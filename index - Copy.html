@@ -1,162 +1,233 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Telegram Mini Apps Vanilla JS Sample App</title>
-    <style>
-        body {
-            --bg-color: var(--tg-theme-bg-color);
-            font: 12px/18px "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--tg-theme-text-color);
-            margin: 48px 24px;
-            padding: 0;
-            color-scheme: var(--tg-color-scheme);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prayer Times App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      text-align: center;
+    }
+    .header {
+      background-color: #4caf50;
+      color: white;
+      padding: 20px;
+      position: relative;
+    }
+    .header img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      position: absolute;
+      left: 20px;
+      top: 15px;
+    }
+    .features {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      padding: 20px;
+      margin-bottom: 100px; /* Avoid language bar overlap */
+    }
+    .feature {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 10px;
+      width: 90px;
+    }
+    .feature img {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #fff;
+      padding: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .feature span {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    .language-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #eee;
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-evenly;
+      border-top: 1px solid #ccc;
+    }
+    .language-bar button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .prayer-times {
+      background: white;
+      margin: 20px;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .prayer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
 
-        a {
-            color: var(--tg-theme-link-color);
-        }
-        #viewport {
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: 0;
-            height: var(--tg-viewport-stable-height, 100vh);
-            pointer-events: none;
-            transition: all .2s ease;
-        }
-        #viewport:after {
-            content: '';
-            display: block;
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            border-width: 4px;
-            border-style: solid;
-            border-image: linear-gradient(45deg, rgba(64, 224, 208, .5), rgba(173, 255, 47, .5)) 1;
-        }
+    .prayer-box {
+      background: #f0f0f0;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 500;
+    }
 
-        #viewport-params-size,
-        #viewport-params-expand {
-            content: attr(text);
-            position: absolute;
-            display: inline-block;
-            background: var(--tg-theme-link-color, rgb(64, 224, 208));
-            right: 4px;
-            left: auto;
-            font-size: 8px;
-            padding: 4px;
-            vertical-align: top;
-        }
-        #viewport-params-size {
-            top: 4px;
-        }
-        #viewport-params-expand {
-            top: 30px;
-        }
-    </style>
+    .prayer-box b {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .spoiler {
+      font-size: 13px;
+      color: #555;
+      margin-top: 15px;
+      background: #f1f1f1;
+      padding: 10px;
+      border-radius: 8px;
+    }
+  </style>
 </head>
-
 <body>
-    <main>
-        <div align="center">
-            <a href="https://ton.org/"><img width="48" src="./assets/tapps.png" alt="logo of telegram web apps"></a>
-        </div>
-        <h1>Modals</h1>
-        <button onclick="Telegram.WebApp.showAlert('Hello World!');">Launch Alert</button>
-        <button onclick="showPopup();">Launch Popup</button>
+  <div class="header">
+    <img src="assets/emblem.jpg" alt="Bot Emblem" />
+    <h2>Muslim Vegukin Bot</h2>
+  </div>
 
-        <h1>Links</h1>
-        <ul>
-            <li>
-                <a href="javascript:Telegram.WebApp.openTelegramLink('https://t.me/trendingapps');">Open link within Telegram</a>
-            </li>
-            <li>
-                <a href="javascript:Telegram.WebApp.openLink('https://ton.org/');">Open link in external browser</a>
-            </li>
-            <li>
-                <a href="javascript:Telegram.WebApp.openLink('https://telegra.ph/api',{try_instant_view:true});">Open link inside Telegram webview</a>
-            </li>
-        </ul>
+  <div class="prayer-times" id="prayerTimes">
+    <h3><b>Siz turgan shahar:</b> <span id="cityName">-</span></h3>
+    <h4>Bugun, <span id="uzbekDate"></span> uchun</h4>
+    <div class="prayer-grid" id="prayerGrid">
+      <!-- Prayer times go here -->
+    </div>
+    <div class="spoiler">
+      <b>Namoz vaqtlari Muslim World League</b> usuli orqali hisoblandi.<br>
+      Ehtiyotan:<br>
+      • <b>Saharlikni</b> Bomdoddan −5 daqiqa avval,<br>
+      • <b>Iftorlikni</b> Shomdan +5 daqiqa keyin,<br>
+      • <b>Namozlarni</b> +10 daqiqa keyin ado etish tavsiya etiladi.
+    </div>
+  </div>
 
-        <h1>Buttons</h1>
-        <button onclick="Telegram.WebApp.expand();">Expand Webview</button>
-        <button onclick="toggleMainButton();">Toggle Main Button</button>
-    </main>
-    <div id="viewport"></div>
-    <div id="viewport-params-size"></div>
-    <div id="viewport-params-expand"></div>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
-        // Init TWA
-        Telegram.WebApp.ready();
+  <div class="features">
+    <div class="feature">
+      <img src="assets/mosque.png" alt="Mosque" />
+      <span>Masjid</span>
+    </div>
+    <div class="feature">
+      <img src="assets/restaurant.jpg" alt="Restaurant" />
+      <span>Restoran</span>
+    </div>
+    <div class="feature">
+      <img src="assets/store.jpg" alt="Shop" />
+      <span>Do‘kon</span>
+    </div>
+  </div>
 
-        // Event occurs whenever theme settings are changed in the user's Telegram app (including switching to night mode).
-        Telegram.WebApp.onEvent('themeChanged', function() {
-            document.documentElement.className = Telegram.WebApp.colorScheme;
-        });
+  <div class="language-bar">
+    <button>🇺🇿</button>
+    <button>🇷🇺</button>
+    <button>🇬🇧</button>
+  </div>
 
-        // Show main button
-        Telegram.WebApp.MainButton.setParams({
-            text: 'Main Button'
-        });
-        Telegram.WebApp.MainButton.onClick(function () {
-            Telegram.WebApp.showAlert('Main Button was clicked')
-        });	
-        Telegram.WebApp.MainButton.show();
+  <script>
+    Telegram.WebApp.ready();
 
-        // Function to call showPopup API
-        function showPopup() {
-            Telegram.WebApp.showPopup({
-                title: 'Title',
-                message: 'Some message',
-                buttons: [
-                    {id: 'link', type: 'default', text: 'Open ton.org'},
-                    {type: 'cancel'},
-                ]
-            }, function(btn) {
-                if (btn === 'link') {
-                    Telegram.WebApp.openLink('https://ton.org/');
-                }
-            });
+    let userLocation = null;
+    let cityName = "Noma’lum joy";
+
+    function getUzbekDate() {
+      const months = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
+      const d = new Date();
+      return `${d.getDate()}-${months[d.getMonth()]}`;
+    }
+
+    async function getCityName(lat, lon) {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=uz`);
+        const data = await res.json();
+        return data.address.city || data.address.town || data.address.village || "Noma’lum joy";
+      } catch {
+        return "Noma’lum joy";
+      }
+    }
+
+    async function getPrayerTimes(lat, lon, method = 3, madhab = 1) {
+      const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=${method}&school=${madhab}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return data.data.timings;
+    }
+
+    async function updatePrayerTimes() {
+      if (!userLocation) return;
+
+      const { latitude, longitude } = userLocation;
+      const timings = await getPrayerTimes(latitude, longitude);
+      const prayers = {
+        "Fajr": "Bomdod",
+        "Sunrise": "Quyosh",
+        "Dhuhr": "Peshin",
+        "Asr": "Asr",
+        "Maghrib": "Shom",
+        "Isha": "Xufton"
+      };
+
+      const grid = document.getElementById("prayerGrid");
+      grid.innerHTML = "";
+
+      // Create prayer boxes
+      Object.entries(prayers).forEach(([key, label]) => {
+        const time = timings[key] || "--:--";
+        const box = document.createElement("div");
+        box.className = "prayer-box"; // <— add class for styling
+        box.innerHTML = `
+          <b>${label}</b>
+          <div>${time}</div>
+        `;
+        grid.appendChild(box);
+      });
+
+      // Update city name and date
+      document.getElementById("cityName").innerText = cityName;
+      document.getElementById("uzbekDate").innerText = getUzbekDate();
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        userLocation = {
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude
         };
-
-        // Function to toggle main TWA button
-        function toggleMainButton() {
-            if (Telegram.WebApp.MainButton.isVisible) {
-                Telegram.WebApp.MainButton.hide();
-            } else {
-                Telegram.WebApp.MainButton.show();
-            }
-        };
-
-        function setViewportData() {
-            var sizeEl = document.getElementById('viewport-params-size');
-            sizeEl.innerText = 'width: ' + window.innerWidth + ' x ' + 
-                'height: ' + Telegram.WebApp.viewportStableHeight;
-
-            var expandEl = document.querySelector('#viewport-params-expand');
-            expandEl.innerText = 'Is Expanded: ' + (Telegram.WebApp.isExpanded ? 'true' : 'false');
-        }
-
-        Telegram.WebApp.setHeaderColor('secondary_bg_color');
-
-        setViewportData();
-        Telegram.WebApp.onEvent('viewportChanged', setViewportData);
-
-        Telegram.WebApp.onEvent('themeChanged', function() {
-            document.body.setAttribute('style', '--bg-color:' + Telegram.WebApp.backgroundColor);
-        });
-
-    </script>
-
-    <!-- Eruda is console for mobile browsers -->
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>
+        cityName = await getCityName(userLocation.latitude, userLocation.longitude);
+        updatePrayerTimes();
+      },
+      (err) => {
+        Telegram.WebApp.showAlert("❌ Lokatsiyani olish imkoni bo‘lmadi. Iltimos, ruxsat bering.");
+      }
+    );
+  </script>
 </body>
 </html>

@@ -1,77 +1,111 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prayer Times App</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-</head>
-<body style="text-align: center; margin-top: 50px; font-family: sans-serif;">
-  <img src="assets/tapps.png" width="64" alt="logo" />
-  <h1>Namoz Vaqtlari</h1>
-  <p>📍Lokatsiyangiz asosida namoz vaqtlari aniqlanadi</p>
+<script>
+  Telegram.WebApp.ready();
+  Telegram.WebApp.MainButton.setText("Namoz vaqtlarini ko‘rish");
+  Telegram.WebApp.MainButton.show();
 
-  <script>
-    Telegram.WebApp.ready();
+  let userLocation = null;
+  let cityName = "Noma’lum joy";
 
-    // Set main button text and show it
-    Telegram.WebApp.MainButton.setText("Namoz vaqtlarini ko‘rish");
-    Telegram.WebApp.MainButton.show();
+  // --- Function to get the city name from coordinates ---
+  async function getCityName(lat, lon) {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=uz`);
+      const data = await res.json();
+      return data.address.city || data.address.town || data.address.village || "Noma’lum joy";
+    } catch {
+      return "Noma’lum joy";
+    }
+  }
 
-    // Location will be stored here after user grants access
-    let userLocation = null;
+  // --- Get user's location ---
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      userLocation = {
+        latitude: pos.coords.latitude,
+        longitude: pos.coords.longitude
+      };
+      cityName = await getCityName(userLocation.latitude, userLocation.longitude);
+    },
+    (err) => {
+      Telegram.WebApp.showAlert("❌ Lokatsiyani olish imkoni bo‘lmadi. Iltimos, ruxsat bering.");
+    }
+  );
 
-    // Ask for location access
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        userLocation = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        };
-        console.log("Location retrieved:", userLocation);
-      },
-      (error) => {
-        Telegram.WebApp.showAlert("❌ Lokatsiyani olish imkoni bo‘lmadi. Iltimos, ruxsat bering.");
-        console.error("Location error:", error);
-      }
-    );
+  // --- Format Uzbek month names ---
+  function getUzbekDate() {
+    const months = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
+    const d = new Date();
+    return `${d.getDate()}-${months[d.getMonth()]}`;
+  }
 
-    // Main Button click: fetch and show prayer times
-    Telegram.WebApp.MainButton.onClick(async () => {
-      if (!userLocation) {
-        Telegram.WebApp.showAlert("❌ Lokatsiya aniqlanmagan. Iltimos, qayta urinib ko‘ring.");
-        return;
-      }
+  // --- Function to fetch prayer times ---
+  async function getPrayerTimes(lat, lon, method = 3, madhab = 1) {
+    const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=${method}&school=${madhab}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    return data.data.timings;
+  }
 
-      const { latitude, longitude } = userLocation;
-      const method = 3; // Muslim World League
-      const school = 1; // Hanafiy
+  // --- Function to show styled popup inside the page ---
+  function showPopup(content) {
+    const popup = document.createElement("div");
+    popup.style.position = "fixed";
+    popup.style.top = "0";
+    popup.style.left = "0";
+    popup.style.width = "100%";
+    popup.style.height = "100%";
+    popup.style.background = "rgba(0,0,0,0.6)";
+    popup.style.display = "flex";
+    popup.style.alignItems = "center";
+    popup.style.justifyContent = "center";
+    popup.style.zIndex = "9999";
+    popup.innerHTML = `
+      <div style="background:#fff;border-radius:12px;padding:20px;max-width:340px;text-align:left;">
+        ${content}
+        <div style="text-align:center;margin-top:15px;">
+          <button id="closePopup" style="background:#0088cc;color:#fff;padding:8px 20px;border:none;border-radius:6px;">Yopish</button>
+        </div>
+      </div>`;
+    document.body.appendChild(popup);
+    document.getElementById("closePopup").onclick = () => popup.remove();
+  }
 
-      try {
-        const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=${method}&school=${school}`);
-        const data = await res.json();
+  // --- Main Button logic ---
+  Telegram.WebApp.MainButton.onClick(async () => {
+    if (!userLocation) {
+      Telegram.WebApp.showAlert("❌ Lokatsiya aniqlanmagan. Iltimos, qayta urinib ko‘ring.");
+      return;
+    }
 
-        if (!data || !data.data || !data.data.timings) {
-          throw new Error("No data from API");
-        }
+    const { latitude, longitude } = userLocation;
+    const methodName = "Muslim World League";
+    const madhabName = "Hanafiy";
+    const timings = await getPrayerTimes(latitude, longitude, 3, 1);
 
-        const t = data.data.timings;
-        const formatted = `
-<b>Namoz vaqtlari</b>:
-Bomdod: ${t.Fajr}
-Quyosh: ${t.Sunrise}
-Peshin: ${t.Dhuhr}
-Asr: ${t.Asr}
-Shom: ${t.Maghrib}
-Xufton: ${t.Isha}
-        `.trim();
+    const prayers = {
+      "Fajr": "Bomdod",
+      "Sunrise": "Quyosh",
+      "Dhuhr": "Peshin",
+      "Asr": "Asr",
+      "Maghrib": "Shom",
+      "Isha": "Xufton"
+    };
 
-        Telegram.WebApp.showAlert(formatted, {parse_mode: "HTML"});
-      } catch (error) {
-        console.error(error);
-        Telegram.WebApp.showAlert("❌ Namoz vaqtlari olinmadi. Internetni tekshirib ko‘ring.");
-      }
-    });
-  </script>
-</body>
-</html>
+    const message = `
+      <b>Siz turgan shahar:</b> ${cityName}<br><br>
+      <b>Mazhab:</b> ${madhabName}<br><br>
+      <b>Bugun, ${getUzbekDate()} uchun namoz vaqtlari:</b><br><br>
+      ${Object.entries(prayers).map(([eng, uz]) => `${uz}: ${timings[eng]}`).join("<br>")}
+      <br><br>
+      <span style="background:#eee;padding:6px 10px;border-radius:8px;display:block;">
+      <b>Namoz vaqtlari ${methodName}</b> usuli orqali hisoblandi.<br>
+      Ehtiyotan:<br>
+      • <b>Saharlikni</b> Bomdoddan −5 daqiqa avval,<br>
+      • <b>Iftorlikni</b> Shomdan +5 daqiqa keyin,<br>
+      • <b>Namozlarni</b> +10 daqiqa keyin ado etish tavsiya etiladi.
+      </span>
+    `;
+
+    showPopup(message);
+  });
+</script>

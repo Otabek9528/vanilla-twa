@@ -1,12 +1,4 @@
-// ui.js
-
-export function initTelegramWebApp() {
-  Telegram.WebApp.ready();
-  Telegram.WebApp.MainButton.setText("Namoz vaqtlarini ko‘rish");
-  Telegram.WebApp.MainButton.show();
-}
-
-export function updatePrayerUI(timings) {
+function renderPrayerTimes(timings) {
   const prayers = {
     "Fajr": "Bomdod",
     "Sunrise": "Quyosh",
@@ -18,16 +10,17 @@ export function updatePrayerUI(timings) {
 
   const grid = document.getElementById("prayerGrid");
   grid.innerHTML = "";
+
   Object.entries(prayers).forEach(([key, label]) => {
     const time = timings[key] || "--:--";
-    const item = document.createElement("div");
-    item.className = "prayer-box";
-    item.innerHTML = `<b>${label}</b><br>${time}`;
-    grid.appendChild(item);
+    const box = document.createElement("div");
+    box.className = "prayer-box";
+    box.innerHTML = `<b>${label}</b><div>${time}</div>`;
+    grid.appendChild(box);
   });
 }
 
-export function updateCityAndDate(city, date) {
+function updateHeader(city, date) {
   document.getElementById("cityName").innerText = city;
   document.getElementById("uzbekDate").innerText = date;
 }

@@ -1,54 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Muslim Assistant WebApp</title>
+  <title>Namoz Vaqtlari</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
-      margin: 0;
       font-family: sans-serif;
-      background-color: #f3f3f3;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+      color: #333;
     }
 
     .header {
       background-color: #4CAF50;
       color: white;
-      padding: 20px 10px 10px;
+      padding: 20px;
       text-align: center;
       position: relative;
     }
 
-    .header img.logo {
+    .header img {
       width: 64px;
       height: 64px;
       border-radius: 50%;
-      margin-bottom: 10px;
+      display: block;
+      margin: 0 auto 10px;
     }
 
     .prayer-times {
-      background-color: #fff;
-      margin: 15px;
-      padding: 15px;
+      padding: 20px;
+      background-color: #ffffff;
+      margin: 10px;
       border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
 
     .prayer-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 15px;
     }
 
     .prayer-item {
-      background-color: #f0f0f0;
       padding: 10px;
-      border-radius: 6px;
+      background: #f0f0f0;
+      border-radius: 8px;
       text-align: center;
     }
 
@@ -56,43 +56,42 @@
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
-      padding: 20px;
-      margin-bottom: 100px; /* ensures bottom buttons are fully visible */
+      padding: 20px 10px 100px; /* Extra bottom spacing added */
+      background: #fff;
     }
 
-    .feature-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 80px;
-      margin: 10px;
+    .feature-button {
+      width: 90px;
+      margin: 15px 10px;
+      text-align: center;
     }
 
-    .feature-btn img {
-      width: 64px;
-      height: 64px;
+    .feature-button img {
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     }
 
-    .feature-btn span {
+    .feature-button span {
+      display: block;
       margin-top: 8px;
       font-size: 14px;
     }
 
-    .lang-bar {
+    .language-bar {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      background: #ffffff;
+      background-color: #ffffff;
       border-top: 1px solid #ccc;
       display: flex;
       justify-content: space-around;
       padding: 10px 0;
     }
 
-    .lang-btn {
+    .language-button {
       background: none;
       border: none;
       font-size: 16px;
@@ -100,89 +99,99 @@
     }
   </style>
 </head>
+
 <body>
   <div class="header">
-    <img src="assets/emblem.png" class="logo" alt="Bot Logo" />
-    <h2>Namoz Vaqtlari</h2>
+    <img src="assets/emblem.jpg" alt="Bot Emblem">
+    <h2>Muslim Vegukin Bot</h2>
   </div>
 
   <div class="prayer-times" id="prayerTimes">
     <h3>Bugun, <span id="uzbekDate"></span> uchun</h3>
     <div class="prayer-grid" id="prayerGrid">
-      <!-- Dynamic prayer time items here -->
+      <!-- Prayer times will be inserted here -->
     </div>
-    <p style="margin-top:15px;font-size:14px;background:#eee;padding:10px;border-radius:6px">
-      <b>Namoz vaqtlari Muslim World League usuli orqali hisoblandi.</b><br>
-      Ehtiyotan:<br>
-      • <b>Saharlikni</b> Bomdoddan −5 daqiqa avval,<br>
-      • <b>Iftorlikni</b> Shomdan +5 daqiqa keyin,<br>
-      • <b>Namozlarni</b> +10 daqiqa keyin ado etish tavsiya etiladi.
-    </p>
   </div>
 
   <div class="features">
-    <div class="feature-btn">
-      <img src="assets/mosque.png" alt="Mosque" />
+    <div class="feature-button">
+      <img src="assets/mosque.png" alt="Masjid">
       <span>Masjid</span>
     </div>
-    <div class="feature-btn">
-      <img src="assets/restaurant.png" alt="Restaurant" />
+    <div class="feature-button">
+      <img src="assets/restaurant.jpg" alt="Restoran">
       <span>Restoran</span>
     </div>
-    <div class="feature-btn">
-      <img src="assets/store.png" alt="Shop" />
-      <span>Do‘kon</span>
+    <div class="feature-button">
+      <img src="assets/store.jpg" alt="Do'kon">
+      <span>Do'kon</span>
     </div>
   </div>
 
-  <div class="lang-bar">
-    <button class="lang-btn">🇺🇿 UZ</button>
-    <button class="lang-btn">🇷🇺 RU</button>
-    <button class="lang-btn">🇬🇧 EN</button>
+  <div class="language-bar">
+    <button class="language-button">🇺🇿 UZ</button>
+    <button class="language-button">🇷🇺 RU</button>
+    <button class="language-button">🇬🇧 EN</button>
   </div>
 
   <script>
-    Telegram.WebApp.ready();
-
     const months = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
-    const d = new Date();
-    document.getElementById("uzbekDate").textContent = `${d.getDate()}-${months[d.getMonth()]}`;
 
-    const userLocation = { latitude: null, longitude: null };
+    function updateDate() {
+      const d = new Date();
+      document.getElementById("uzbekDate").textContent = `${d.getDate()}-${months[d.getMonth()]}`;
+    }
 
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      userLocation.latitude = pos.coords.latitude;
-      userLocation.longitude = pos.coords.longitude;
-      const timings = await getPrayerTimes(userLocation.latitude, userLocation.longitude);
-      renderPrayerTimes(timings);
-    }, (err) => {
-      alert("❌ Lokatsiyani olish imkoni bo‘lmadi. Iltimos, ruxsat bering.");
-    });
+    function populatePrayerTimes(times) {
+      const grid = document.getElementById("prayerGrid");
+      grid.innerHTML = "";
+      const translations = {
+        Fajr: "Bomdod",
+        Sunrise: "Quyosh",
+        Dhuhr: "Peshin",
+        Asr: "Asr",
+        Maghrib: "Shom",
+        Isha: "Xufton"
+      };
 
-    async function getPrayerTimes(lat, lon, method = 3, madhab = 1) {
-      const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=${method}&school=${madhab}`);
+      Object.entries(translations).forEach(([key, label]) => {
+        const div = document.createElement("div");
+        div.className = "prayer-item";
+        div.innerHTML = `<strong>${label}</strong><br>${times[key] || "--:--"}`;
+        grid.appendChild(div);
+      });
+    }
+
+    async function fetchPrayerTimes(lat, lon) {
+      const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=3&school=1`;
+      const res = await fetch(url);
       const data = await res.json();
       return data.data.timings;
     }
 
-    function renderPrayerTimes(timings) {
-      const translations = {
-        "Fajr": "Bomdod",
-        "Sunrise": "Quyosh",
-        "Dhuhr": "Peshin",
-        "Asr": "Asr",
-        "Maghrib": "Shom",
-        "Isha": "Xufton"
-      };
-      const grid = document.getElementById("prayerGrid");
-      grid.innerHTML = "";
-      Object.entries(translations).forEach(([eng, uz]) => {
-        const div = document.createElement("div");
-        div.className = "prayer-item";
-        div.innerHTML = `<b>${uz}</b><br>${timings[eng]}`;
-        grid.appendChild(div);
+    async function getCityName(lat, lon) {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=uz`);
+        const data = await res.json();
+        return data.address.city || data.address.town || data.address.village || "Noma’lum joy";
+      } catch {
+        return "Noma’lum joy";
+      }
+    }
+
+    async function init() {
+      updateDate();
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const times = await fetchPrayerTimes(latitude, longitude);
+        populatePrayerTimes(times);
+      }, () => {
+        alert("Lokatsiyani olish imkoni bo‘lmadi.");
       });
     }
+
+    init();
   </script>
 </body>
+
 </html>

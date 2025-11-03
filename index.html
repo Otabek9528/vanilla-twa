@@ -83,6 +83,22 @@
       gap: 10px;
       margin-top: 10px;
     }
+
+    .prayer-box {
+      background: #f0f0f0;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .prayer-box b {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
     .spoiler {
       font-size: 13px;
       color: #555;
@@ -180,16 +196,24 @@
 
       const grid = document.getElementById("prayerGrid");
       grid.innerHTML = "";
+
+      // Create prayer boxes
       Object.entries(prayers).forEach(([key, label]) => {
         const time = timings[key] || "--:--";
-        const item = document.createElement("div");
-        item.innerHTML = `<b>${label}:</b> ${time}`;
-        grid.appendChild(item);
+        const box = document.createElement("div");
+        box.className = "prayer-box"; // <— add class for styling
+        box.innerHTML = `
+          <b>${label}</b>
+          <div>${time}</div>
+        `;
+        grid.appendChild(box);
       });
 
+      // Update city name and date
       document.getElementById("cityName").innerText = cityName;
       document.getElementById("uzbekDate").innerText = getUzbekDate();
     }
+
 
     navigator.geolocation.getCurrentPosition(
       async (pos) => {

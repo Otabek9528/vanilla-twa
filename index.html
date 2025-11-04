@@ -7,7 +7,15 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="css/style.css" />
 </head>
+
 <body>
+  <!-- HEADER -->
+  <div class="header">
+    <img src="assets/emblem.jpg" alt="Bot Emblem" />
+    <h2>Muslim Vegukin Bot</h2>
+  </div>
+
+  <!-- PRAYER PANEL -->
   <div class="prayer-panel">
     <div class="location-bar">
       <span class="location-icon">📍</span>
@@ -18,12 +26,10 @@
     <p class="panel-date" id="uzbekDate">--</p>
 
     <div class="prayer-grid-modern" id="prayerGrid">
-      <!-- Populated dynamically -->
+      <!-- Fetched dynamically -->
     </div>
 
-    <div class="sun-panel" id="sunPanel">
-      <!-- Sunrise / Sunset dynamically inserted -->
-    </div>
+    <div class="sun-panel" id="sunPanel"></div>
 
     <div class="spoiler-info">
       <p>
@@ -36,6 +42,30 @@
     </div>
   </div>
 
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feature">
+      <img src="assets/mosque.png" alt="Mosque" />
+      <span>Masjid</span>
+    </div>
+    <div class="feature">
+      <img src="assets/restaurant.jpg" alt="Restaurant" />
+      <span>Restoran</span>
+    </div>
+    <div class="feature">
+      <img src="assets/store.jpg" alt="Shop" />
+      <span>Do‘kon</span>
+    </div>
+  </div>
+
+  <!-- LANGUAGE BAR -->
+  <div class="language-bar">
+    <button>🇺🇿</button>
+    <button>🇷🇺</button>
+    <button>🇬🇧</button>
+  </div>
+
+  <!-- JS -->
   <script>
     Telegram.WebApp.ready();
 
@@ -87,7 +117,6 @@
         grid.appendChild(card);
       });
 
-      // Sunrise and Sunset info
       sunPanel.innerHTML = `
         <div class="sun-info">
           <div class="icon">🌇</div>

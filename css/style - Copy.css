@@ -1,13 +1,15 @@
+/* --- GLOBAL PAGE STYLING --- */
 body {
-  font-family: sans-serif;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(180deg, #0f3d57, #1b4d65);
+  color: #eaeaea;
   margin: 0;
   padding: 0;
-  background: #f9f9f9;
   text-align: center;
 }
 
 .header {
-  background-color: #4caf50;
+  background-color: #43a047;
   color: white;
   padding: 20px;
   position: relative;
@@ -22,12 +24,128 @@ body {
   top: 15px;
 }
 
+/* --- NEW PRAYER PANEL --- */
+.prayer-panel {
+  background: #133c53;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 500px;
+  margin: 25px auto;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.location-bar {
+  background: #1f526c;
+  border-radius: 15px;
+  padding: 10px 15px;
+  color: #eabf4e;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  font-size: 15px;
+  margin-bottom: 15px;
+}
+
+.panel-title {
+  margin: 5px 0 0;
+  font-size: 20px;
+  color: #f3f5f6;
+}
+
+.panel-date {
+  color: #eabf4e;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+/* Prayer Cards */
+.prayer-grid-modern {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 12px;
+  justify-items: center;
+}
+
+.prayer-card {
+  background: transparent;
+  border: 1px solid #6aa0bd;
+  border-radius: 12px;
+  width: 90px;
+  padding: 12px;
+  text-align: center;
+  color: #f0f5f7;
+}
+
+.prayer-card .icon {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.prayer-card .time {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.prayer-card .label {
+  font-size: 13px;
+  margin-top: 4px;
+  color: #fefefe;
+}
+
+/* Sunrise/Sunset Panel */
+.sun-panel {
+  display: flex;
+  justify-content: space-around;
+  background: #1f526c;
+  border-radius: 12px;
+  padding: 10px;
+  margin-top: 15px;
+}
+
+.sun-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sun-info .icon {
+  font-size: 22px;
+}
+
+.sun-label {
+  color: #eabf4e;
+  display: block;
+  font-size: 13px;
+}
+
+.sun-time {
+  font-size: 15px;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Info Block */
+.spoiler-info {
+  background: #1f526c;
+  border-radius: 12px;
+  padding: 10px;
+  margin-top: 15px;
+  font-size: 13px;
+  color: #e2e6ea;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* --- FEATURES --- */
 .features {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
   padding: 20px;
-  margin-bottom: 100px; /* Avoid language bar overlap */
+  margin-bottom: 100px;
 }
 
 .feature {
@@ -44,7 +162,7 @@ body {
   border-radius: 50%;
   background: #fff;
   padding: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .feature span {
@@ -52,12 +170,13 @@ body {
   font-size: 14px;
 }
 
+/* --- LANGUAGE BAR --- */
 .language-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #eee;
+  background: #e0e3e7;
   padding: 10px 0;
   display: flex;
   justify-content: space-evenly;
@@ -69,43 +188,4 @@ body {
   border: none;
   font-size: 18px;
   cursor: pointer;
-}
-
-.prayer-times {
-  background: white;
-  margin: 20px;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.prayer-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.prayer-box {
-  background: #f0f0f0;
-  border-radius: 8px;
-  padding: 12px;
-  text-align: center;
-  font-size: 15px;
-  font-weight: 500;
-}
-
-.prayer-box b {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 4px;
-}
-
-.spoiler {
-  font-size: 13px;
-  color: #555;
-  margin-top: 15px;
-  background: #f1f1f1;
-  padding: 10px;
-  border-radius: 8px;
 }

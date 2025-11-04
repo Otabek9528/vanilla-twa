@@ -9,24 +9,40 @@
 </head>
 
 <body>
+  <!-- HEADER -->
   <div class="header">
     <img src="assets/emblem.jpg" alt="Bot Emblem" />
     <h2>Muslim Vegukin Bot</h2>
   </div>
 
-  <div class="prayer-times" id="prayerTimes">
-    <h3><b>Siz turgan shahar:</b> <span id="cityName">-</span></h3>
-    <h4>Bugun, <span id="uzbekDate"></span> uchun</h4>
-    <div class="prayer-grid" id="prayerGrid"></div>
-    <div class="spoiler">
-      <b>Namoz vaqtlari Muslim World League</b> usuli orqali hisoblandi.<br>
-      Ehtiyotan:<br>
-      • <b>Saharlikni</b> Bomdoddan −5 daqiqa avval,<br>
-      • <b>Iftorlikni</b> Shomdan +5 daqiqa keyin,<br>
-      • <b>Namozlarni</b> +10 daqiqa keyin ado etish tavsiya etiladi.
+  <!-- PRAYER PANEL -->
+  <div class="prayer-panel">
+    <div class="location-bar">
+      <span class="location-icon">📍</span>
+      <span id="cityName">Joy aniqlanmoqda...</span>
+    </div>
+
+    <h2 class="panel-title">Namoz vaqtlari</h2>
+    <p class="panel-date" id="uzbekDate">--</p>
+
+    <div class="prayer-grid-modern" id="prayerGrid">
+      <!-- Fetched dynamically -->
+    </div>
+
+    <div class="sun-panel" id="sunPanel"></div>
+
+    <div class="spoiler-info">
+      <p>
+        <b>Namoz vaqtlari Muslim World League</b> usuli orqali hisoblandi.<br>
+        Ehtiyot choralari:<br>
+        • <b>Saharlikni</b> Bomdoddan −5 daqiqa avval,<br>
+        • <b>Iftorlikni</b> Shomdan +5 daqiqa keyin,<br>
+        • <b>Namozlarni</b> +10 daqiqa keyin ado etish tavsiya etiladi.
+      </p>
     </div>
   </div>
 
+  <!-- FEATURES -->
   <div class="features">
     <div class="feature">
       <img src="assets/mosque.png" alt="Mosque" />
@@ -42,17 +58,99 @@
     </div>
   </div>
 
+  <!-- LANGUAGE BAR -->
   <div class="language-bar">
     <button>🇺🇿</button>
     <button>🇷🇺</button>
     <button>🇬🇧</button>
   </div>
 
-  <!-- Load scripts in order -->
-  <script src="js/location.js"></script>
-  <script src="js/prayerTimes.js"></script>
-  <script src="js/language.js"></script>
-  <script src="js/features.js"></script>
-  <script src="js/main.js"></script>
+  <!-- JS -->
+  <script>
+    Telegram.WebApp.ready();
+
+    async function getCityName(lat, lon) {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=uz`);
+        const data = await res.json();
+        return data.address.city || data.address.town || data.address.village || "Noma’lum joy";
+      } catch {
+        return "Noma’lum joy";
+      }
+    }
+
+    async function getPrayerTimes(lat, lon, method = 3, madhab = 1) {
+      const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=${method}&school=${madhab}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return data.data;
+    }
+
+    function getUzbekDate() {
+      const months = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
+      const d = new Date();
+      return `${d.getDate()}-${months[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    function renderPrayerTimes(data) {
+      const grid = document.getElementById("prayerGrid");
+      const sunPanel = document.getElementById("sunPanel");
+
+      const prayers = [
+        { key: "Fajr", label: "Bomdod", icon: "🌅" },
+        { key: "Dhuhr", label: "Peshin", icon: "☀️" },
+        { key: "Asr", label: "Asr", icon: "🌤️" },
+        { key: "Maghrib", label: "Shom", icon: "🌇" },
+        { key: "Isha", label: "Xufton", icon: "🌙" },
+      ];
+
+      grid.innerHTML = "";
+      prayers.forEach(p => {
+        const time = data.timings[p.key];
+        const card = document.createElement("div");
+        card.className = "prayer-card";
+        card.innerHTML = `
+          <div class="icon">${p.icon}</div>
+          <div class="time">${time}</div>
+          <div class="label">${p.label}</div>
+        `;
+        grid.appendChild(card);
+      });
+
+      sunPanel.innerHTML = `
+        <div class="sun-info">
+          <div class="icon">🌇</div>
+          <div>
+            <span class="sun-label">Quyosh botishi</span>
+            <span class="sun-time">${data.timings.Sunset}</span>
+          </div>
+        </div>
+        <div class="sun-info">
+          <div class="icon">🌅</div>
+          <div>
+            <span class="sun-label">Quyosh chiqishi</span>
+            <span class="sun-time">${data.timings.Sunrise}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    async function init() {
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const city = await getCityName(lat, lon);
+        document.getElementById("cityName").innerText = city;
+        document.getElementById("uzbekDate").innerText = getUzbekDate();
+
+        const data = await getPrayerTimes(lat, lon);
+        renderPrayerTimes(data);
+      }, () => {
+        Telegram.WebApp.showAlert("❌ Lokatsiyani olish imkoni bo‘lmadi. Iltimos, ruxsat bering.");
+      });
+    }
+
+    init();
+  </script>
 </body>
 </html>

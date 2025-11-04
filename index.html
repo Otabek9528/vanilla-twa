@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Muslim Vegukin Bot</title>
+  <title>Halal Compass</title>
+
   <style>
+    /* ===== BASE ===== */
     * {
       margin: 0;
       padding: 0;
@@ -13,111 +15,182 @@
     }
 
     body {
+      background: linear-gradient(to bottom, #f9fafb, #f4f4f4);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      background-color: #f8f9fa;
       overflow-x: hidden;
+      color: #2f3e46;
     }
 
-    /* === 1️⃣ HEADER SECTION === */
+    /* ===== 1️⃣ HEADER SECTION ===== */
     .header {
-      background: linear-gradient(135deg, #007b5e, #009879);
-      color: white;
+      background: linear-gradient(135deg, #007b5e, #00a884);
+      color: #fff;
       text-align: center;
-      padding: 30px 20px;
+      padding: 25px 15px;
+      border-bottom-left-radius: 25px;
+      border-bottom-right-radius: 25px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: -40px;
+      width: 160px;
+      height: 160px;
+      background: url('mosque_pattern.png') no-repeat center center/contain;
+      opacity: 0.15;
     }
 
     .header h1 {
       font-size: 1.6rem;
       margin-bottom: 5px;
+      font-weight: 600;
     }
 
     .header p {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       opacity: 0.9;
     }
 
-    /* === 2️⃣ PRAYER SECTION === */
+    /* ===== 2️⃣ PRAYER SECTION ===== */
     .prayer-section {
-      background: url('assets/prayer_bg.png') no-repeat center center/cover;
+      background: url('assets/prayer_bg.png') center center/cover no-repeat;
+      margin: 20px;
+      border-radius: 20px;
       text-align: center;
+      padding: 25px 20px;
       color: white;
-      padding: 40px 20px;
+      position: relative;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+    }
+
+    .prayer-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+    }
+
+    .prayer-content {
+      position: relative;
+      z-index: 1;
     }
 
     .prayer-section h2 {
-      font-size: 1.4rem;
-      margin-bottom: 10px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 8px;
     }
 
     .prayer-section .time {
       font-size: 2.2rem;
       font-weight: bold;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .prayer-section p {
       font-size: 1rem;
-      opacity: 0.85;
+      opacity: 0.9;
     }
 
-    /* === 3️⃣ MAIN SECTION === */
+    /* ===== 3️⃣ MAIN SECTION ===== */
     .main {
-      background: url('assets/main_bg.jpg') no-repeat center center/cover;
       flex: 1;
+      background: url('assets/main_bg.jpg') no-repeat bottom center/cover;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      padding: 30px;
+      gap: 18px;
+      padding: 20px 25px 40px 25px;
+      justify-items: center;
     }
 
     .card {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 170px;
       text-align: center;
       padding: 25px 10px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
       transition: all 0.2s ease;
+      backdrop-filter: blur(6px);
       cursor: pointer;
     }
 
     .card:hover {
       transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .card img {
-      width: 45px;
-      height: 45px;
-      margin-bottom: 10px;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 12px;
     }
 
     .card p {
       color: #007b5e;
       font-weight: 600;
+      font-size: 1rem;
     }
 
-    /* === 4️⃣ LANGUAGE SECTION === */
+    /* ===== 4️⃣ LANGUAGE SECTION ===== */
     .language-switch {
-      background: #e8f5f1;
-      text-align: center;
+      background: #f1f7f4;
       padding: 15px 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      border-top: 1px solid #e0e0e0;
     }
 
-    .language-switch button {
-      background: #007b5e;
-      color: white;
-      border: none;
+    .lang-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      border: 1.5px solid #007b5e;
+      color: #007b5e;
       border-radius: 25px;
-      margin: 0 8px;
-      padding: 8px 20px;
+      padding: 8px 18px;
       font-size: 0.9rem;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s ease;
     }
 
-    .language-switch button:hover {
-      background: #005f47;
+    .lang-btn:hover {
+      background: #007b5e;
+      color: #fff;
+    }
+
+    .lang-btn img {
+      width: 20px;
+      height: 14px;
+      border-radius: 2px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .main {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 20px;
+      }
+
+      .card {
+        max-width: 150px;
+      }
+
+      .header h1 {
+        font-size: 1.4rem;
+      }
     }
   </style>
 </head>
@@ -131,9 +204,11 @@
 
   <!-- PRAYER SECTION -->
   <div class="prayer-section">
-    <h2>Dhuhur</h2>
-    <div class="time">12:15</div>
-    <p>Next prayer: Asr - 15:52</p>
+    <div class="prayer-content">
+      <h2>Dhuhur</h2>
+      <div class="time">12:15</div>
+      <p>Next prayer: Asr - 15:52</p>
+    </div>
   </div>
 
   <!-- MAIN SECTION -->
@@ -151,16 +226,16 @@
       <p>Cafe</p>
     </div>
     <div class="card">
-      <img src="icons/store.jpg" alt="Store" />
+      <img src="icons/store.png" alt="Store" />
       <p>Store</p>
     </div>
   </div>
 
-  <!-- LANGUAGE SWITCHER -->
+  <!-- LANGUAGE SECTION -->
   <div class="language-switch">
-    <button>🇺🇿 Uzbek</button>
-    <button>🇷🇺 Russian</button>
-    <button>🇬🇧 English</button>
+    <button class="lang-btn"><img src="flags/uzbek.png" alt="Uzbek" />Uzbek</button>
+    <button class="lang-btn"><img src="flags/russian.png" alt="Russian" />Russian</button>
+    <button class="lang-btn"><img src="flags/english.png" alt="English" />English</button>
   </div>
 </body>
 </html>

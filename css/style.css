@@ -101,43 +101,72 @@ body {
 /* =========================
    3) Prayer section (keeps prayer_bg.jpg)
    ========================= */
+/* =====PRAYER PANEL ===== */
 .prayer {
-  background: url('../assets/prayer_bg.png') no-repeat center/cover;
-  margin: 16px 16px 0;
-  border-radius: var(--radius-lg);
+  background: url("../assets/prayer_bg.png") no-repeat center/cover;
   color: #fff;
-  text-align: center;
-  box-shadow: var(--shadow-2);
+  padding: 24px 20px;
+  text-align: left;
+  border-radius: 20px;
+  margin: 10px 16px;
+  box-shadow: var(--shadow-1);
   position: relative;
-  overflow: hidden;
-  padding: 24px 16px 40px;
 }
 
-/* soft blend into main_bg.png */
-.prayer::after {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 60px;
-  background: linear-gradient(to bottom, rgba(0,0,0,0), var(--bg) 90%);
+.prayer__overlay {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(6px);
 }
 
-.prayer__content { position: relative; z-index: 1; }
+.prayer__info {
+  margin-bottom: 20px;
+}
 
-.prayer h2 {
-  margin: 0 0 8px;
-  font-size: 1.25rem;
+.weekday {
+  font-size: 1.05rem;
   font-weight: 600;
-}
-.prayer__time {
-  font-size: 2.2rem;
-  font-weight: 800;
-  margin-bottom: 6px;
-}
-.prayer p {
   margin: 0;
+}
+
+.hijri-date {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin: 4px 0 10px 0;
+}
+
+.city-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.prayer__main {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.prayer-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+}
+
+.prayer-time {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.countdown {
   font-size: 1rem;
-  opacity: .9;
+  opacity: 0.85;
 }
 
 /* =========================

@@ -52,7 +52,7 @@ body {
 
 /* ===== WRAPPER (for smooth blending) ===== */
 .content-bg {
-  background: url('assets/main_bg.jpg') no-repeat bottom center/cover;
+  background: url('assets/main_bg1.jpg') no-repeat bottom center/cover;
   flex: 1;
   position: relative;
   overflow: hidden;

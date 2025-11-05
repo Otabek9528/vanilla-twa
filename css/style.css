@@ -15,7 +15,7 @@ body {
   color: #2f3e46;
 }
 
-/* ===== 1️⃣ HEADER SECTION ===== */
+/* ===== HEADER SECTION ===== */
 .header {
   background: linear-gradient(135deg, #007b5e, #00a884);
   color: #fff;
@@ -35,7 +35,7 @@ body {
   right: -40px;
   width: 160px;
   height: 160px;
-  background: url('mosque_pattern.png') no-repeat center center/contain;
+  background: url('../assets/main_bg.jpg') no-repeat center center/contain;
   opacity: 0.15;
 }
 
@@ -50,17 +50,17 @@ body {
   opacity: 0.9;
 }
 
-/* ===== WRAPPER (for smooth blending) ===== */
+/* ===== BACKGROUND WRAPPER ===== */
 .content-bg {
-  background: url('main_bg.png') no-repeat bottom center/cover;
+  background: url('../assets/main_bg.jpg') no-repeat bottom center/cover;
   flex: 1;
   position: relative;
   overflow: hidden;
 }
 
-/* ===== 2️⃣ PRAYER SECTION ===== */
+/* ===== PRAYER SECTION ===== */
 .prayer-section {
-  background: url('assets/prayer_bg.jpg') no-repeat center center/cover;
+  background: url('../assets/prayer_bg.png') no-repeat center center/cover;
   margin: 20px 20px 0 20px;
   border-radius: 20px;
   text-align: center;
@@ -105,7 +105,7 @@ body {
   opacity: 0.9;
 }
 
-/* ===== 3️⃣ MAIN SECTION ===== */
+/* ===== MAIN SECTION ===== */
 .main {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -146,7 +146,7 @@ body {
   font-size: 1rem;
 }
 
-/* ===== 4️⃣ LANGUAGE SECTION ===== */
+/* ===== LANGUAGE SECTION ===== */
 .language-switch {
   background: #f1f7f4;
   padding: 15px 0;

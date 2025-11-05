@@ -39,13 +39,13 @@ body {
 }
 
 /* =========================
-   1) /* ===== HEADER (shortened with logo) ===== */
+/* 1)=====HEADER (compact version) ===== */
 .app__header {
   background: linear-gradient(135deg, var(--green-1), var(--green-2));
   color: #fff;
-  padding: 16px 18px;
-  border-bottom-left-radius: 24px;
-  border-bottom-right-radius: 24px;
+  padding: 10px 16px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
   box-shadow: var(--shadow-1);
   position: relative;
   overflow: hidden;
@@ -55,25 +55,24 @@ body {
   content: "";
   position: absolute;
   top: 0;
-  right: -40px;
-  width: 120px;
-  height: 120px;
-  background: url('../assets/main_bg.jpg') no-repeat center/contain;
+  right: -30px;
+  width: 100px;
+  height: 100px;
+  background: url('../images/mosque_pattern.png') no-repeat center/contain;
   opacity: 0.15;
 }
 
-/* Layout for emblem + text */
 .header-content {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   position: relative;
   z-index: 1;
 }
 
 .bot-logo {
-  width: 56px;
-  height: 56px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.3);
   object-fit: cover;
@@ -81,17 +80,12 @@ body {
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
 }
 
-.header-text h1 {
-  font-size: 1.25rem;
+.header-content h1 {
+  font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 2px;
-}
-
-.header-text p {
-  font-size: 0.9rem;
-  opacity: 0.9;
   margin: 0;
 }
+
 
 
 /* =========================

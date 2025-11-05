@@ -39,13 +39,11 @@ body {
 }
 
 /* =========================
-   1) Header
-   ========================= */
+   1) /* ===== HEADER (shortened with logo) ===== */
 .app__header {
   background: linear-gradient(135deg, var(--green-1), var(--green-2));
   color: #fff;
-  text-align: center;
-  padding: 24px 16px;
+  padding: 16px 18px;
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
   box-shadow: var(--shadow-1);
@@ -58,22 +56,43 @@ body {
   position: absolute;
   top: 0;
   right: -40px;
-  width: 160px;
-  height: 160px;
+  width: 120px;
+  height: 120px;
   background: url('../assets/main_bg.jpg') no-repeat center/contain;
-  opacity: .15;
+  opacity: 0.15;
 }
 
-.app__header h1 {
-  margin: 0 0 6px;
-  font-size: 1.5rem;
+/* Layout for emblem + text */
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.bot-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+}
+
+.header-text h1 {
+  font-size: 1.25rem;
   font-weight: 600;
+  margin-bottom: 2px;
 }
-.app__header p {
+
+.header-text p {
+  font-size: 0.9rem;
+  opacity: 0.9;
   margin: 0;
-  font-size: .95rem;
-  opacity: .9;
 }
+
 
 /* =========================
    2) Background wrapper for sections 2–3

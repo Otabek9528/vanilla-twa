@@ -100,8 +100,7 @@ body {
 
 /* =========================
    3) Prayer section (keeps prayer_bg.jpg)
-   ========================= */
-/* ===== 2️⃣ PRAYER PANEL (Refined) ===== */
+/* ===== 2️⃣ PRAYER PANEL (Complete with current & next) ===== */
 .prayer {
   background: url("../assets/main_bg.jpg") no-repeat center/cover;
   padding: 20px 16px;
@@ -112,14 +111,13 @@ body {
   border-radius: 20px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: 18px 22px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
   position: relative;
   overflow: hidden;
 }
 
-/* Add subtle illustration, smaller and aligned left */
 .prayer-card::before {
   content: "";
   position: absolute;
@@ -164,8 +162,14 @@ body {
   z-index: 2;
 }
 
+.current-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 4px;
+}
+
 .prayer-name {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: 600;
   color: #fff;
   margin: 0;
@@ -175,12 +179,28 @@ body {
   font-size: 2.4rem;
   font-weight: 700;
   color: #fff;
-  margin: 4px 0;
+  margin: 4px 0 6px;
+}
+
+.next-prayer {
+  margin-top: 6px;
+}
+
+.next-prayer p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 2px 0;
+}
+
+.next-prayer strong {
+  color: #fff;
+  font-weight: 600;
 }
 
 .countdown {
   font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: #d0f0d0;
+  font-weight: 500;
 }
 
 

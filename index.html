@@ -2,55 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Halal Compass</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-
 <body>
-  <!-- HEADER SECTION -->
-  <div class="header">
-    <h1>Halal Compass</h1>
-    <p>성남시, South Korea</p>
-  </div>
+  <div class="app">
+    <!-- HEADER -->
+    <header class="app__header">
+      <h1>Halal Compass</h1>
+      <p>성남시, South Korea</p>
+    </header>
 
-  <!-- PRAYER + MAIN WRAPPER -->
-  <div class="content-bg">
-    <!-- PRAYER SECTION -->
-    <div class="prayer-section">
-      <div class="prayer-content">
-        <h2>Dhuhur</h2>
-        <div class="time">12:15</div>
-        <p>Next prayer: Asr - 15:52</p>
-      </div>
+    <!-- PRAYER + MAIN share the same page width -->
+    <div class="app__content-bg">
+      <!-- PRAYER (keeps prayer_bg.jpg) -->
+      <section class="prayer">
+        <div class="prayer__content">
+          <h2>Dhuhur</h2>
+          <div class="prayer__time">12:15</div>
+          <p>Next prayer: Asr - 15:52</p>
+        </div>
+      </section>
+
+      <!-- MAIN (cards) -->
+      <main class="main">
+        <button class="card">
+          <img src="assets/mosque.png" alt="Mosques" />
+          <p>Mosques</p>
+        </button>
+
+        <button class="card">
+          <img src="assets/restaurant.jpg" alt="News" />
+          <p>News</p>
+        </button>
+
+        <button class="card">
+          <img src="assets/store.jpg" alt="Cafe" />
+          <p>Cafe</p>
+        </button>
+
+        <button class="card">
+          <img src="assets/store.jpg" alt="Store" />
+          <p>Store</p>
+        </button>
+      </main>
     </div>
 
-    <!-- MAIN SECTION -->
-    <div class="main">
-      <div class="card">
-        <img src="assets/mosque.png" alt="Mosques" />
-        <p>Mosques</p>
-      </div>
-      <div class="card">
-        <img src="assets/restaurant.jpg" alt="News" />
-        <p>News</p>
-      </div>
-      <div class="card">
-        <img src="assets/store.jpg" alt="Cafe" />
-        <p>Cafe</p>
-      </div>
-      <div class="card">
-        <img src="assets/store.jpg" alt="Store" />
-        <p>Store</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- LANGUAGE SECTION -->
-  <div class="language-switch">
-    <button class="lang-btn">🇺🇿 Uzbek</button>
-    <button class="lang-btn">🇷🇺 Russian</button>
-    <button class="lang-btn">🇬🇧 English</button>
+    <!-- LANGUAGE -->
+    <footer class="lang">
+      <button class="lang__btn">🇺🇿 Uzbek</button>
+      <button class="lang__btn">🇷🇺 Russian</button>
+      <button class="lang__btn">🇬🇧 English</button>
+    </footer>
   </div>
 </body>
 </html>

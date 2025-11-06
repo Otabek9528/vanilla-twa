@@ -105,19 +105,6 @@ body {
   padding: 10px 12px;
 }
 
-.prayer-card.minimal-layout {
-  
-  /* You can also try: background: #0b4e45; for solid tone */
-  border-radius: 16px;
-  padding: 20px 22px;
-  color: #fff;
-  font-family: 'Poppins', sans-serif;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  position: relative;
-  overflow: hidden;
-  max-width: 95%;
-  margin: 0 auto;
-}
 
 /* ---- TOP ROW ---- */
 .top-row {

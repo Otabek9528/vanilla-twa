@@ -101,12 +101,13 @@ body {
 /* =========================
 /* ===== 2️⃣ PRAYER PANEL (Optimized version) ===== */
 .prayer {
-  background: url("../assets/main_bg.jpg") no-repeat center/cover;
+  background: url("../assets/prayer_bg.png") no-repeat center/cover;
   padding: 10px 12px;
 }
 
 .prayer-card.minimal-layout {
-  background: url("../assets/prayer_bg.png") no-repeat center/cover;
+  
+  /* You can also try: background: #0b4e45; for solid tone */
   border-radius: 16px;
   padding: 20px 22px;
   color: #fff;
@@ -117,14 +118,6 @@ body {
   max-width: 95%;
   margin: 0 auto;
 }
-
-
-/* ensure content is above background */
-.prayer-card.minimal-layout > * {
-  position: relative;
-  z-index: 1;
-}
-
 
 /* ---- TOP ROW ---- */
 .top-row {

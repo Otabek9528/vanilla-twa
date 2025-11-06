@@ -106,29 +106,18 @@ body {
 }
 
 .prayer-card.minimal-layout {
-  position: relative;
-  background: rgba(0, 0, 0, 0.35);
+  background: url("../assets/prayer_bg.png") no-repeat center/cover;
   border-radius: 16px;
-  padding: 20px 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  padding: 20px 22px;
   color: #fff;
   font-family: 'Poppins', sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  position: relative;
   overflow: hidden;
   max-width: 95%;
   margin: 0 auto;
 }
 
-/* --- background image fixed --- */
-.prayer-card.minimal-layout::before {
-  content: "";
-  position: absolute;
-  inset: 0; /* fill entire card */
-  background: url("../assets/prayer_bg.png") no-repeat center/contain;
-  background-size: 90%; /* make it larger and centered */
-  opacity: 0.22; /* clearly visible */
-  z-index: 0;
-  pointer-events: none; /* so it won’t block clicks */
-}
 
 /* ensure content is above background */
 .prayer-card.minimal-layout > * {

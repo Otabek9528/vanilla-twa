@@ -99,117 +99,103 @@ body {
 }
 
 /* =========================
-   3) Prayer section (keeps prayer_bg.jpg)
-/* ===== 2️⃣ PRAYER PANEL (Lightweight & Modern Layout) ===== */
+/* ===== 2️⃣ PRAYER PANEL (Clean visual layout) ===== */
 .prayer {
-  background: url("../assets/main_bg.jpg") no-repeat center/cover;
+  background: url("../images/main_bg.png") no-repeat center/cover;
   padding: 20px 16px;
 }
 
-.prayer-card.new-layout {
+.prayer-card.minimal-layout {
   background: rgba(0, 0, 0, 0.35);
   border-radius: 18px;
-  padding: 20px 22px;
+  padding: 22px 24px;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
-  text-align: center;
   color: #fff;
+  font-family: 'Poppins', sans-serif;
   position: relative;
   overflow: hidden;
 }
 
-/* Subtle pattern on left (optional aesthetic touch) */
-.prayer-card.new-layout::before {
+/* Optional faded pattern on left side */
+.prayer-card.minimal-layout::before {
   content: "";
   position: absolute;
   left: -30px;
   top: 0;
   width: 150px;
   height: 100%;
-  background: url("../assets/prayer_bg.png") no-repeat left center/contain;
-  opacity: 0.1;
+  background: url("../images/prayer_bg.png") no-repeat left center/contain;
+  opacity: 0.08;
 }
 
 /* ---- TOP ROW ---- */
 .top-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 10px;
 }
 
-.date-block {
+.left-side {
   text-align: left;
 }
 
 .weekday {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   margin: 0;
 }
 
-.gregorian {
+.hijri {
   font-size: 0.9rem;
   opacity: 0.85;
-  margin: 2px 0 0 0;
+  margin-top: 3px;
 }
 
-.hijri {
-  font-size: 0.85rem;
-  opacity: 0.8;
-  margin: 2px 0 0;
-}
-
-.city-block {
+.right-side {
   display: flex;
   align-items: center;
+  gap: 6px;
   font-size: 0.95rem;
   opacity: 0.9;
 }
 
 .location-icon {
-  margin-right: 6px;
-  font-size: 1rem;
-}
-
-/* ---- TRANSITION ROW ---- */
-.transition-row {
-  margin: 10px 0;
   font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+}
+
+/* ---- MIDDLE ROW ---- */
+.middle-row {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-}
-
-.current-prayer {
-  color: #fff;
-}
-
-.arrow {
-  opacity: 0.8;
-  font-size: 1.2rem;
-}
-
-.next-prayer {
-  color: #b0f0b0;
-}
-
-/* ---- TIME ROW ---- */
-.time-row {
+  text-align: center;
   margin-top: 6px;
 }
 
-.current-time {
-  font-size: 2.8rem;
-  font-weight: 700;
-  margin-bottom: 6px;
+.prayer-current,
+.prayer-next {
+  flex: 1;
 }
 
+.prayer-name,
+.next-name {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.prayer-time,
 .countdown {
-  font-size: 1rem;
-  opacity: 0.85;
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.arrow {
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  color: #a8e6a1;
+  margin: 0 18px;
 }
 
 

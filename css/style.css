@@ -99,34 +99,44 @@ body {
 }
 
 /* =========================
-/* ===== 2️⃣ PRAYER PANEL (Clean visual layout) ===== */
+/* ===== 2️⃣ PRAYER PANEL (Optimized version) ===== */
 .prayer {
-  background: url("../assets/main_bg.jpg") no-repeat center/cover;
-  padding: 20px 16px;
+  background: url("../images/main_bg.png") no-repeat center/cover;
+  padding: 12px 10px; /* reduced to remove extra vertical gaps */
 }
 
 .prayer-card.minimal-layout {
   background: rgba(0, 0, 0, 0.35);
-  border-radius: 18px;
-  padding: 22px 24px;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+  padding: 16px 18px; /* tighter inner padding */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
   color: #fff;
   font-family: 'Poppins', sans-serif;
   position: relative;
   overflow: hidden;
+  max-width: 95%; /* keep centered and proportional */
+  margin: 0 auto;
 }
 
-/* Optional faded pattern on left side */
+/* improved background visibility */
 .prayer-card.minimal-layout::before {
   content: "";
   position: absolute;
-  left: -30px;
-  top: 0;
-  width: 150px;
+  left: 0;
+  bottom: -10px;
+  width: 100%;
   height: 100%;
-  background: url("../assets/prayer_bg.png") no-repeat left center/contain;
-  opacity: 0.08;
+  background: url("../images/prayer_bg.png") no-repeat center bottom / contain;
+  opacity: 0.18; /* higher visibility but still subtle */
+  z-index: 0;
 }
+
+/* ensure content sits above the decorative background */
+.prayer-card.minimal-layout * {
+  position: relative;
+  z-index: 1;
+}
+
 
 /* ---- TOP ROW ---- */
 .top-row {

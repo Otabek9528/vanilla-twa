@@ -181,6 +181,7 @@ body {
   font-size: 1.5rem;
   color: #007d5e;
   margin: 0 18px;
+  text-shadow: 0 0 6px rgba(0, 255, 128, 0.4);
 }
 
 

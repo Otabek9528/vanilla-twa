@@ -101,33 +101,15 @@ body {
 /* =========================
 /* ===== 2️⃣ PRAYER PANEL (Optimized version) ===== */
 .prayer {
-  background: url("../assets/prayer_bg.png") no-repeat center/cover;
-  position: relative;
+  background: #f6f3eb; /* same tone as your lower section background */
   padding: 16px 20px;
-  border-radius: 16px;
-  color: #ffffff;
+  border-radius: 18px;
   font-family: 'Poppins', sans-serif;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  color: #1f3d33;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  max-width: 95%;
+  margin: 0 auto 18px;
 }
-
-/* Dark overlay to improve text contrast */
-.prayer::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35); /* adjustable 0.25–0.45 depending on your image brightness */
-  border-radius: 16px;
-  z-index: 0;
-}
-
-/* Ensure all children are above overlay */
-.prayer * {
-  position: relative;
-  z-index: 1;
-}
-
-
 
 /* ---- TOP ROW ---- */
 .top-row {
@@ -142,27 +124,24 @@ body {
 }
 
 .weekday {
-  color: #ffffff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0;
+  color: #0b3c33;
 }
 
 .hijri {
-  color: #e0e0e0;
+  font-size: 0.9rem;
+  color: #49645b;
+  margin-top: 3px;
 }
 
 .right-side {
-  color: #f1f1f1;
-}
-
-.prayer-name,
-.next-name {
-  color: #ffffff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-}
-
-.prayer-time,
-.countdown {
-  color: #f4f4f4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  color: #2e5147;
 }
 
 .location-icon {
@@ -175,7 +154,7 @@ body {
   justify-content: space-between;
   align-items: center;
   text-align: center;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .prayer-current,
@@ -188,18 +167,22 @@ body {
   font-size: 1.6rem;
   font-weight: 600;
   margin-bottom: 4px;
+  color: #004d40;
 }
 
 .prayer-time,
 .countdown {
   font-size: 1.2rem;
-  opacity: 0.9;
+  color: #2f4f4f;
 }
 
 .arrow {
-  color: #bdf7cf;
-  text-shadow: 0 0 6px rgba(0, 255, 128, 0.4);
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  color: #007d5e;
+  margin: 0 18px;
 }
+
 
 
 

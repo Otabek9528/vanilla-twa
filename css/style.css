@@ -76,35 +76,36 @@ body {
   white-space: nowrap;
 }
 
-/* Language buttons inside header */
+/* Language section */
 .header-lang {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
 }
 
 .lang__btn {
-  background: transparent;
-  border: 1.8px solid rgba(255, 255, 255, 0.8);
-  border-radius: 20px;
-  color: #ffffff;
-  font-size: 0.85rem;
-  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 4px 8px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  backdrop-filter: blur(4px);
 }
 
 .lang__btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.28);
   transform: scale(1.05);
 }
 
-
-.header-content h1 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0;
+.lang__btn:active {
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(0.97);
 }
+
 
 
 

@@ -102,13 +102,13 @@ body {
 /* ===== 2️⃣ PRAYER PANEL (Optimized version) ===== */
 .prayer {
   background: #f6f3eb; /* same tone as your lower section background */
-  padding: 12px 20px;
+  padding: 6px 14px;
   border-radius: 18px;
   font-family: 'Poppins', sans-serif;
   color: #1f3d33;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   max-width: 95%;
-  margin: 0 auto 12px;
+  margin: 0 auto 4px;
 }
 
 /* ---- TOP ROW ---- */

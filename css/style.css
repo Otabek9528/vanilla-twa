@@ -100,108 +100,118 @@ body {
 
 /* =========================
    3) Prayer section (keeps prayer_bg.jpg)
-/* ===== 2️⃣ PRAYER PANEL (Complete with current & next) ===== */
+/* ===== 2️⃣ PRAYER PANEL (Lightweight & Modern Layout) ===== */
 .prayer {
   background: url("../assets/main_bg.jpg") no-repeat center/cover;
   padding: 20px 16px;
 }
 
-.prayer-card {
-  background: rgba(0, 0, 0, 0.45);
-  border-radius: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 18px 22px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+.prayer-card.new-layout {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 18px;
+  padding: 20px 22px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  color: #fff;
   position: relative;
   overflow: hidden;
 }
 
-.prayer-card::before {
+/* Subtle pattern on left (optional aesthetic touch) */
+.prayer-card.new-layout::before {
   content: "";
   position: absolute;
-  left: -10px;
+  left: -30px;
   top: 0;
-  width: 160px;
+  width: 150px;
   height: 100%;
   background: url("../assets/prayer_bg.png") no-repeat left center/contain;
-  opacity: 0.15;
+  opacity: 0.1;
 }
 
-.prayer-left {
-  z-index: 2;
+/* ---- TOP ROW ---- */
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.date-block {
+  text-align: left;
 }
 
 .weekday {
   font-size: 1rem;
   font-weight: 600;
-  color: #fff;
   margin: 0;
 }
 
-.hijri-date {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.8);
-  margin: 2px 0 10px;
-}
-
-.city-badge {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 5px 12px;
-  border-radius: 20px;
+.gregorian {
   font-size: 0.9rem;
-  font-weight: 500;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(3px);
+  opacity: 0.85;
+  margin: 2px 0 0 0;
 }
 
-.prayer-right {
-  text-align: right;
-  z-index: 2;
+.hijri {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin: 2px 0 0;
 }
 
-.current-label {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.75);
-  margin-bottom: 4px;
+.city-block {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  opacity: 0.9;
 }
 
-.prayer-name {
-  font-size: 1.8rem;
+.location-icon {
+  margin-right: 6px;
+  font-size: 1rem;
+}
+
+/* ---- TRANSITION ROW ---- */
+.transition-row {
+  margin: 10px 0;
+  font-size: 1.1rem;
   font-weight: 600;
-  color: #fff;
-  margin: 0;
+  letter-spacing: 0.5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
-.prayer-time {
-  font-size: 2.4rem;
-  font-weight: 700;
+.current-prayer {
   color: #fff;
-  margin: 4px 0 6px;
+}
+
+.arrow {
+  opacity: 0.8;
+  font-size: 1.2rem;
 }
 
 .next-prayer {
+  color: #b0f0b0;
+}
+
+/* ---- TIME ROW ---- */
+.time-row {
   margin-top: 6px;
 }
 
-.next-prayer p {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 2px 0;
-}
-
-.next-prayer strong {
-  color: #fff;
-  font-weight: 600;
+.current-time {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
 .countdown {
-  font-size: 0.95rem;
-  color: #d0f0d0;
-  font-weight: 500;
+  font-size: 1rem;
+  opacity: 0.85;
 }
+
 
 
 /* =========================

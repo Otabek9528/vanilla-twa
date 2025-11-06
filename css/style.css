@@ -40,10 +40,11 @@ body {
 
 /* =========================
 /* ===== 1️⃣ HEADER ===== */
+/* ===== 1️⃣ HEADER ===== */
 .app__header {
   background: linear-gradient(135deg, #009e85, #006b5f);
   color: #ffffff;
-  padding: 10px 16px;
+  padding: 10px 14px;
   border-bottom-left-radius: 14px;
   border-bottom-right-radius: 14px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -53,44 +54,46 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* 🔒 Prevents wrapping */
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-shrink: 1; /* Allows slight text compression on smaller screens */
 }
 
 .bot-logo {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   object-fit: cover;
 }
 
 .header-left h1 {
-  font-size: 1.1rem;
+  font-size: 0.95rem;   /* 🔽 smaller for better balance */
   font-weight: 600;
   margin: 0;
   white-space: nowrap;
 }
 
-/* Language section */
+/* Language buttons inline */
 .header-lang {
   display: flex;
   gap: 6px;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .lang__btn {
   background: rgba(255, 255, 255, 0.18);
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   color: #fff;
-  font-size: 0.8rem;
+  font-size: 0.75rem;  /* 🔽 slightly smaller font */
   font-weight: 500;
-  padding: 4px 8px;
+  padding: 3px 8px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   backdrop-filter: blur(4px);
@@ -100,6 +103,7 @@ body {
   background: rgba(255, 255, 255, 0.28);
   transform: scale(1.05);
 }
+
 
 .lang__btn:active {
   background: rgba(255, 255, 255, 0.35);
@@ -266,4 +270,8 @@ body {
   .main { gap: 14px; padding: 40px 14px 24px; }
   .card { max-width: 150px; padding: 18px 10px; }
   .app__header h1 { font-size: 1.35rem; }
+  .header-content {flex-wrap: wrap; justify-content: center; text-align: center;}
+  .header-lang {margin-top: 6px;}
 }
+
+

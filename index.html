@@ -7,100 +7,98 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-    <!-- HEADER (Panel 1) -->
-    <header class="app__header">
-      <div class="header-content">
-        <img src="assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
-        <h1>Muslim Vegukin Bot</h1>
-      </div>
-    </header>
-
-
-    <!-- PRAYER + MAIN share the same page width -->
-    <div class="app__content-bg">
-      <!-- PRAYER (keeps prayer_bg.jpg) -->
-      <!-- PRAYER (clickable to open detailed page) -->
-      <section class="prayer">
-        <button class="prayer-card minimal-layout" onclick="window.location.href='pages/prayers.html'">
-          <div class="top-row">
-            <div class="left-side">
-              <p class="weekday">Chorshanba, 5 Noyabr</p>
-              <p class="hijri">14 Jumadul Awwal, 1447</p>
-            </div>
-            <div class="right-side">
-              <span class="location-icon">📍</span>
-              <span class="city-name">성남시</span>
-            </div>
-          </div>
-
-          <div class="middle-row">
-            <div class="prayer-current">
-              <h2 class="prayer-name">Asr</h2>
-              <p class="prayer-time">15:50</p>
-            </div>
-
-            <div class="arrow">➜</div>
-
-            <div class="prayer-next">
-              <h2 class="next-name">Maghrib</h2>
-              <p class="countdown">-02:14:47</p>
-            </div>
-          </div>
-        </button>
-      </section>
-
-
-
-
-      <!-- MAIN (cards) -->
-      <main class="main">
-        <button class="card">
-          <img src="assets/mosque.png" alt="Mosques" />
-          <p>Mosques</p>
-        </button>
-
-        <button class="card">
-          <img src="assets/restaurant.jpg" alt="News" />
-          <p>News</p>
-        </button>
-
-        <button class="card">
-          <img src="assets/store.jpg" alt="Cafe" />
-          <p>Cafe</p>
-        </button>
-
-        <button class="card">
-          <img src="assets/store.jpg" alt="Store" />
-          <p>Store</p>
-        </button>
-
-        <button class="card">
-          <img src="assets/store.jpg" alt="Cafe" />
-          <p>Cafe</p>
-        </button>
-
-        <button class="card">
-          <img src="assets/store.jpg" alt="Store" />
-          <p>Store</p>
-        </button>
-
-        <button class="card">
-          <img src="assets/store.jpg" alt="Cafe" />
-          <p>Cafe</p>
-        </button>
-
-        <button class="card">
-          <img src="assets/store.jpg" alt="Store" />
-          <p>Store</p>
-        </button>
-      </main>
+  <!-- HEADER (Panel 1) -->
+  <header class="app__header">
+    <div class="header-content">
+      <img src="assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
+      <h1>Muslim Vegukin Bot</h1>
     </div>
+  </header>
 
-    <!-- LANGUAGE -->
-    <footer class="lang">
-      <button class="lang__btn">🇷🇺 Russian</button>
-      <button class="lang__btn">🇬🇧 English</button>
-    </footer>
+  <!-- PRAYER + MAIN share the same page width -->
+  <div class="app__content-bg">
+    <!-- PRAYER (clickable to open detailed page) -->
+    <section class="prayer">
+      <button class="prayer-card minimal-layout" onclick="window.location.href='pages/prayers.html'">
+        <div class="top-row">
+          <div class="left-side">
+            <p class="weekday" id="weekday">Loading...</p>
+            <p class="hijri" id="hijri">Loading...</p>
+          </div>
+          <div class="right-side">
+            <span class="location-icon">📍</span>
+            <span class="city-name" id="cityName">Loading...</span>
+          </div>
+        </div>
+
+        <div class="middle-row">
+          <div class="prayer-current">
+            <h2 class="prayer-name" id="currentPrayer">--</h2>
+            <p class="prayer-time" id="prayerTime">--:--</p>
+          </div>
+
+          <div class="arrow">➜</div>
+
+          <div class="prayer-next">
+            <h2 class="next-name" id="nextPrayer">--</h2>
+            <p class="countdown" id="countdown">--:--:--</p>
+          </div>
+        </div>
+      </button>
+    </section>
+
+    <!-- MAIN (cards) -->
+    <main class="main">
+      <button class="card">
+        <img src="assets/mosque.png" alt="Mosques" />
+        <p>Mosques</p>
+      </button>
+
+      <button class="card">
+        <img src="assets/restaurant.jpg" alt="News" />
+        <p>News</p>
+      </button>
+
+      <button class="card">
+        <img src="assets/store.jpg" alt="Cafe" />
+        <p>Cafe</p>
+      </button>
+
+      <button class="card">
+        <img src="assets/store.jpg" alt="Store" />
+        <p>Store</p>
+      </button>
+
+      <button class="card">
+        <img src="assets/store.jpg" alt="Cafe" />
+        <p>Cafe</p>
+      </button>
+
+      <button class="card">
+        <img src="assets/store.jpg" alt="Store" />
+        <p>Store</p>
+      </button>
+
+      <button class="card">
+        <img src="assets/store.jpg" alt="Cafe" />
+        <p>Cafe</p>
+      </button>
+
+      <button class="card">
+        <img src="assets/store.jpg" alt="Store" />
+        <p>Store</p>
+      </button>
+    </main>
   </div>
+
+  <!-- LANGUAGE -->
+  <footer class="lang">
+    <button class="lang__btn">🇷🇺 Russian</button>
+    <button class="lang__btn">🇬🇧 English</button>
+  </footer>
+
+  <!-- JS Scripts -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="js/prayerTimes.js"></script>
 </body>
 </html>

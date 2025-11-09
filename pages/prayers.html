@@ -26,5 +26,29 @@
     </ul>
     <p class="note">🕌 Remember: Jummah prayer is held at 13:30 every Friday.</p>
   </main>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+  const tg = window.Telegram.WebApp;
+
+  // Show Telegram's native back button in the top bar
+  tg.BackButton.show();
+
+  // Handle Telegram's back button click
+  tg.BackButton.onClick(() => {
+    // Return to main page
+    window.location.href = '../index.html';
+  });
+
+  // Optional: also intercept phone's system back button
+  window.addEventListener("popstate", () => {
+    window.location.href = "../index.html";
+  });
+
+  // Add a dummy history entry so phone's back button works like Telegram's
+  window.history.pushState({}, "");
+</script>
+
+
 </body>
 </html>

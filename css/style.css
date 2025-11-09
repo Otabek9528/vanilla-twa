@@ -245,6 +245,14 @@ body {
   gap: 10px;
   justify-content: center;
   border-top: 1px solid #e0e0e0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  z-index: 1000;
 }
 
 .lang__btn {
@@ -263,6 +271,11 @@ body {
   background: var(--green-1);
   color: #fff;
   border-color: var(--green-1);
+  transform: scale(1.05);
+}
+
+.lang__btn:active {
+  transform: scale(0.95);
 }
 
 /* =========================
@@ -273,4 +286,7 @@ body {
   .main { gap: 14px; padding: 40px 14px 24px; }
   .card { max-width: 150px; padding: 18px 10px; }
   .app__header h1 { font-size: 1.35rem; }
+  .app__content-bg {padding-bottom: 70px;} /* ensures last row of content isn’t hidden */
+
+
 }

@@ -3,19 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Today's Prayers</title>
+  <title>Today's Prayer Times</title>
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
+
+  <!-- HEADER -->
   <header class="app__header">
     <div class="header-content">
-      <h1>Today's Prayer Times</h1>
-      <button class="back-btn" onclick="window.history.back()">⬅ Back</button>
+      <div class="header-left">
+        <img src="../assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
+        <h1>Muslim Vegukin Bot</h1>
+      </div>
     </div>
   </header>
 
+  <!-- MAIN CONTENT -->
   <main class="prayer-detail">
-    <h2>TEST 1 Full Prayer Schedule for 성남시</h2>
+    <h2>Today's Prayer Times for 성남시</h2>
     <ul>
       <li>Fajr — 05:18</li>
       <li>Sunrise — 06:45</li>
@@ -24,31 +29,29 @@
       <li>Maghrib — 17:32</li>
       <li>Isha — 19:00</li>
     </ul>
-    <p class="note">🕌 Remember: Jummah prayer is held at 13:30 every Friday.</p>
+
+    <p class="note">🕌 Jummah prayer starts at 13:30 every Friday.</p>
   </main>
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script>
-  const tg = window.Telegram.WebApp;
+  <!-- BOTTOM BACK BUTTON -->
+  <footer class="back-footer">
+    <button class="back-btn" id="backToMain">
+      ⬅ Back to Main
+    </button>
+  </footer>
 
-  // Show Telegram's native back button in the top bar
-  tg.BackButton.show();
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    const tg = window.Telegram.WebApp;
 
-  // Handle Telegram's back button click
-  tg.BackButton.onClick(() => {
-    // Return to main page
-    window.location.href = '../index.html';
-  });
+    // Hide Telegram native back button — we use our own
+    tg.BackButton.hide();
 
-  // Optional: also intercept phone's system back button
-  window.addEventListener("popstate", () => {
-    window.location.href = "../index.html";
-  });
-
-  // Add a dummy history entry so phone's back button works like Telegram's
-  window.history.pushState({}, "");
-</script>
-
+    // Handle footer back button click
+    document.getElementById("backToMain").addEventListener("click", () => {
+      window.location.href = "../index.html";
+    });
+  </script>
 
 </body>
 </html>

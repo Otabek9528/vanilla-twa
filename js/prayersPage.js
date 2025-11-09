@@ -1,43 +1,76 @@
 document.addEventListener("DOMContentLoaded", async () => {
   Telegram.WebApp.ready();
 
-  // Handle back button
+  // Back button behavior
   document.getElementById("backToMain").addEventListener("click", () => {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      window.location.replace("../index.html");
-    }
+    if (window.history.length > 1) window.history.back();
+    else window.location.replace("../index.html");
   });
 
-  // Load location data
-  const stored = JSON.parse(localStorage.getItem("userLocation"));
-  if (!stored) {
-    Telegram.WebApp.showAlert("Location not found. Please return to main page.");
-    return;
+  // Use cached location or refresh quietly
+  let stored = JSON.parse(localStorage.getItem("userLocation"));
+  if (navigator.permissions) {
+    try {
+      const perm = await navigator.permissions.query({ name: "geolocation" });
+      if (perm.state === "granted") {
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            const city = await getCityName(lat, lon);
+            localStorage.setItem("userLocation", JSON.stringify({ lat, lon, city }));
+            stored = { lat, lon, city };
+            console.log("📍 Location refreshed silently (prayers page)");
+            loadPrayerData(stored);
+          },
+          (err) => {
+            console.warn("⚠️ Silent refresh failed:", err.message);
+            if (stored) loadPrayerData(stored);
+          }
+        );
+        return;
+      }
+    } catch (e) {
+      console.warn("Permissions API not supported, fallback to cache");
+    }
   }
 
-  const { lat, lon, city } = stored;
+  if (stored) loadPrayerData(stored);
+  else Telegram.WebApp.showAlert("Location not found. Please reopen main page.");
+});
+
+async function loadPrayerData({ lat, lon, city }) {
   document.getElementById("cityName").textContent = city;
 
-  // Get prayer times for this location
   const data = await getPrayerTimes(lat, lon);
 
-  // Display date
-  const gregorian = data.date.gregorian.date;
+  // Date display
+  const greg = data.date.gregorian.date;
   const hijri = data.date.hijri.date;
-  document.getElementById("todayDate").textContent = `${gregorian} (${hijri})`;
+  document.getElementById("todayDate").textContent = `${greg} (${hijri})`;
 
-  // Build prayer list
-  const container = document.getElementById("prayerList");
-  container.innerHTML = "";
+  // List build
+  const list = document.getElementById("prayerList");
+  list.innerHTML = "";
 
   const prayerOrder = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
+  const { current, next } = getCurrentPrayer(data.timings);
+
   prayerOrder.forEach((name) => {
     const time = data.timings[name];
     const div = document.createElement("div");
     div.className = "prayer-item";
+    if (name === current.name) div.classList.add("current-prayer");
     div.innerHTML = `<span>${name}</span><span>${time}</span>`;
-    container.appendChild(div);
+    list.appendChild(div);
   });
-});
+
+  // Countdown section
+  document.getElementById("nextPrayerName").textContent = next.name;
+
+  function updateCountdown() {
+    document.getElementById("countdown").textContent = formatCountdown(data.timings[next.name]);
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+}

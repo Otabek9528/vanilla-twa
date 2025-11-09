@@ -21,10 +21,15 @@
     <h2 id="cityName">Loading...</h2>
     <p id="todayDate">Fetching date...</p>
 
-    <div class="prayer-list" id="prayerList">
-      <!-- Prayer times will be injected here dynamically -->
+    <!-- Countdown -->
+    <div class="next-prayer-countdown">
+      <p>Next prayer: <span id="nextPrayerName">Loading...</span></p>
+      <p class="countdown-text">⏳ <span id="countdown">--:--:--</span></p>
     </div>
-  </section>
+
+    <!-- List -->
+    <div class="prayer-list" id="prayerList"></div>
+  </section>  
 
   <!-- BOTTOM BACK BUTTON -->
   <footer class="back-footer">

@@ -39,77 +39,52 @@ body {
 }
 
 /* =========================
-/* ===== 1️⃣ HEADER ===== */
-/* ===== 1️⃣ HEADER ===== */
+/* 1)=====HEADER (compact version) ===== */
 .app__header {
-  background: linear-gradient(135deg, #009e85, #006b5f);
-  color: #ffffff;
-  padding: 10px 14px;
-  border-bottom-left-radius: 14px;
-  border-bottom-right-radius: 14px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, var(--green-1), var(--green-2));
+  color: #fff;
+  padding: 10px 16px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: var(--shadow-1);
+  position: relative;
+  overflow: hidden;
+}
+
+.app__header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -30px;
+  width: 100px;
+  height: 100px;
+  background: url('../images/mosque_pattern.png') no-repeat center/contain;
+  opacity: 0.15;
 }
 
 .header-content {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: nowrap; /* 🔒 Prevents wrapping */
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 1; /* Allows slight text compression on smaller screens */
+  gap: 10px;
+  position: relative;
+  z-index: 1;
 }
 
 .bot-logo {
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
 }
 
-.header-left h1 {
-  font-size: 0.95rem;   /* 🔽 smaller for better balance */
+.header-content h1 {
+  font-size: 1.1rem;
   font-weight: 600;
   margin: 0;
-  white-space: nowrap;
 }
-
-/* Language buttons inline */
-.header-lang {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.lang__btn {
-  background: rgba(255, 255, 255, 0.18);
-  border: none;
-  border-radius: 10px;
-  color: #fff;
-  font-size: 0.75rem;  /* 🔽 slightly smaller font */
-  font-weight: 500;
-  padding: 3px 8px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  backdrop-filter: blur(4px);
-}
-
-.lang__btn:hover {
-  background: rgba(255, 255, 255, 0.28);
-  transform: scale(1.05);
-}
-
-
-.lang__btn:active {
-  background: rgba(255, 255, 255, 0.35);
-  transform: scale(0.97);
-}
-
 
 
 
@@ -127,13 +102,13 @@ body {
 /* ===== 2️⃣ PRAYER PANEL (Optimized version) ===== */
 .prayer {
   background: #f6f3eb; /* same tone as your lower section background */
-  padding: 6px 14px;
+  padding: 16px 20px;
   border-radius: 18px;
   font-family: 'Poppins', sans-serif;
   color: #1f3d33;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   max-width: 95%;
-  margin: 0 auto 4px;
+  margin: 0 auto 18px;
 }
 
 /* ---- TOP ROW ---- */
@@ -206,7 +181,6 @@ body {
   font-size: 1.5rem;
   color: #007d5e;
   margin: 0 18px;
-  text-shadow: 0 0 6px rgba(0, 255, 128, 0.4);
 }
 
 
@@ -261,6 +235,35 @@ body {
   font-size: 1rem;
 }
 
+/* =========================
+   5) Language
+   ========================= */
+.lang {
+  background: #f1f7f4;
+  padding: 14px 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  border-top: 1px solid #e0e0e0;
+}
+
+.lang__btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--green-1);
+  background: #fff;
+  color: var(--green-1);
+  font-size: .95rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.lang__btn:hover {
+  background: var(--green-1);
+  color: #fff;
+  border-color: var(--green-1);
+}
 
 /* =========================
    6) Responsive tweaks
@@ -270,8 +273,4 @@ body {
   .main { gap: 14px; padding: 40px 14px 24px; }
   .card { max-width: 150px; padding: 18px 10px; }
   .app__header h1 { font-size: 1.35rem; }
-  .header-content {flex-wrap: wrap; justify-content: center; text-align: center;}
-  .header-lang {margin-top: 6px;}
 }
-
-

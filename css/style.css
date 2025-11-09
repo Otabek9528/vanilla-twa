@@ -381,6 +381,69 @@ body {
 }
 
 
+.prayers-detailed {
+  background-color: #f8fff8;
+  padding: 20px;
+  text-align: center;
+  min-height: calc(100vh - 160px);
+}
+
+.prayers-detailed h2 {
+  font-size: 1.4rem;
+  color: #2c5e2e;
+  margin-bottom: 4px;
+}
+
+.prayers-detailed p {
+  font-size: 1rem;
+  color: #4c4c4c;
+  margin-bottom: 20px;
+}
+
+.prayer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.prayer-item {
+  display: flex;
+  justify-content: space-between;
+  background: #e7f4e8;
+  border-radius: 10px;
+  padding: 10px 15px;
+  font-size: 1.1rem;
+  color: #2c5e2e;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.back-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #f0fff0;
+  padding: 10px;
+  text-align: center;
+  border-top: 1px solid #cce5cc;
+}
+
+.back-btn {
+  background: #388e3c;
+  color: #fff;
+  padding: 10px 30px;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.back-btn:hover {
+  background: #2e7d32;
+}
+
 
 
 /* =========================

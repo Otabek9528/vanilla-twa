@@ -109,16 +109,7 @@ async function init() {
     updatePrayerData(stored.lat, stored.lon, stored.city);
 
     // Optionally refresh in background (no new permission)
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        const city = await getCityName(lat, lon);
-        localStorage.setItem("userLocation", JSON.stringify({ lat, lon, city }));
-        updatePrayerData(lat, lon, city);
-      },
-      (err) => console.warn("⚠️ Could not refresh location:", err.message)
-    );
+
   } else {
     // Ask for permission only the first time
     navigator.geolocation.getCurrentPosition(

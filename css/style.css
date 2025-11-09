@@ -113,9 +113,10 @@ body {
 
 
 .prayer-card {
-  all: unset; /* removes browser default button styles */
+  all: unset; /* remove default button styles */
   display: block;
   width: 100%;
+  box-sizing: border-box; /* ensures consistent sizing */
   background: #f6f3eb;
   border-radius: 18px;
   padding: 16px 20px;
@@ -124,10 +125,17 @@ body {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* hover effect (optional) */
 .prayer-card:hover {
   transform: scale(1.02);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
+
+/* remove focus outline (especially on mobile) */
+.prayer-card:focus {
+  outline: none;
+}
+
 
 
 

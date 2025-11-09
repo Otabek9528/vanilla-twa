@@ -127,7 +127,11 @@ body {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-
+/* hover effect (optional) */
+.prayer-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
 
 /* remove focus outline (especially on mobile) */
 .prayer-card:focus {

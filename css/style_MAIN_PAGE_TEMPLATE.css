@@ -111,26 +111,6 @@ body {
   margin: 0 auto 18px;
 }
 
-
-.prayer-card {
-  all: unset; /* removes browser default button styles */
-  display: block;
-  width: 100%;
-  background: #f6f3eb;
-  border-radius: 18px;
-  padding: 16px 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.prayer-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
-}
-
-
-
 /* ---- TOP ROW ---- */
 .top-row {
   display: flex;
@@ -297,48 +277,6 @@ body {
 .lang__btn:active {
   transform: scale(0.95);
 }
-
-
-
-
-.prayer-detail {
-  padding: 20px;
-  font-family: 'Poppins', sans-serif;
-}
-
-.prayer-detail h2 {
-  font-size: 1.2rem;
-  color: #004d40;
-  margin-bottom: 10px;
-}
-
-.prayer-detail ul {
-  list-style: none;
-  padding: 0;
-  margin-bottom: 10px;
-}
-
-.prayer-detail li {
-  padding: 6px 0;
-  border-bottom: 1px solid #ddd;
-  color: #2f4f4f;
-}
-
-.note {
-  margin-top: 12px;
-  color: #006b5f;
-}
-
-.back-btn {
-  background: transparent;
-  color: #fff;
-  border: 1.5px solid rgba(255, 255, 255, 0.7);
-  border-radius: 8px;
-  padding: 4px 10px;
-  cursor: pointer;
-}
-
-
 
 /* =========================
    6) Responsive tweaks

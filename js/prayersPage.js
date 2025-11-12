@@ -35,11 +35,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             stored = { lat, lon, city };
             updated = true;
             if (window.Telegram?.WebApp) {
-                Telegram.WebApp.showAlert(`📍 New location updated.\nCoordinates: ${lon}, ${lat}`);
-              } else {
-                notify(`📍 New location updated. Coordinates: ${lon}, ${lat}`);
-              }
-
+              Telegram.WebApp.showAlert(`📍 New location updated.\nCoordinates: ${lon}, ${lat}`);} 
+              else {
+                notify(`📍 New location updated. Coordinates: ${lon}, ${lat}`);}
             loadPrayerData(stored);
           },
           (err) => {

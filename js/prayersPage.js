@@ -7,6 +7,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     else window.location.replace("../index.html");
   });
 
+  document.getElementById("cityCoords").textContent = `Coordinates: ${lat}, ${lon}`;
+
+
   // Debug notification system
   const notify = (msg) => {
     let note = document.createElement("div");
@@ -33,11 +36,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             const city = await getCityName(lat, lon);
             localStorage.setItem("userLocation", JSON.stringify({ lat, lon, city }));
             stored = { lat, lon, city };
-            updated = true;
-            if (window.Telegram?.WebApp) {
-              Telegram.WebApp.showAlert(`📍 New location updated.\nCoordinates: ${lon}, ${lat}`);} 
-              else {
-                notify(`📍 New location updated. Coordinates: ${lon}, ${lat}`);}
+
+            // 👇 Add this line
+            document.getElementById("cityCoords").textContent = `Coordinates: ${lat}, ${lon}`;
+            console.log(`📍 New location updated: ${lat}, ${lon}`);
+
             loadPrayerData(stored);
           },
           (err) => {

@@ -1,4 +1,4 @@
-// main.js — unified prayer logic for all pages
+// main.js — unified logic for main and prayer pages
 Telegram.WebApp.ready();
 
 /* ----------------------
@@ -100,15 +100,20 @@ async function renderMainPage(lat, lon, city) {
 }
 
 async function renderPrayerPage(lat, lon, city) {
-  document.getElementById("cityName").textContent = city;
-
   const data = await getPrayerTimes(lat, lon);
   const { current, next } = getCurrentPrayer(data.timings);
 
+  // city & coordinates
+  document.getElementById("cityName").textContent = city;
+  const coordsEl = document.getElementById("coords");
+  if (coordsEl) coordsEl.textContent = `Coordinates: ${lat}, ${lon}`;
+
+  // date info
   const greg = data.date.gregorian.date;
   const hijri = data.date.hijri.date;
   document.getElementById("todayDate").textContent = `${greg} (${hijri})`;
 
+  // prayer list
   const list = document.getElementById("prayerList");
   list.innerHTML = "";
 
@@ -132,7 +137,7 @@ async function renderPrayerPage(lat, lon, city) {
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // Back button
+  // back button
   const back = document.getElementById("backToMain");
   if (back) {
     back.addEventListener("click", () => {
@@ -148,7 +153,10 @@ async function renderPrayerPage(lat, lon, city) {
 
 async function getUserLocation() {
   let stored = JSON.parse(localStorage.getItem("userLocation"));
-  if (stored && stored.lat && stored.lon && stored.city) return stored;
+  if (stored && stored.lat && stored.lon && stored.city) {
+    refreshLocationSilently(stored);
+    return stored;
+  }
 
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
@@ -168,6 +176,25 @@ async function getUserLocation() {
   });
 }
 
+async function refreshLocationSilently(stored) {
+  if (!navigator.permissions) return;
+  try {
+    const permission = await navigator.permissions.query({ name: "geolocation" });
+    if (permission.state === "granted") {
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const lat = pos.coords.latitude.toFixed(4);
+        const lon = pos.coords.longitude.toFixed(4);
+        const city = await getCityName(lat, lon);
+        const newLoc = { lat, lon, city };
+        localStorage.setItem("userLocation", JSON.stringify(newLoc));
+        console.log(`📍 Background location updated: ${lat}, ${lon}`);
+      });
+    }
+  } catch (err) {
+    console.warn("Background refresh failed:", err);
+  }
+}
+
 /* ----------------------
    ENTRY POINT
 ----------------------- */
@@ -175,7 +202,6 @@ async function getUserLocation() {
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     const { lat, lon, city } = await getUserLocation();
-
     if (document.getElementById("prayerList")) {
       await renderPrayerPage(lat, lon, city);
     } else {

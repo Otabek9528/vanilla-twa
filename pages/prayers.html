@@ -3,27 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Prayer Times</title>
+  <title>Today's Prayer Times</title>
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
+
+  <!-- HEADER -->
+  <header class="app__header">
+    <div class="header-content">
+      <img src="../assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
+        <h1>Muslim Vegukin Bot</h1>
+      </div>
+  </header>
+
+  <!-- PRAYER DETAILS -->
   <section class="prayers-detailed">
     <h2 id="cityName">Loading...</h2>
-    <p id="todayDate">Loading...</p>
+    <p id="coords" style="color:#666;font-size:0.9rem;margin-bottom:10px;">Coordinates: -- , --</p>
+    <p id="todayDate">Fetching date...</p>
 
+    <!-- Countdown -->
     <div class="next-prayer-countdown">
-      Next Prayer: <span id="nextPrayerName">--</span>
-      <div class="countdown-text" id="countdown">--:--:--</div>
+      <p>Next prayer: <span id="nextPrayerName">Loading...</span></p>
+      <p class="countdown-text">⏳ <span id="countdown">--:--:--</span></p>
     </div>
 
-    <div class="prayer-list" id="prayerList">Loading...</div>
-  </section>
+    <!-- List -->
+    <div class="prayer-list" id="prayerList"></div>
+  </section>  
 
+  <!-- BOTTOM BACK BUTTON -->
   <footer class="back-footer">
-    <button id="backToMain" class="back-btn">⬅ Back to Main</button>
+    <button class="back-btn" id="backToMain">
+      ⬅ Back to Main
+    </button>
   </footer>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="../js/main.js"></script>
+  <script src="../js/prayerTimes.js"></script>
+  <script src="../js/prayersPage.js"></script>
+  <script>
+    const tg = window.Telegram.WebApp;
+
+    // Hide Telegram native back button — we use our own
+    tg.BackButton.hide();
+
+    // Handle footer back button click
+    document.getElementById("backToMain").addEventListener("click", () => {
+      window.location.href = "../index.html";
+    });
+  </script>
+  
+
 </body>
 </html>

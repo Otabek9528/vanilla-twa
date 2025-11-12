@@ -7,20 +7,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     else window.location.replace("../index.html");
   });
 
+  // Debug notification system
+  const notify = (msg) => {
+    let note = document.createElement("div");
+    note.className = "debug-note";
+    note.textContent = msg;
+    document.body.appendChild(note);
+    setTimeout(() => note.classList.add("show"), 100);
+    setTimeout(() => note.classList.remove("show"), 4000);
+    setTimeout(() => note.remove(), 4500);
+  };
+
   // Use cached location or refresh quietly
   let stored = JSON.parse(localStorage.getItem("userLocation"));
+  let updated = false;
+
   if (navigator.permissions) {
     try {
       const perm = await navigator.permissions.query({ name: "geolocation" });
       if (perm.state === "granted") {
         navigator.geolocation.getCurrentPosition(
           async (pos) => {
-            const lat = pos.coords.latitude;
-            const lon = pos.coords.longitude;
+            const lat = pos.coords.latitude.toFixed(4);
+            const lon = pos.coords.longitude.toFixed(4);
             const city = await getCityName(lat, lon);
             localStorage.setItem("userLocation", JSON.stringify({ lat, lon, city }));
             stored = { lat, lon, city };
-            console.log("📍 Location refreshed silently (prayers page)");
+            updated = true;
+            notify(`📍 New location updated. Coordinates: ${lon}, ${lat}`);
             loadPrayerData(stored);
           },
           (err) => {
@@ -35,8 +49,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  if (stored) loadPrayerData(stored);
-  else Telegram.WebApp.showAlert("Location not found. Please reopen main page.");
+  if (stored && !updated) loadPrayerData(stored);
+  else if (!stored) Telegram.WebApp.showAlert("Location not found. Please reopen main page.");
 });
 
 async function loadPrayerData({ lat, lon, city }) {

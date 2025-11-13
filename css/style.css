@@ -309,36 +309,6 @@ body {
 }
 
 
-
-
-.prayer-detail {
-  padding: 20px;
-  font-family: 'Poppins', sans-serif;
-}
-
-.prayer-detail h2 {
-  font-size: 1.2rem;
-  color: #004d40;
-  margin-bottom: 10px;
-}
-
-.prayer-detail ul {
-  list-style: none;
-  padding: 0;
-  margin-bottom: 10px;
-}
-
-.prayer-detail li {
-  padding: 6px 0;
-  border-bottom: 1px solid #ddd;
-  color: #2f4f4f;
-}
-
-.note {
-  margin-top: 12px;
-  color: #006b5f;
-}
-
 /* ===== BACK FOOTER BUTTON ===== */
 .back-footer {
   position: fixed;

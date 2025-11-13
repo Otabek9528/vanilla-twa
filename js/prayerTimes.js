@@ -70,6 +70,13 @@ function formatCountdown(nextTime) {
 async function updatePrayerData(lat, lon, city) {
   document.getElementById("cityName").innerText = city;
 
+  // Update coordinates if coords element exists (prayers.html)
+  const coordsElem = document.getElementById("coords");
+  if (coordsElem) {
+    coordsElem.innerText = `Coordinates: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+  }
+
+
   const data = await getPrayerTimes(lat, lon);
   const { current, next } = getCurrentPrayer(data.timings);
 

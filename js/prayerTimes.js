@@ -109,38 +109,34 @@ async function updatePrayerData(lat, lon, city) {
 
 async function init() {
   const tg = Telegram.WebApp;
-  tg.ready(); // very important: counts as user gesture in Telegram
+  tg.ready(); // Telegram counts this as a gesture
 
-  // --- FIRST-TIME PERMISSION REQUEST (ONLY ONCE EVER) ---
-  if (!window.__tgGeoPermissionRequested) {
-    window.__tgGeoPermissionRequested = true;
+  const alreadyAsked = localStorage.getItem("geoPermissionRequested");
 
+  if (!alreadyAsked) {
+    // FIRST TIME EVER → show permission popup once
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
+        localStorage.setItem("geoPermissionRequested", "yes");
+
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
         const city = await getCityName(lat, lon);
-
         updatePrayerData(lat, lon, city);
-
-        // After permission is granted, the rest of the pages
-        // can call geolocation silently with no popups.
       },
       (err) => {
-        tg.showAlert("❌ Location permission denied. Please enable.");
+        tg.showAlert("❌ Please enable location permissions.");
       }
     );
-
-    return; // stop here on first run, do not continue
+    return;
   }
 
-  // --- AFTER PERMISSION IS GRANTED: ALWAYS SILENT GPS ---
+  // AFTER FIRST PERMISSION → silent location update (NO POPUP)
   navigator.geolocation.getCurrentPosition(
     async (pos) => {
       const lat = pos.coords.latitude;
       const lon = pos.coords.longitude;
       const city = await getCityName(lat, lon);
-
       updatePrayerData(lat, lon, city);
     },
     (err) => {
@@ -148,6 +144,7 @@ async function init() {
     }
   );
 }
+
 
 
 document.addEventListener("DOMContentLoaded", init);

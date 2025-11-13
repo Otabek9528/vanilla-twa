@@ -7,17 +7,17 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <!-- HEADER -->
+  <!-- HEADER (Panel 1) -->
   <header class="app__header">
     <div class="header-content">
       <img src="assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
-      <h1>Muslim Vegukin Bot1</h1>
+      <h1>Muslim Vegukin Bot</h1>
     </div>
   </header>
 
-  <!-- CONTENT -->
+  <!-- PRAYER + MAIN share the same page width -->
   <div class="app__content-bg">
-    <!-- PRAYER SUMMARY -->
+    <!-- PRAYER (clickable to open detailed page) -->
     <section class="prayer">
       <button class="prayer-card minimal-layout" onclick="window.location.href='pages/prayers.html'">
         <div class="top-row">
@@ -36,7 +36,9 @@
             <h2 class="prayer-name" id="currentPrayer">--</h2>
             <p class="prayer-time" id="prayerTime">--:--</p>
           </div>
+
           <div class="arrow">➜</div>
+
           <div class="prayer-next">
             <h2 class="next-name" id="nextPrayer">--</h2>
             <p class="countdown" id="countdown">--:--:--</p>
@@ -45,20 +47,43 @@
       </button>
     </section>
 
-    <!-- MAIN CARDS -->
+    <!-- MAIN (cards) -->
     <main class="main">
       <button class="card">
         <img src="assets/mosque.png" alt="Mosques" />
         <p>Mosques</p>
       </button>
+
       <button class="card">
         <img src="assets/restaurant.jpg" alt="News" />
         <p>News</p>
       </button>
+
       <button class="card">
         <img src="assets/store.jpg" alt="Cafe" />
         <p>Cafe</p>
       </button>
+
+      <button class="card">
+        <img src="assets/store.jpg" alt="Store" />
+        <p>Store</p>
+      </button>
+
+      <button class="card">
+        <img src="assets/store.jpg" alt="Cafe" />
+        <p>Cafe</p>
+      </button>
+
+      <button class="card">
+        <img src="assets/store.jpg" alt="Store" />
+        <p>Store</p>
+      </button>
+
+      <button class="card">
+        <img src="assets/store.jpg" alt="Cafe" />
+        <p>Cafe</p>
+      </button>
+
       <button class="card">
         <img src="assets/store.jpg" alt="Store" />
         <p>Store</p>
@@ -66,13 +91,14 @@
     </main>
   </div>
 
-  <!-- LANGUAGE FOOTER -->
+  <!-- LANGUAGE -->
   <footer class="lang">
     <button class="lang__btn">🇷🇺 Russian</button>
     <button class="lang__btn">🇬🇧 English</button>
   </footer>
 
+  <!-- JS Scripts -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/prayerTimes.js"></script>
 </body>
 </html>

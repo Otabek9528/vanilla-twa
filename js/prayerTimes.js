@@ -1,4 +1,6 @@
-// prayerTimes.js
+// Telegram WebApp Fix – ensure permission requested only once
+window.__tgGeoPermissionRequested = false;
+
 Telegram.WebApp.ready();
 
 async function getCityName(lat, lon) {
@@ -106,43 +108,46 @@ async function updatePrayerData(lat, lon, city) {
 }
 
 async function init() {
-  Telegram.WebApp.ready();
+  const tg = Telegram.WebApp;
+  tg.ready(); // very important: counts as user gesture in Telegram
 
-  // Try to use stored location first
-  const stored = JSON.parse(localStorage.getItem("userLocation"));
+  // --- FIRST-TIME PERMISSION REQUEST (ONLY ONCE EVER) ---
+  if (!window.__tgGeoPermissionRequested) {
+    window.__tgGeoPermissionRequested = true;
 
-  if (stored && stored.lat && stored.lon && stored.city) {
-    console.log("✅ Using cached location");
-    updatePrayerData(stored.lat, stored.lon, stored.city);
-
-    // Optionally refresh in background (no new permission)
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
         const city = await getCityName(lat, lon);
-        localStorage.setItem("userLocation", JSON.stringify({ lat, lon, city }));
+
         updatePrayerData(lat, lon, city);
+
+        // After permission is granted, the rest of the pages
+        // can call geolocation silently with no popups.
       },
-      (err) => console.warn("⚠️ Could not refresh location:", err.message)
-    );
-  } else {
-    // Ask for permission only the first time
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        const city = await getCityName(lat, lon);
-        localStorage.setItem("userLocation", JSON.stringify({ lat, lon, city }));
-        updatePrayerData(lat, lon, city);
-      },
-      () => {
-        Telegram.WebApp.showAlert(
-          "❌ Unable to access your location. Please enable permissions."
-        );
+      (err) => {
+        tg.showAlert("❌ Location permission denied. Please enable.");
       }
     );
+
+    return; // stop here on first run, do not continue
   }
+
+  // --- AFTER PERMISSION IS GRANTED: ALWAYS SILENT GPS ---
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      const city = await getCityName(lat, lon);
+
+      updatePrayerData(lat, lon, city);
+    },
+    (err) => {
+      console.warn("Silent geolocation failed:", err.message);
+    }
+  );
 }
+
 
 document.addEventListener("DOMContentLoaded", init);

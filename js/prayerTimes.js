@@ -1,16 +1,5 @@
-// Telegram WebApp Fix – ensure permission requested only once
-window.__tgGeoPermissionRequested = false;
-
+// prayerTimes.js
 Telegram.WebApp.ready();
-
-function saveLocation(lat, lon, city) {
-  localStorage.setItem("locationData", JSON.stringify({ lat, lon, city }));
-}
-
-function loadLocation() {
-  return JSON.parse(localStorage.getItem("locationData"));
-}
-
 
 async function getCityName(lat, lon) {
   try {
@@ -81,13 +70,6 @@ function formatCountdown(nextTime) {
 async function updatePrayerData(lat, lon, city) {
   document.getElementById("cityName").innerText = city;
 
-  // Update coordinates if coords element exists (prayers.html)
-  const coordsElem = document.getElementById("coords");
-  if (coordsElem) {
-    coordsElem.innerText = `Coordinates: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-  }
-
-
   const data = await getPrayerTimes(lat, lon);
   const { current, next } = getCurrentPrayer(data.timings);
 
@@ -117,43 +99,58 @@ async function updatePrayerData(lat, lon, city) {
 }
 
 async function init() {
-  const tg = Telegram.WebApp;
-  tg.ready(); // Telegram counts this as a gesture
+  Telegram.WebApp.ready();
 
-  const alreadyAsked = localStorage.getItem("geoPermissionRequested");
+  // Try to use stored location first
+  const stored = JSON.parse(localStorage.getItem("userLocation"));
 
-  if (!alreadyAsked) {
-    // FIRST TIME EVER → show permission popup once
+  if (stored && stored.lat && stored.lon && stored.city) {
+    console.log("✅ Using cached location");
+    updatePrayerData(stored.lat, stored.lon, stored.city);
+
+    // 🔄 Try to refresh in the background (won’t trigger prompt again)
+    if (navigator.permissions) {
+      try {
+        const permission = await navigator.permissions.query({ name: "geolocation" });
+
+        // Only refresh if already granted
+        if (permission.state === "granted") {
+          navigator.geolocation.getCurrentPosition(
+            async (pos) => {
+              const lat = pos.coords.latitude;
+              const lon = pos.coords.longitude;
+              const city = await getCityName(lat, lon);
+              localStorage.setItem("userLocation", JSON.stringify({ lat, lon, city }));
+              updatePrayerData(lat, lon, city);
+              console.log("📍 Background location updated silently");
+            },
+            (err) => console.warn("⚠️ Could not refresh location:", err.message)
+          );
+        } else {
+          console.log("ℹ️ Background refresh skipped — permission not granted");
+        }
+      } catch (err) {
+        console.warn("⚠️ Permissions API not supported:", err);
+      }
+    }
+  } else {
+    // ❗ Ask permission only once (first-time users)
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        localStorage.setItem("geoPermissionRequested", "yes");
-
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
         const city = await getCityName(lat, lon);
+        localStorage.setItem("userLocation", JSON.stringify({ lat, lon, city }));
         updatePrayerData(lat, lon, city);
       },
-      (err) => {
-        tg.showAlert("❌ Please enable location permissions.");
+      () => {
+        Telegram.WebApp.showAlert(
+          "❌ Unable to access your location. Please enable permissions."
+        );
       }
     );
-    return;
   }
-
-  // AFTER FIRST PERMISSION → silent location update (NO POPUP)
-  navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      const lat = pos.coords.latitude;
-      const lon = pos.coords.longitude;
-      const city = await getCityName(lat, lon);
-      updatePrayerData(lat, lon, city);
-    },
-    (err) => {
-      console.warn("Silent geolocation failed:", err.message);
-    }
-  );
 }
-
 
 
 document.addEventListener("DOMContentLoaded", init);

@@ -70,6 +70,13 @@ function formatCountdown(nextTime) {
 async function updatePrayerData(lat, lon, city) {
   document.getElementById("cityName").innerText = city;
 
+  // Update coordinates if coords element exists (prayers.html)
+  const coordsElem = document.getElementById("coords");
+  if (coordsElem) {
+    coordsElem.innerText = `Coordinates: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+  }
+
+
   const data = await getPrayerTimes(lat, lon);
   const { current, next } = getCurrentPrayer(data.timings);
 
@@ -108,33 +115,19 @@ async function init() {
     console.log("✅ Using cached location");
     updatePrayerData(stored.lat, stored.lon, stored.city);
 
-    // 🔄 Try to refresh in the background (won’t trigger prompt again)
-    if (navigator.permissions) {
-      try {
-        const permission = await navigator.permissions.query({ name: "geolocation" });
-
-        // Only refresh if already granted
-        if (permission.state === "granted") {
-          navigator.geolocation.getCurrentPosition(
-            async (pos) => {
-              const lat = pos.coords.latitude;
-              const lon = pos.coords.longitude;
-              const city = await getCityName(lat, lon);
-              localStorage.setItem("userLocation", JSON.stringify({ lat, lon, city }));
-              updatePrayerData(lat, lon, city);
-              console.log("📍 Background location updated silently");
-            },
-            (err) => console.warn("⚠️ Could not refresh location:", err.message)
-          );
-        } else {
-          console.log("ℹ️ Background refresh skipped — permission not granted");
-        }
-      } catch (err) {
-        console.warn("⚠️ Permissions API not supported:", err);
-      }
-    }
+    // Optionally refresh in background (no new permission)
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const city = await getCityName(lat, lon);
+        localStorage.setItem("userLocation", JSON.stringify({ lat, lon, city }));
+        updatePrayerData(lat, lon, city);
+      },
+      (err) => console.warn("⚠️ Could not refresh location:", err.message)
+    );
   } else {
-    // ❗ Ask permission only once (first-time users)
+    // Ask for permission only the first time
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         const lat = pos.coords.latitude;
@@ -151,6 +144,5 @@ async function init() {
     );
   }
 }
-
 
 document.addEventListener("DOMContentLoaded", init);

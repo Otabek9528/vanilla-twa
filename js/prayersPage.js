@@ -19,9 +19,33 @@ function initPrayersPage() {
   // Handle manual location refresh
   const refreshBtn = document.getElementById('refreshLocationBtn');
   if (refreshBtn) {
+    let isRefreshing = false;
+    
     refreshBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
       e.stopPropagation();
-      await LocationManager.manualRefresh();
+      
+      if (isRefreshing) {
+        console.log('⏳ Refresh already in progress...');
+        return;
+      }
+      
+      isRefreshing = true;
+      
+      // Visual feedback
+      refreshBtn.style.opacity = '0.5';
+      refreshBtn.disabled = true;
+      
+      try {
+        await LocationManager.manualRefresh();
+      } catch (error) {
+        console.error('Refresh error:', error);
+      } finally {
+        // Re-enable button
+        refreshBtn.style.opacity = '1';
+        refreshBtn.disabled = false;
+        isRefreshing = false;
+      }
     });
   }
 
@@ -32,8 +56,16 @@ function initPrayersPage() {
 
   // Show initial timestamp from cached location
   const location = LocationManager.getStoredLocation();
+  console.log('📍 Initial location on page load:', location);
+  
   if (location && location.timestamp) {
     updateTimestampDisplay(location.timestamp);
+  } else {
+    console.warn('⚠️ No location data available on page load');
+    const timestampElem = document.getElementById('locationTimestamp');
+    if (timestampElem) {
+      timestampElem.innerText = 'Last updated: Never';
+    }
   }
 
   // Check if location is stale and show warning
@@ -45,11 +77,17 @@ function initPrayersPage() {
 // Update the timestamp display element
 function updateTimestampDisplay(timestamp) {
   const timestampElem = document.getElementById('locationTimestamp');
+  console.log('🕒 updateTimestampDisplay called with:', timestamp, 'Element:', timestampElem);
+  
   if (timestampElem && timestamp) {
     const date = new Date(timestamp);
     const timeString = date.toLocaleTimeString();
     const dateString = date.toLocaleDateString();
     timestampElem.innerText = `Last updated: ${timeString}, ${dateString}`;
+    timestampElem.style.color = '#888';
+    console.log('✅ Timestamp updated to:', timestampElem.innerText);
+  } else {
+    console.warn('⚠️ Could not update timestamp. Element:', timestampElem, 'Timestamp:', timestamp);
   }
 }
 

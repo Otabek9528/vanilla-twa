@@ -226,6 +226,8 @@ const LocationManager = {
 
   // Update UI elements on current page
   updateUI(locationData) {
+    console.log('📍 Updating UI with location:', locationData);
+    
     // Update city name elements
     const cityElements = document.querySelectorAll('#cityName, .city-name');
     cityElements.forEach(el => {
@@ -240,9 +242,14 @@ const LocationManager = {
 
     // Update timestamp display if exists
     const timestampElem = document.getElementById('locationTimestamp');
-    if (timestampElem) {
+    if (timestampElem && locationData.timestamp) {
       const date = new Date(locationData.timestamp);
-      timestampElem.innerText = `Last updated: ${date.toLocaleTimeString()}`;
+      const timeString = date.toLocaleTimeString();
+      const dateString = date.toLocaleDateString();
+      timestampElem.innerText = `Last updated: ${timeString}, ${dateString}`;
+      console.log('🕒 Updated timestamp to:', timestampElem.innerText);
+    } else {
+      console.warn('⚠️ Timestamp element not found or no timestamp in data');
     }
 
     // Trigger prayer times update

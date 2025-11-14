@@ -5,8 +5,14 @@
 function initPrayersPage() {
   const tg = window.Telegram.WebApp;
   
-  // Hide Telegram native back button – we use our own
-  tg.BackButton.hide();
+  // Try to hide Telegram native back button (ignore if not supported)
+  try {
+    if (tg.BackButton && tg.BackButton.hide) {
+      tg.BackButton.hide();
+    }
+  } catch (e) {
+    console.log('BackButton not supported, skipping...');
+  }
 
   // Handle footer back button click
   const backBtn = document.getElementById("backToMain");
@@ -18,10 +24,14 @@ function initPrayersPage() {
 
   // Handle manual location refresh
   const refreshBtn = document.getElementById('refreshLocationBtn');
+  console.log('🔍 Looking for refresh button:', refreshBtn);
+  
   if (refreshBtn) {
+    console.log('✅ Refresh button found! Adding click listener...');
     let isRefreshing = false;
     
     refreshBtn.addEventListener('click', async (e) => {
+      console.log('🖱️ REFRESH BUTTON CLICKED!');
       e.preventDefault();
       e.stopPropagation();
       
@@ -31,22 +41,30 @@ function initPrayersPage() {
       }
       
       isRefreshing = true;
+      console.log('🔄 Starting refresh process...');
       
       // Visual feedback
       refreshBtn.style.opacity = '0.5';
       refreshBtn.disabled = true;
       
       try {
-        await LocationManager.manualRefresh();
+        console.log('📞 Calling LocationManager.manualRefresh()...');
+        const result = await LocationManager.manualRefresh();
+        console.log('✅ manualRefresh returned:', result);
       } catch (error) {
-        console.error('Refresh error:', error);
+        console.error('❌ Refresh error:', error);
       } finally {
         // Re-enable button
+        console.log('🔓 Re-enabling button...');
         refreshBtn.style.opacity = '1';
         refreshBtn.disabled = false;
         isRefreshing = false;
       }
     });
+    
+    console.log('✅ Click listener added successfully');
+  } else {
+    console.error('❌ REFRESH BUTTON NOT FOUND!');
   }
 
   // Update timestamp display when location updates
@@ -103,6 +121,48 @@ function initPrayersPage() {
       }
     });
   }
+  
+  // TEST: Add direct test for refresh button
+  console.log('🧪 Testing if refresh button is accessible...');
+  const testRefreshBtn = document.getElementById('refreshLocationBtn');
+  if (testRefreshBtn) {
+    console.log('✅ Refresh button IS in DOM');
+    console.log('   Tag:', testRefreshBtn.tagName);
+    console.log('   Class:', testRefreshBtn.className);
+    console.log('   Disabled:', testRefreshBtn.disabled);
+    console.log('   Visible:', window.getComputedStyle(testRefreshBtn).display !== 'none');
+    console.log('   Try clicking it now!');
+  } else {
+    console.error('❌ Refresh button NOT in DOM!');
+  }
+  
+  // BLUE TEST BUTTON - Directly call LocationManager.manualRefresh
+  const testRefreshCall = document.getElementById('testRefreshCall');
+  if (testRefreshCall) {
+    testRefreshCall.addEventListener('click', async () => {
+      console.log('🧪 BLUE TEST BUTTON CLICKED - Calling manualRefresh directly...');
+      
+      // First, verify timestamp element exists and is visible
+      const tsElem = document.getElementById('locationTimestamp');
+      console.log('🔍 Before refresh - timestamp element:', tsElem);
+      console.log('   Current text:', tsElem ? tsElem.innerText : 'NOT FOUND');
+      console.log('   Visible:', tsElem ? (window.getComputedStyle(tsElem).display !== 'none') : 'N/A');
+      
+      try {
+        const result = await LocationManager.manualRefresh();
+        console.log('✅ Test refresh completed:', result);
+        
+        // Check again after refresh
+        console.log('🔍 After refresh - timestamp element text:', tsElem ? tsElem.innerText : 'NOT FOUND');
+        
+        alert('Refresh complete! Check if timestamp changed on page.');
+      } catch (error) {
+        console.error('❌ Test refresh failed:', error);
+        alert('Failed! Error: ' + error.message);
+      }
+    });
+    console.log('✅ Blue test button listener added');
+  }
 }
 
 // Update the timestamp display element
@@ -114,9 +174,24 @@ function updateTimestampDisplay(timestamp) {
     const date = new Date(timestamp);
     const timeString = date.toLocaleTimeString();
     const dateString = date.toLocaleDateString();
-    timestampElem.innerText = `Last updated: ${timeString}, ${dateString}`;
-    timestampElem.style.color = '#888';
+    const newText = `Last updated: ${timeString}, ${dateString}`;
+    
+    // Update the text
+    timestampElem.innerText = newText;
+    timestampElem.textContent = newText; // Try both methods
+    
+    // Force visual update
+    timestampElem.style.color = '#ff0000';
+    timestampElem.style.fontWeight = 'bold';
+    
+    // Force repaint
+    void timestampElem.offsetHeight;
+    
     console.log('✅ Timestamp updated to:', timestampElem.innerText);
+    console.log('   Element text content:', timestampElem.textContent);
+    console.log('   Element innerHTML:', timestampElem.innerHTML);
+    console.log('   Element visible:', window.getComputedStyle(timestampElem).display !== 'none');
+    console.log('   Element in viewport:', timestampElem.getBoundingClientRect().top < window.innerHeight);
   } else {
     console.warn('⚠️ Could not update timestamp. Element:', timestampElem, 'Timestamp:', timestamp);
   }

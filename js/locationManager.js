@@ -115,14 +115,10 @@ const LocationManager = {
 
   // Manual refresh triggered by user button
   async manualRefresh() {
-    console.log('🔄 Manual refresh initiated');
+    console.log('🔄 Manual refresh initiated at:', new Date().toLocaleString());
     
-    // Show loading state
-    Telegram.WebApp.showPopup({
-      title: '📍 Updating Location',
-      message: 'Getting your current location...',
-      buttons: []
-    });
+    // Show loading state using alert (compatible with older versions)
+    Telegram.WebApp.showAlert('📍 Getting your location...');
 
     return new Promise((resolve) => {
       const options = {
@@ -131,36 +127,33 @@ const LocationManager = {
         maximumAge: 0
       };
 
+      console.log('📡 Calling getCurrentPosition...');
+      
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           console.log('✅ Got new position:', pos.coords.latitude, pos.coords.longitude);
+          console.log('⏰ Position timestamp:', new Date(pos.timestamp).toLocaleString());
           
           try {
             const locationData = await this.processPosition(pos);
+            console.log('✅ Processed location data:', locationData);
+            console.log('🕒 New timestamp:', new Date(locationData.timestamp).toLocaleString());
             
-            // Close loading popup and show success
-            Telegram.WebApp.closePopup();
-            setTimeout(() => {
-              Telegram.WebApp.showPopup({
-                title: '✅ Location Updated',
-                message: `New location: ${locationData.city}`,
-                buttons: [{type: 'ok'}]
-              });
-            }, 100);
+            // Show success using alert (compatible)
+            Telegram.WebApp.showAlert(`✅ Location Updated!\n${locationData.city}\n${new Date(locationData.timestamp).toLocaleTimeString()}`);
             
+            console.log('🎨 Calling updateUI with:', locationData);
             this.updateUI(locationData);
+            console.log('✅ Manual refresh complete');
             resolve(locationData);
           } catch (error) {
-            console.error('Error processing position:', error);
-            Telegram.WebApp.closePopup();
+            console.error('❌ Error processing position:', error);
             Telegram.WebApp.showAlert('⚠️ Error updating location. Using cached data.');
             resolve(this.getStoredLocation());
           }
         },
         (error) => {
           console.error('❌ Geolocation error:', error.code, error.message);
-          
-          Telegram.WebApp.closePopup();
           
           let errorMsg = '❌ Could not update location. ';
           switch(error.code) {

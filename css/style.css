@@ -532,6 +532,14 @@ body {
   }
 }
 
+#refreshIcon {
+  display: inline-block;
+}
+
+#refreshIcon.spinning {
+  animation: spin 1s linear infinite;
+}
+
 /* Pulsing animation for stale location */
 @keyframes pulse {
   0%, 100% {

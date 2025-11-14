@@ -59,9 +59,6 @@ const LocationManager = {
         },
         (error) => {
           console.error('❌ Location permission denied:', error);
-          Telegram.WebApp.showAlert(
-            '📍 Location access is required for prayer times. Please enable it in your browser settings.'
-          );
           // Use default fallback location
           const fallback = {
             lat: 37.5665,
@@ -219,8 +216,6 @@ const LocationManager = {
 
   // Update UI elements on current page
   updateUI(locationData) {
-    console.log('📍 Updating UI with location:', locationData);
-    
     // Update city name elements
     const cityElements = document.querySelectorAll('#cityName, .city-name');
     cityElements.forEach(el => {
@@ -240,9 +235,6 @@ const LocationManager = {
       const timeString = date.toLocaleTimeString();
       const dateString = date.toLocaleDateString();
       timestampElem.innerText = `Last updated: ${timeString}, ${dateString}`;
-      console.log('🕒 Updated timestamp to:', timestampElem.innerText);
-    } else {
-      console.warn('⚠️ Timestamp element not found or no timestamp in data');
     }
 
     // Trigger prayer times update

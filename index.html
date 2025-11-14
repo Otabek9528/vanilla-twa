@@ -106,14 +106,39 @@
   <script src="js/locationManager.js"></script>
   <script src="js/prayerTimes.js"></script>
   <script>
-    // Handle manual location refresh
+    // Handle manual location refresh with debouncing
+    let isRefreshing = false;
+    
     document.getElementById('refreshLocationBtn').addEventListener('click', async (e) => {
-      e.stopPropagation(); // Prevent any parent click handlers
-      await LocationManager.manualRefresh();
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isRefreshing) {
+        console.log('⏳ Refresh already in progress...');
+        return;
+      }
+      
+      isRefreshing = true;
+      const btn = e.currentTarget;
+      
+      // Visual feedback
+      btn.style.opacity = '0.5';
+      btn.disabled = true;
+      
+      try {
+        await LocationManager.manualRefresh();
+      } catch (error) {
+        console.error('Refresh error:', error);
+      } finally {
+        // Re-enable button
+        btn.style.opacity = '1';
+        btn.disabled = false;
+        isRefreshing = false;
+      }
     });
 
     // Show stale location warning
-    if (LocationManager.isLocationStale()) {
+    if (LocationManager.isLocationStale && LocationManager.isLocationStale()) {
       console.warn('⚠️ Location data is more than 24 hours old');
     }
   </script>

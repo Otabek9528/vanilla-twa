@@ -407,6 +407,84 @@ body {
 
 
 
+/* Add these styles to your existing style.css */
+
+/* Location refresh button in header */
+.location-refresh-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 0;
+  line-height: 1;
+}
+
+.location-refresh-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.1);
+}
+
+.location-refresh-btn:active:not(:disabled) {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.location-refresh-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Pulsing animation for stale location */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.location-refresh-btn.stale {
+  animation: pulse 2s infinite;
+  border-color: #ffa726;
+  background: rgba(255, 167, 38, 0.2);
+}
+
+/* Update header-content to accommodate button */
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.header-content h1 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  flex: 1; /* Allow title to take available space */
+}
+
+/* Location timestamp styling */
+#locationTimestamp {
+  color: #888;
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-top: 5px;
+}
+
 
 /* =========================
    6) Responsive tweaks

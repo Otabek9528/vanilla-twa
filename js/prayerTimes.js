@@ -118,58 +118,42 @@ async function updatePrayerData(lat, lon, city) {
 
 async function init() {
   const tg = Telegram.WebApp;
-  tg.ready();
+  tg.ready(); // Telegram counts this as a gesture
 
-  // Do we already have a stored location?
-  const stored = loadLocation();
+  const alreadyAsked = localStorage.getItem("geoPermissionRequested");
 
-  if (stored) {
-    // Use stored location immediately — NO permission popup
-    updatePrayerData(stored.lat, stored.lon, stored.city);
+  if (!alreadyAsked) {
+    // FIRST TIME EVER → show permission popup once
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        localStorage.setItem("geoPermissionRequested", "yes");
+
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const city = await getCityName(lat, lon);
+        updatePrayerData(lat, lon, city);
+      },
+      (err) => {
+        tg.showAlert("❌ Please enable location permissions.");
+      }
+    );
     return;
   }
 
-  // FIRST TIME ONLY → request permission
+  // AFTER FIRST PERMISSION → silent location update (NO POPUP)
   navigator.geolocation.getCurrentPosition(
     async (pos) => {
       const lat = pos.coords.latitude;
       const lon = pos.coords.longitude;
       const city = await getCityName(lat, lon);
-
-      saveLocation(lat, lon, city);   // store it for future transitions
       updatePrayerData(lat, lon, city);
     },
     (err) => {
-      tg.showAlert("❌ Please enable location permissions.");
+      console.warn("Silent geolocation failed:", err.message);
     }
   );
 }
 
 
-document.addEventListener("click", async (e) => {
-  if (e.target.id === "updateLocationBtn") {
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        const city = await getCityName(lat, lon);
-
-        saveLocation(lat, lon, city);
-        updatePrayerData(lat, lon, city);   // immediate refresh
-
-        Telegram.WebApp.showPopup({
-          title: "Location Updated",
-          message: "Your prayer times have been refreshed.",
-          buttons: [{ type: "close" }]
-        });
-      },
-      (err) => {
-        Telegram.WebApp.showAlert("Unable to update your location.");
-      }
-    );
-  }
-});
-
 
 document.addEventListener("DOMContentLoaded", init);
-

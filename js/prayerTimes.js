@@ -1,22 +1,5 @@
-// prayerTimes.js
+// prayerTimes.js - Updated to work with LocationManager
 Telegram.WebApp.ready();
-
-async function getCityName(lat, lon) {
-  try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=en`
-    );
-    const data = await res.json();
-    return (
-      data.address.city ||
-      data.address.town ||
-      data.address.village ||
-      "Unknown"
-    );
-  } catch {
-    return "Unknown";
-  }
-}
 
 async function getPrayerTimes(lat, lon) {
   const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=3&school=1`;
@@ -68,81 +51,97 @@ function formatCountdown(nextTime) {
 }
 
 async function updatePrayerData(lat, lon, city) {
-  document.getElementById("cityName").innerText = city;
+  try {
+    const data = await getPrayerTimes(lat, lon);
+    const { current, next } = getCurrentPrayer(data.timings);
 
-  // Update coordinates if coords element exists (prayers.html)
-  const coordsElem = document.getElementById("coords");
-  if (coordsElem) {
-    coordsElem.innerText = `Coordinates: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-  }
+    // Update current prayer display
+    const currentPrayerElem = document.getElementById("currentPrayer");
+    const prayerTimeElem = document.getElementById("prayerTime");
+    const nextPrayerElem = document.getElementById("nextPrayer");
+    const countdownElem = document.getElementById("countdown");
 
+    if (currentPrayerElem) currentPrayerElem.innerText = current.name;
+    if (prayerTimeElem) prayerTimeElem.innerText = data.timings[current.name];
+    if (nextPrayerElem) nextPrayerElem.innerText = next.name;
 
-  const data = await getPrayerTimes(lat, lon);
-  const { current, next } = getCurrentPrayer(data.timings);
-
-  document.getElementById("currentPrayer").innerText = current.name;
-  document.getElementById("prayerTime").innerText =
-    data.timings[current.name];
-  document.getElementById("nextPrayer").innerText = next.name;
-
-  function updateCountdown() {
-    document.getElementById("countdown").innerText = formatCountdown(
-      data.timings[next.name]
-    );
-  }
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-
-  // Update Hijri/Gregorian date if present
-  if (document.getElementById("weekday")) {
-    const hijri = data.date.hijri.date;
-    const greg = data.date.gregorian.date;
-    const weekday = data.date.gregorian.weekday.en;
-    document.getElementById("weekday").innerText = `${weekday}, ${greg}`;
-    if (document.getElementById("hijri")) {
-      document.getElementById("hijri").innerText = hijri;
-    }
-  }
-}
-
-async function init() {
-  Telegram.WebApp.ready();
-
-  // Try to use stored location first
-  const stored = JSON.parse(localStorage.getItem("userLocation"));
-
-  if (stored && stored.lat && stored.lon && stored.city) {
-    console.log("✅ Using cached location");
-    updatePrayerData(stored.lat, stored.lon, stored.city);
-
-    // Optionally refresh in background (no new permission)
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        const city = await getCityName(lat, lon);
-        localStorage.setItem("userLocation", JSON.stringify({ lat, lon, city }));
-        updatePrayerData(lat, lon, city);
-      },
-      (err) => console.warn("⚠️ Could not refresh location:", err.message)
-    );
-  } else {
-    // Ask for permission only the first time
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        const city = await getCityName(lat, lon);
-        localStorage.setItem("userLocation", JSON.stringify({ lat, lon, city }));
-        updatePrayerData(lat, lon, city);
-      },
-      () => {
-        Telegram.WebApp.showAlert(
-          "❌ Unable to access your location. Please enable permissions."
-        );
+    // Update countdown every second
+    function updateCountdown() {
+      if (countdownElem) {
+        countdownElem.innerText = formatCountdown(data.timings[next.name]);
       }
-    );
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // Update date displays
+    if (document.getElementById("weekday")) {
+      const hijri = data.date.hijri.date;
+      const greg = data.date.gregorian.date;
+      const weekday = data.date.gregorian.weekday.en;
+      document.getElementById("weekday").innerText = `${weekday}, ${greg}`;
+      
+      const hijriElem = document.getElementById("hijri");
+      if (hijriElem) {
+        hijriElem.innerText = hijri;
+      }
+    }
+
+    // Update detailed page elements if they exist
+    const todayDateElem = document.getElementById("todayDate");
+    if (todayDateElem) {
+      todayDateElem.innerText = `${data.date.gregorian.weekday.en}, ${data.date.gregorian.date}`;
+    }
+
+    const nextPrayerNameElem = document.getElementById("nextPrayerName");
+    if (nextPrayerNameElem) {
+      nextPrayerNameElem.innerText = next.name;
+    }
+
+    // Populate prayer list if on detailed page
+    const prayerListElem = document.getElementById("prayerList");
+    if (prayerListElem) {
+      populatePrayerList(data.timings, current.name);
+    }
+
+  } catch (error) {
+    console.error("Error updating prayer data:", error);
+    Telegram.WebApp.showAlert("⚠️ Could not load prayer times. Please check your connection.");
   }
 }
 
-document.addEventListener("DOMContentLoaded", init);
+// Populate detailed prayer list
+function populatePrayerList(timings, currentPrayerName) {
+  const prayerListElem = document.getElementById("prayerList");
+  if (!prayerListElem) return;
+
+  const prayerOrder = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+  prayerListElem.innerHTML = '';
+
+  prayerOrder.forEach(prayer => {
+    const div = document.createElement('div');
+    div.className = 'prayer-item';
+    if (prayer === currentPrayerName) {
+      div.classList.add('current-prayer');
+    }
+
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = prayer;
+
+    const timeSpan = document.createElement('span');
+    timeSpan.textContent = timings[prayer];
+
+    div.appendChild(nameSpan);
+    div.appendChild(timeSpan);
+    prayerListElem.appendChild(div);
+  });
+}
+
+// Listen for location updates from LocationManager
+window.addEventListener('locationUpdated', (event) => {
+  const { lat, lon, city } = event.detail;
+  updatePrayerData(lat, lon, city);
+});
+
+// Make updatePrayerData available globally for LocationManager
+window.updatePrayerData = updatePrayerData;

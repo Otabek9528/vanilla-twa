@@ -1,90 +1,110 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  Telegram.WebApp.ready();
+// prayersPage.js - Logic specific to the detailed prayers page
+// This file handles the prayer list display and page-specific interactions
 
-  // Back button behavior
-  document.getElementById("backToMain").addEventListener("click", () => {
-    if (window.history.length > 1) window.history.back();
-    else window.location.replace("../index.html");
-  });
+// Initialize the prayers page
+function initPrayersPage() {
+  const tg = window.Telegram.WebApp;
+  
+  // Hide Telegram native back button – we use our own
+  tg.BackButton.hide();
 
-  // Debug notification system
-  const notify = (msg) => {
-    let note = document.createElement("div");
-    note.className = "debug-note";
-    note.textContent = msg;
-    document.body.appendChild(note);
-    setTimeout(() => note.classList.add("show"), 100);
-    setTimeout(() => note.classList.remove("show"), 4000);
-    setTimeout(() => note.remove(), 4500);
-  };
-
-  // Use cached location or refresh quietly
-  let stored = JSON.parse(localStorage.getItem("userLocation"));
-  let updated = false;
-
-  if (navigator.permissions) {
-    try {
-      const perm = await navigator.permissions.query({ name: "geolocation" });
-      if (perm.state === "granted") {
-        navigator.geolocation.getCurrentPosition(
-          async (pos) => {
-            const lat = pos.coords.latitude.toFixed(4);
-            const lon = pos.coords.longitude.toFixed(4);
-            const city = await getCityName(lat, lon);
-            localStorage.setItem("userLocation", JSON.stringify({ lat, lon, city }));
-            stored = { lat, lon, city };
-            updated = true;
-            notify(`📍 New location updated. Coordinates: ${lon}, ${lat}`);
-            loadPrayerData(stored);
-          },
-          (err) => {
-            console.warn("⚠️ Silent refresh failed:", err.message);
-            if (stored) loadPrayerData(stored);
-          }
-        );
-        return;
-      }
-    } catch (e) {
-      console.warn("Permissions API not supported, fallback to cache");
-    }
+  // Handle footer back button click
+  const backBtn = document.getElementById("backToMain");
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      window.location.href = "../index.html";
+    });
   }
 
-  if (stored && !updated) loadPrayerData(stored);
-  else if (!stored) Telegram.WebApp.showAlert("Location not found. Please reopen main page.");
+  // Handle manual location refresh
+  const refreshBtn = document.getElementById('refreshLocationBtn');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      await LocationManager.manualRefresh();
+    });
+  }
+
+  // Update timestamp display when location updates
+  window.addEventListener('locationUpdated', (event) => {
+    updateTimestampDisplay(event.detail.timestamp);
+  });
+
+  // Show initial timestamp from cached location
+  const location = LocationManager.getStoredLocation();
+  if (location && location.timestamp) {
+    updateTimestampDisplay(location.timestamp);
+  }
+
+  // Check if location is stale and show warning
+  if (LocationManager.isLocationStale()) {
+    showStaleLocationWarning();
+  }
+}
+
+// Update the timestamp display element
+function updateTimestampDisplay(timestamp) {
+  const timestampElem = document.getElementById('locationTimestamp');
+  if (timestampElem && timestamp) {
+    const date = new Date(timestamp);
+    const timeString = date.toLocaleTimeString();
+    const dateString = date.toLocaleDateString();
+    timestampElem.innerText = `Last updated: ${timeString}, ${dateString}`;
+  }
+}
+
+// Show warning if location data is stale
+function showStaleLocationWarning() {
+  const timestampElem = document.getElementById('locationTimestamp');
+  if (timestampElem) {
+    timestampElem.style.color = '#ff9800';
+    timestampElem.innerHTML += ' ⚠️ <small>(Consider refreshing)</small>';
+  }
+
+  // Add pulse animation to refresh button
+  const refreshBtn = document.getElementById('refreshLocationBtn');
+  if (refreshBtn) {
+    refreshBtn.classList.add('stale');
+  }
+}
+
+// Populate the detailed prayer list
+function populateDetailedPrayerList(timings, currentPrayerName) {
+  const prayerListElem = document.getElementById("prayerList");
+  if (!prayerListElem) return;
+
+  const prayerOrder = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+  prayerListElem.innerHTML = '';
+
+  prayerOrder.forEach(prayer => {
+    const div = document.createElement('div');
+    div.className = 'prayer-item';
+    
+    // Highlight current prayer
+    if (prayer === currentPrayerName) {
+      div.classList.add('current-prayer');
+    }
+
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = prayer;
+    nameSpan.style.fontWeight = '600';
+
+    const timeSpan = document.createElement('span');
+    timeSpan.textContent = timings[prayer];
+    timeSpan.style.fontWeight = '500';
+
+    div.appendChild(nameSpan);
+    div.appendChild(timeSpan);
+    prayerListElem.appendChild(div);
+  });
+}
+
+// Listen for prayer data updates and populate the list
+window.addEventListener('prayerDataUpdated', (event) => {
+  if (event.detail && event.detail.timings && event.detail.currentPrayer) {
+    populateDetailedPrayerList(event.detail.timings, event.detail.currentPrayer);
+  }
 });
 
-async function loadPrayerData({ lat, lon, city }) {
-  document.getElementById("cityName").textContent = city;
-
-  const data = await getPrayerTimes(lat, lon);
-
-  // Date display
-  const greg = data.date.gregorian.date;
-  const hijri = data.date.hijri.date;
-  document.getElementById("todayDate").textContent = `${greg} (${hijri})`;
-
-  // List build
-  const list = document.getElementById("prayerList");
-  list.innerHTML = "";
-
-  const prayerOrder = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
-  const { current, next } = getCurrentPrayer(data.timings);
-
-  prayerOrder.forEach((name) => {
-    const time = data.timings[name];
-    const div = document.createElement("div");
-    div.className = "prayer-item";
-    if (name === current.name) div.classList.add("current-prayer");
-    div.innerHTML = `<span>${name}</span><span>${time}</span>`;
-    list.appendChild(div);
-  });
-
-  // Countdown section
-  document.getElementById("nextPrayerName").textContent = next.name;
-
-  function updateCountdown() {
-    document.getElementById("countdown").textContent = formatCountdown(data.timings[next.name]);
-  }
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-}
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', initPrayersPage);

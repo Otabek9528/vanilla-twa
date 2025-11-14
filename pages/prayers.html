@@ -12,8 +12,12 @@
   <header class="app__header">
     <div class="header-content">
       <img src="../assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
-        <h1>Muslim Vegukin Bot</h1>
-      </div>
+      <h1>Muslim Vegukin Bot</h1>
+      <!-- Location refresh button -->
+      <button class="location-refresh-btn" id="refreshLocationBtn" title="Update Location">
+        📍
+      </button>
+    </div>
   </header>
 
   <!-- PRAYER DETAILS -->
@@ -21,6 +25,7 @@
     <h2 id="cityName">Loading...</h2>
     <p id="coords" style="color:#666;font-size:0.9rem;margin-bottom:10px;">Coordinates: -- , --</p>
     <p id="todayDate">Fetching date...</p>
+    <p id="locationTimestamp" style="color:#888;font-size:0.85rem;font-style:italic;">Loading...</p>
 
     <!-- Countdown -->
     <div class="next-prayer-countdown">
@@ -35,25 +40,14 @@
   <!-- BOTTOM BACK BUTTON -->
   <footer class="back-footer">
     <button class="back-btn" id="backToMain">
-      ⬅ Back to Main
+      ⬅️ Back to Main
     </button>
   </footer>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="../js/locationManager.js"></script>
   <script src="../js/prayerTimes.js"></script>
   <script src="../js/prayersPage.js"></script>
-  <script>
-    const tg = window.Telegram.WebApp;
-
-    // Hide Telegram native back button — we use our own
-    tg.BackButton.hide();
-
-    // Handle footer back button click
-    document.getElementById("backToMain").addEventListener("click", () => {
-      window.location.href = "../index.html";
-    });
-  </script>
-  
 
 </body>
 </html>

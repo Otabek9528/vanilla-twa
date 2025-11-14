@@ -51,6 +51,7 @@ function initPrayersPage() {
 
   // Update timestamp display when location updates
   window.addEventListener('locationUpdated', (event) => {
+    console.log('🎉 locationUpdated EVENT received!', event.detail);
     updateTimestampDisplay(event.detail.timestamp);
   });
 
@@ -71,6 +72,36 @@ function initPrayersPage() {
   // Check if location is stale and show warning
   if (LocationManager.isLocationStale()) {
     showStaleLocationWarning();
+  }
+  
+  // DEBUG BUTTON - Force update timestamp to test if element works
+  const debugBtn = document.getElementById('debugTimestamp');
+  if (debugBtn) {
+    debugBtn.addEventListener('click', () => {
+      const timestampElem = document.getElementById('locationTimestamp');
+      const now = Date.now();
+      const date = new Date(now);
+      
+      console.log('🐛 DEBUG: Forcing timestamp update');
+      console.log('🐛 Element found:', timestampElem);
+      console.log('🐛 New time:', date.toLocaleString());
+      
+      if (timestampElem) {
+        timestampElem.innerText = `Last updated: ${date.toLocaleTimeString()}, ${date.toLocaleDateString()}`;
+        timestampElem.style.color = '#ff0000'; // Red to show it was forced
+        console.log('✅ DEBUG: Timestamp element updated to:', timestampElem.innerText);
+        
+        // Also update localStorage to test
+        const location = LocationManager.getStoredLocation();
+        if (location) {
+          location.timestamp = now;
+          localStorage.setItem('userLocation', JSON.stringify(location));
+          console.log('✅ DEBUG: localStorage also updated');
+        }
+      } else {
+        console.error('❌ DEBUG: Timestamp element not found!');
+      }
+    });
   }
 }
 

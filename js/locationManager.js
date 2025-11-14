@@ -198,8 +198,13 @@ const LocationManager = {
       timestamp: Date.now()
     };
     
+    console.log('💾 Saving to localStorage:', locationData);
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(locationData));
     localStorage.setItem(this.LAST_UPDATE_KEY, locationData.timestamp.toString());
+    
+    // Verify it was saved
+    const saved = localStorage.getItem(this.STORAGE_KEY);
+    console.log('✅ Verified saved data:', saved);
     
     return locationData;
   },

@@ -17,14 +17,17 @@
 
   <!-- PRAYER + MAIN share the same page width -->
   <div class="app__content-bg">
-    <!-- PRAYER (clickable to open detailed page) -->
+
+    <!-- PRAYER (clickable card) -->
     <section class="prayer">
       <button class="prayer-card minimal-layout" onclick="window.location.href='pages/prayers.html'">
+
         <div class="top-row">
           <div class="left-side">
             <p class="weekday" id="weekday">Loading...</p>
             <p class="hijri" id="hijri">Loading...</p>
           </div>
+
           <div class="right-side">
             <span class="location-icon">📍</span>
             <span class="city-name" id="cityName">Loading...</span>
@@ -44,11 +47,13 @@
             <p class="countdown" id="countdown">--:--:--</p>
           </div>
         </div>
+
       </button>
     </section>
 
     <!-- MAIN (cards) -->
     <main class="main">
+
       <button class="card">
         <img src="assets/mosque.png" alt="Mosques" />
         <p>Mosques</p>
@@ -88,6 +93,7 @@
         <img src="assets/store.jpg" alt="Store" />
         <p>Store</p>
       </button>
+
     </main>
   </div>
 
@@ -99,6 +105,44 @@
 
   <!-- JS Scripts -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- Load geolocation FIRST -->
+  <script src="js/geolocation.js"></script>
+
+  <!-- Then prayer time updater for index card -->
   <script src="js/prayerTimes.js"></script>
+
+  <script>
+    // Page-specific initialization
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+      // 1️⃣ Initialize location using geolocation.js
+      initLocation((lat, lon, city) => {
+        document.getElementById("cityName").innerText = city;
+        document.getElementById("coords")?.innerText =
+          `(${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+
+        // 2️⃣ Update prayer information on card
+        updatePrayerData(lat, lon, city);
+
+        // 3️⃣ Update weekday + Hijri date
+        const now = new Date();
+        const weekdayNames = [
+          "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"
+        ];
+        document.getElementById("weekday").innerText =
+          weekdayNames[now.getDay()];
+
+        // Hijri date from Aladhan API
+        fetch("https://api.aladhan.com/v1/gToH")
+          .then(r => r.json())
+          .then(data => {
+            document.getElementById("hijri").innerText =
+              `${data.data.hijri.day} ${data.data.hijri.month.en}`;
+          });
+      });
+    });
+  </script>
 </body>
 </html>

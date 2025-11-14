@@ -117,8 +117,7 @@ const LocationManager = {
   async manualRefresh() {
     console.log('🔄 Manual refresh initiated at:', new Date().toLocaleString());
     
-    // Show loading state using alert (compatible with older versions)
-    Telegram.WebApp.showAlert('📍 Getting your location...');
+    // No popup - just proceed silently with console logs
 
     return new Promise((resolve) => {
       const options = {
@@ -139,38 +138,34 @@ const LocationManager = {
             console.log('✅ Processed location data:', locationData);
             console.log('🕒 New timestamp:', new Date(locationData.timestamp).toLocaleString());
             
-            // Show success using alert (compatible)
-            Telegram.WebApp.showAlert(`✅ Location Updated!\n${locationData.city}\n${new Date(locationData.timestamp).toLocaleTimeString()}`);
-            
             console.log('🎨 Calling updateUI with:', locationData);
             this.updateUI(locationData);
             console.log('✅ Manual refresh complete');
             resolve(locationData);
           } catch (error) {
             console.error('❌ Error processing position:', error);
-            Telegram.WebApp.showAlert('⚠️ Error updating location. Using cached data.');
             resolve(this.getStoredLocation());
           }
         },
         (error) => {
           console.error('❌ Geolocation error:', error.code, error.message);
           
-          let errorMsg = '❌ Could not update location. ';
+          let errorMsg = '❌ Could not update location: ';
           switch(error.code) {
             case error.PERMISSION_DENIED:
-              errorMsg += 'Permission denied. Please enable location in settings.';
+              errorMsg += 'Permission denied.';
               break;
             case error.POSITION_UNAVAILABLE:
-              errorMsg += 'Location unavailable. Using cached location.';
+              errorMsg += 'Location unavailable.';
               break;
             case error.TIMEOUT:
-              errorMsg += 'Request timed out. Using cached location.';
+              errorMsg += 'Request timed out.';
               break;
             default:
-              errorMsg += 'Using cached location.';
+              errorMsg += 'Unknown error.';
           }
           
-          Telegram.WebApp.showAlert(errorMsg);
+          console.error(errorMsg);
           resolve(this.getStoredLocation());
         },
         options

@@ -14,7 +14,7 @@
       <h1>Muslim Vegukin Bot</h1>
       <!-- Location refresh button in header -->
       <button class="location-refresh-btn" id="refreshLocationBtn" title="Update Location">
-        📍
+        <span id="refreshIcon">📍</span>
       </button>
     </div>
   </header>
@@ -130,6 +130,7 @@
       
       try {
         await LocationManager.manualRefresh();
+        console.log('✅ Manual refresh completed');
       } catch (error) {
         console.error('Refresh error:', error);
       } finally {
@@ -137,6 +138,32 @@
         btn.style.opacity = '1';
         btn.disabled = false;
         isRefreshing = false;
+      }
+    });
+
+    // Update timestamp display when location updates
+    window.addEventListener('locationUpdated', (event) => {
+      const timestampElem = document.getElementById('locationTimestamp');
+      if (timestampElem && event.detail.timestamp) {
+        const date = new Date(event.detail.timestamp);
+        const timeString = date.toLocaleTimeString();
+        timestampElem.innerText = `Updated: ${timeString}`;
+        console.log('🕒 Index page timestamp updated:', timeString);
+      }
+    });
+
+    // Show initial timestamp
+    document.addEventListener('DOMContentLoaded', () => {
+      const location = LocationManager.getStoredLocation();
+      const timestampElem = document.getElementById('locationTimestamp');
+      
+      if (location && location.timestamp && timestampElem) {
+        const date = new Date(location.timestamp);
+        const timeString = date.toLocaleTimeString();
+        timestampElem.innerText = `Updated: ${timeString}`;
+        console.log('🕒 Initial timestamp set:', timeString);
+      } else if (timestampElem) {
+        timestampElem.innerText = 'Location not loaded';
       }
     });
 

@@ -88,6 +88,41 @@ body {
   flex: 1;
 }
 
+/* Language flag buttons in header */
+.lang-flags {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.flag-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.flag-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.flag-btn:active, .flag-btn.active {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.7);
+  transform: scale(0.95);
+}
+
 /* Location refresh button in header */
 .location-refresh-btn {
   background: rgba(255, 255, 255, 0.2);
@@ -183,113 +218,222 @@ body {
 }
 
 /* =========================
-   3) PRAYER PANEL (Optimized version)
+   3) PRAYER PANEL (Timeline Style)
    ========================= */
 .prayer {
-  background: #f6f3eb;
-  padding: 10px 12px;
-  border-radius: 18px;
-  font-family: 'Poppins', sans-serif;
-  color: #1f3d33;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  padding: 0;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   max-width: 95%;
   margin: 0 auto 18px;
-  box-sizing: border-box;
   overflow: hidden;
 }
 
-.prayer-card {
+.prayer-card-timeline {
   all: unset;
   display: block;
   width: 100%;
-  box-sizing: border-box;
-  background: #f6f3eb;
-  border-radius: 18px;
-  padding: 16px 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  background: linear-gradient(135deg, #f6f9fc 0%, #ffffff 100%);
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
-.prayer-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+.prayer-card-timeline:hover {
+  background: linear-gradient(135deg, #f0f5f9 0%, #fafafa 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
-.prayer-card:focus {
-  outline: none;
+.prayer-card-timeline:active {
+  transform: translateY(0);
 }
 
-/* ---- TOP ROW ---- */
-.top-row {
+/* Header: Location + Refresh */
+.timeline-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 10px;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
-.left-side {
-  text-align: left;
-}
-
-.weekday {
-  font-size: 1.05rem;
-  font-weight: 600;
-  margin: 0;
-  color: #0b3c33;
-}
-
-.hijri {
-  font-size: 0.9rem;
-  color: #49645b;
-  margin-top: 3px;
-}
-
-.right-side {
+.location-row {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.95rem;
-  color: #2e5147;
+  color: #1a4d2e;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .location-icon {
   font-size: 1.1rem;
+  line-height: 1;
 }
 
-/* ---- MIDDLE ROW ---- */
-.middle-row {
+.city-name {
+  line-height: 1;
+}
+
+/* Refresh button */
+.prayer-refresh-btn {
+  background: rgba(0, 168, 132, 0.1);
+  border: 1.5px solid rgba(0, 168, 132, 0.25);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  text-align: center;
-  margin-top: 8px;
-}
-
-.prayer-current,
-.prayer-next {
-  flex: 1;
-}
-
-.prayer-name,
-.next-name {
-  font-size: 1.6rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: #004d40;
-}
-
-.prayer-time,
-.countdown {
-  font-size: 1.2rem;
-  color: #2f4f4f;
-}
-
-.arrow {
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
   flex-shrink: 0;
-  font-size: 1.5rem;
-  color: #007d5e;
-  margin: 0 18px;
+}
+
+.prayer-refresh-btn:hover:not(:disabled) {
+  background: rgba(0, 168, 132, 0.2);
+  border-color: rgba(0, 168, 132, 0.4);
+  transform: scale(1.1);
+}
+
+.prayer-refresh-btn:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.prayer-refresh-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.prayer-refresh-btn #refreshIcon {
+  display: inline-block;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.prayer-refresh-btn #refreshIcon.spinning {
+  animation: spin 1s linear infinite !important;
+}
+
+/* Date section */
+.timeline-date {
+  margin-bottom: 16px;
+}
+
+.timeline-date .weekday {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #0b3c33;
+  line-height: 1.3;
+}
+
+.timeline-date .hijri {
+  font-size: 0.85rem;
+  color: #49645b;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Timeline Prayer Section */
+.timeline-prayer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.timeline-start,
+.timeline-end {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.timeline-emoji {
+  font-size: 2rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.timeline-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1a4d2e;
+  line-height: 1.2;
+}
+
+.timeline-time {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #2c5e2e;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+/* Timeline Progress/Countdown */
+.timeline-progress {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  padding: 0 8px;
+}
+
+.progress-line {
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #00a884 0%, #4caf50 100%);
+  border-radius: 2px;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 168, 132, 0.3);
+}
+
+.progress-line::before,
+.progress-line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00a884;
+  box-shadow: 0 0 0 2px white, 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.progress-line::before {
+  left: -4px;
+}
+
+.progress-line::after {
+  right: -4px;
+  background: #4caf50;
+}
+
+.countdown-badge {
+  background: linear-gradient(135deg, #fff3cd 0%, #fff9e6 100%);
+  border: 2px solid #ffc107;
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ff8f00;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 6px rgba(255, 193, 7, 0.2);
+  white-space: nowrap;
 }
 
 /* =========================

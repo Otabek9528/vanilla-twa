@@ -12,40 +12,55 @@
     <div class="header-content">
       <img src="assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
       <h1>Muslim Vegukin Bot</h1>
-      <!-- Location refresh button in header -->
-      <button class="location-refresh-btn" id="refreshLocationBtn" title="Update Location">
-        <span id="refreshIcon">📍</span>
-      </button>
+      <!-- Language flags in header -->
+      <div class="lang-flags">
+        <button class="flag-btn" id="flagRu" title="Русский">🇷🇺</button>
+        <button class="flag-btn" id="flagEn" title="English">🇬🇧</button>
+      </div>
     </div>
   </header>
 
   <!-- PRAYER + MAIN share the same page width -->
   <div class="app__content-bg">
-    <!-- PRAYER (clickable to open detailed page) -->
+    <!-- PRAYER (Timeline Style - clickable to open detailed page) -->
     <section class="prayer">
-      <button class="prayer-card minimal-layout" onclick="window.location.href='pages/prayers.html'">
-        <div class="top-row">
-          <div class="left-side">
-            <p class="weekday" id="weekday">Loading...</p>
-            <p class="hijri" id="hijri">Loading...</p>
-          </div>
-          <div class="right-side">
+      <button class="prayer-card-timeline" onclick="window.location.href='pages/prayers.html'">
+        <!-- Header: Location with refresh button -->
+        <div class="timeline-header">
+          <div class="location-row">
             <span class="location-icon">📍</span>
             <span class="city-name" id="cityName">Loading...</span>
           </div>
+          <button class="prayer-refresh-btn" id="refreshLocationBtn" title="Update Location" onclick="event.stopPropagation();">
+            <span id="refreshIcon">🔄</span>
+          </button>
         </div>
 
-        <div class="middle-row">
-          <div class="prayer-current">
-            <h2 class="prayer-name" id="currentPrayer">--</h2>
-            <p class="prayer-time" id="prayerTime">--:--</p>
+        <!-- Date info -->
+        <div class="timeline-date">
+          <p class="weekday" id="weekday">Loading...</p>
+          <p class="hijri" id="hijri">Loading...</p>
+        </div>
+
+        <!-- Timeline: Current → Next -->
+        <div class="timeline-prayer">
+          <div class="timeline-start">
+            <span class="timeline-emoji" id="currentEmoji">🌅</span>
+            <h3 class="timeline-name" id="currentPrayer">--</h3>
+            <p class="timeline-time" id="prayerTime">--:--</p>
           </div>
 
-          <div class="arrow">➜</div>
+          <div class="timeline-progress">
+            <div class="progress-line"></div>
+            <div class="countdown-badge">
+              <span id="countdown">--:--:--</span>
+            </div>
+          </div>
 
-          <div class="prayer-next">
-            <h2 class="next-name" id="nextPrayer">--</h2>
-            <p class="countdown" id="countdown">--:--:--</p>
+          <div class="timeline-end">
+            <span class="timeline-emoji" id="nextEmoji">☀️</span>
+            <h3 class="timeline-name" id="nextPrayer">--</h3>
+            <p class="timeline-time" id="nextPrayerTime">--:--</p>
           </div>
         </div>
       </button>
@@ -95,12 +110,6 @@
     </main>
   </div>
 
-  <!-- LANGUAGE -->
-  <footer class="lang">
-    <button class="lang__btn">🇷🇺 Russian</button>
-    <button class="lang__btn">🇬🇧 English</button>
-  </footer>
-
   <!-- JS Scripts -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="js/locationManager.js"></script>
@@ -139,7 +148,7 @@
           icon.classList.remove('spinning');
           icon.innerText = '✅';
           setTimeout(() => {
-            icon.innerText = '📍';
+            icon.innerText = '🔄';
           }, 2000);
         }
       } catch (error) {
@@ -150,7 +159,7 @@
           icon.classList.remove('spinning');
           icon.innerText = '❌';
           setTimeout(() => {
-            icon.innerText = '📍';
+            icon.innerText = '🔄';
           }, 2000);
         }
       } finally {
@@ -159,6 +168,17 @@
         btn.disabled = false;
         isRefreshing = false;
       }
+    });
+
+    // Language flag buttons
+    document.getElementById('flagRu').addEventListener('click', () => {
+      console.log('Russian selected');
+      // TODO: Implement language switching
+    });
+
+    document.getElementById('flagEn').addEventListener('click', () => {
+      console.log('English selected');
+      // TODO: Implement language switching
     });
 
     // Update timestamp display when location updates

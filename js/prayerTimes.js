@@ -67,15 +67,32 @@ async function updatePrayerData(lat, lon, city) {
     const data = await getPrayerTimes(lat, lon);
     const { current, next } = getCurrentPrayer(data.timings);
 
+    // Prayer emoji mapping
+    const prayerEmojis = {
+      "Fajr": "🌅",
+      "Dhuhr": "☀️",
+      "Asr": "🌤️",
+      "Maghrib": "🌇",
+      "Isha": "🌙"
+    };
+
     // Update current prayer display
     const currentPrayerElem = document.getElementById("currentPrayer");
     const prayerTimeElem = document.getElementById("prayerTime");
+    const currentEmojiElem = document.getElementById("currentEmoji");
+    
     const nextPrayerElem = document.getElementById("nextPrayer");
     const countdownElem = document.getElementById("countdown");
+    const nextEmojiElem = document.getElementById("nextEmoji");
+    const nextPrayerTimeElem = document.getElementById("nextPrayerTime");
 
     if (currentPrayerElem) currentPrayerElem.innerText = current.name;
     if (prayerTimeElem) prayerTimeElem.innerText = data.timings[current.name];
+    if (currentEmojiElem) currentEmojiElem.innerText = prayerEmojis[current.name] || '🕌';
+    
     if (nextPrayerElem) nextPrayerElem.innerText = next.name;
+    if (nextEmojiElem) nextEmojiElem.innerText = prayerEmojis[next.name] || '🕌';
+    if (nextPrayerTimeElem) nextPrayerTimeElem.innerText = data.timings[next.name];
 
     // Update countdown every second (using local time)
     function updateCountdown() {

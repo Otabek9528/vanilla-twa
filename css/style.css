@@ -37,7 +37,7 @@ body {
 .app__header {
   background: linear-gradient(135deg, var(--green-1), var(--green-2));
   color: #fff;
-  padding: 10px 16px;
+  padding: 20px 16px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   box-shadow: var(--shadow-1);
@@ -122,13 +122,12 @@ body {
    ========================= */
 .prayer-panel {
   background: #ffffff;
-  padding: 20px 16px 16px 16px; /* Added top padding to prevent overlap */
+  padding: 10px 16px 16px 16px; /* Added top padding to prevent overlap */
   width: 100%;
   box-sizing: border-box;
   margin-top: 0; /* No negative margin */
   position: relative;
-  z-index: 50; /* Below header */
-  margin-top: 50; /* ← ADJUST THIS if needed */
+  z-index: 5; /* Below header */
 }
 
 /* =========================

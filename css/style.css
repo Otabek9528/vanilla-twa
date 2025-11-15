@@ -208,38 +208,28 @@ body {
 }
 
 /* =========================
-   2) Background wrapper for sections
+   2) PRAYER PANEL (Panel 2 - separate from main)
    ========================= */
-.app__content-bg {
-  background: url('../assets/main_bg.jpg') no-repeat bottom center/cover;
-  flex: 1;
-  position: relative;
-  padding: 0 16px 16px; /* Add horizontal padding */
-  max-width: 640px; /* Match app container */
-  margin: 0 auto;
+.prayer-panel {
+  background: #f9fafb;
+  padding: 16px;
   width: 100%;
   box-sizing: border-box;
 }
 
 /* =========================
-   3) PRAYER PANEL (Timeline Style)
+   3) PRAYER CARD (Timeline Style)
    ========================= */
-.prayer {
-  background: #ffffff;
-  padding: 0;
-  border-radius: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  width: 100%; /* Full width of parent container */
-  margin: 0 0 18px 0; /* Remove auto margins */
-  overflow: hidden;
-}
-
 .prayer-card-timeline {
   all: unset;
   display: block;
   width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
   padding: 20px;
   background: linear-gradient(135deg, #f6f9fc 0%, #ffffff 100%);
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
   box-sizing: border-box;

@@ -20,53 +20,52 @@
     </div>
   </header>
 
-  <!-- PRAYER + MAIN share the same page width -->
-  <div class="app__content-bg">
-    <!-- PRAYER (Timeline Style - clickable to open detailed page) -->
-    <section class="prayer">
-      <button class="prayer-card-timeline" onclick="window.location.href='pages/prayers.html'">
-        <!-- Header: Location with refresh button -->
-        <div class="timeline-header">
-          <div class="location-row">
-            <span class="location-icon">📍</span>
-            <span class="city-name" id="cityName">Loading...</span>
-          </div>
-          <button class="prayer-refresh-btn" id="refreshLocationBtn" title="Update Location" onclick="event.stopPropagation();">
-            <span id="refreshIcon">🔄</span>
-          </button>
+  <!-- PRAYER PANEL (Panel 2) -->
+  <section class="prayer-panel">
+    <button class="prayer-card-timeline" onclick="window.location.href='pages/prayers.html'">
+      <!-- Header: Location with refresh button -->
+      <div class="timeline-header">
+        <div class="location-row">
+          <span class="location-icon">📍</span>
+          <span class="city-name" id="cityName">Loading...</span>
+        </div>
+        <button class="prayer-refresh-btn" id="refreshLocationBtn" title="Update Location" onclick="event.stopPropagation();">
+          <span id="refreshIcon">🔄</span>
+        </button>
+      </div>
+
+      <!-- Date info -->
+      <div class="timeline-date">
+        <p class="weekday" id="weekday">Loading...</p>
+        <p class="hijri" id="hijri">Loading...</p>
+      </div>
+
+      <!-- Timeline: Current → Next -->
+      <div class="timeline-prayer">
+        <div class="timeline-start">
+          <span class="timeline-emoji" id="currentEmoji">🌅</span>
+          <h3 class="timeline-name" id="currentPrayer">--</h3>
+          <p class="timeline-time" id="prayerTime">--:--</p>
         </div>
 
-        <!-- Date info -->
-        <div class="timeline-date">
-          <p class="weekday" id="weekday">Loading...</p>
-          <p class="hijri" id="hijri">Loading...</p>
-        </div>
-
-        <!-- Timeline: Current → Next -->
-        <div class="timeline-prayer">
-          <div class="timeline-start">
-            <span class="timeline-emoji" id="currentEmoji">🌅</span>
-            <h3 class="timeline-name" id="currentPrayer">--</h3>
-            <p class="timeline-time" id="prayerTime">--:--</p>
-          </div>
-
-          <div class="timeline-progress">
-            <div class="progress-line"></div>
-            <div class="countdown-badge">
-              <span id="countdown">--:--:--</span>
-            </div>
-          </div>
-
-          <div class="timeline-end">
-            <span class="timeline-emoji" id="nextEmoji">☀️</span>
-            <h3 class="timeline-name" id="nextPrayer">--</h3>
-            <p class="timeline-time" id="nextPrayerTime">--:--</p>
+        <div class="timeline-progress">
+          <div class="progress-line"></div>
+          <div class="countdown-badge">
+            <span id="countdown">--:--:--</span>
           </div>
         </div>
-      </button>
-    </section>
 
-    <!-- MAIN (cards) -->
+        <div class="timeline-end">
+          <span class="timeline-emoji" id="nextEmoji">☀️</span>
+          <h3 class="timeline-name" id="nextPrayer">--</h3>
+          <p class="timeline-time" id="nextPrayerTime">--:--</p>
+        </div>
+      </div>
+    </button>
+  </section>
+
+  <!-- MAIN PANEL (Panel 3) with background -->
+  <div class="main-panel">
     <main class="main">
       <button class="card">
         <img src="assets/mosque.png" alt="Mosques" />

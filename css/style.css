@@ -214,7 +214,11 @@ body {
   background: url('../assets/main_bg.jpg') no-repeat bottom center/cover;
   flex: 1;
   position: relative;
-  padding-bottom: 16px;
+  padding: 0 16px 16px; /* Add horizontal padding */
+  max-width: 640px; /* Match app container */
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* =========================
@@ -225,8 +229,8 @@ body {
   padding: 0;
   border-radius: 20px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  max-width: 95%;
-  margin: 0 auto 18px;
+  width: 100%; /* Full width of parent container */
+  margin: 0 0 18px 0; /* Remove auto margins */
   overflow: hidden;
 }
 
@@ -443,8 +447,9 @@ body {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
-  padding: 48px 20px 28px;
+  padding: 0; /* Remove extra padding, parent container has it */
   justify-items: center;
+  width: 100%;
 }
 
 .card {

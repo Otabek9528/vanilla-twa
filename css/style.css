@@ -88,41 +88,6 @@ body {
   flex: 1;
 }
 
-/* Language flag buttons in header */
-.lang-flags {
-  display: flex;
-  gap: 6px;
-  margin-left: auto;
-}
-
-.flag-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-  width: 40px;
-  height: 40px;
-  font-size: 1.4rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  line-height: 1;
-}
-
-.flag-btn:hover {
-  background: rgba(255, 255, 255, 0.35);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: scale(1.05);
-}
-
-.flag-btn:active, .flag-btn.active {
-  background: rgba(255, 255, 255, 0.5);
-  border-color: rgba(255, 255, 255, 0.7);
-  transform: scale(0.95);
-}
-
 /* Location refresh button in header */
 .location-refresh-btn {
   background: rgba(255, 255, 255, 0.2);
@@ -218,39 +183,53 @@ body {
 }
 
 /* =========================
-   3) PRAYER PANEL (Redesigned)
+   3) PRAYER PANEL (Optimized version)
    ========================= */
 .prayer {
   background: #f6f3eb;
-  padding: 0;
+  padding: 10px 12px;
   border-radius: 18px;
   font-family: 'Poppins', sans-serif;
   color: #1f3d33;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   max-width: 95%;
   margin: 0 auto 18px;
+  box-sizing: border-box;
   overflow: hidden;
 }
 
-.prayer-card-wrapper {
-  display: flex;
-  flex-direction: column;
+.prayer-card {
+  all: unset;
+  display: block;
   width: 100%;
+  box-sizing: border-box;
+  background: #f6f3eb;
+  border-radius: 18px;
+  padding: 16px 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Top header section (NOT clickable) */
-.prayer-card-header {
+.prayer-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.prayer-card:focus {
+  outline: none;
+}
+
+/* ---- TOP ROW ---- */
+.top-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 16px 20px 12px;
-  background: #f6f3eb;
+  margin-bottom: 10px;
 }
 
-.date-section {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+.left-side {
+  text-align: left;
 }
 
 .weekday {
@@ -258,17 +237,15 @@ body {
   font-weight: 600;
   margin: 0;
   color: #0b3c33;
-  line-height: 1.2;
 }
 
 .hijri {
   font-size: 0.9rem;
   color: #49645b;
-  margin: 0;
-  line-height: 1.2;
+  margin-top: 3px;
 }
 
-.location-section {
+.right-side {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -277,100 +254,35 @@ body {
 }
 
 .location-icon {
-  font-size: 1rem;
-  line-height: 1;
+  font-size: 1.1rem;
 }
 
-.city-name {
-  font-weight: 500;
-  line-height: 1;
-}
-
-/* Prayer refresh button (small, inline) */
-.prayer-refresh-btn {
-  background: rgba(0, 123, 94, 0.12);
-  border: 1.5px solid rgba(0, 123, 94, 0.25);
-  border-radius: 50%;
-  width: 26px;
-  height: 26px;
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.prayer-refresh-btn:hover:not(:disabled) {
-  background: rgba(0, 123, 94, 0.2);
-  border-color: rgba(0, 123, 94, 0.4);
-  transform: scale(1.08);
-}
-
-.prayer-refresh-btn:active:not(:disabled) {
-  transform: scale(0.92);
-}
-
-.prayer-refresh-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.prayer-refresh-btn #refreshIcon {
-  display: inline-block;
-  font-size: 0.75rem;
-  line-height: 1;
-}
-
-.prayer-refresh-btn #refreshIcon.spinning {
-  animation: spin 1s linear infinite !important;
-}
-
-/* Prayer times card (CLICKABLE) */
-.prayer-times-card {
-  all: unset;
+/* ---- MIDDLE ROW ---- */
+.middle-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
-  background: #f6f3eb;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.prayer-times-card:hover {
-  background: #f0ede5;
-}
-
-.prayer-times-card:active {
-  transform: scale(0.98);
+  text-align: center;
+  margin-top: 8px;
 }
 
 .prayer-current,
 .prayer-next {
   flex: 1;
-  text-align: center;
 }
 
 .prayer-name,
 .next-name {
   font-size: 1.6rem;
   font-weight: 600;
-  margin: 0 0 4px 0;
+  margin-bottom: 4px;
   color: #004d40;
-  line-height: 1.2;
 }
 
 .prayer-time,
 .countdown {
   font-size: 1.2rem;
   color: #2f4f4f;
-  margin: 0;
-  line-height: 1.2;
 }
 
 .arrow {
@@ -378,7 +290,6 @@ body {
   font-size: 1.5rem;
   color: #007d5e;
   margin: 0 18px;
-  line-height: 1;
 }
 
 /* =========================

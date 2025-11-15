@@ -12,11 +12,10 @@
     <div class="header-content">
       <img src="assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
       <h1>Muslim Vegukin Bot</h1>
-      <!-- Language flags in header -->
-      <div class="lang-flags">
-        <button class="flag-btn" id="flagRu" title="Русский">🇷🇺</button>
-        <button class="flag-btn" id="flagEn" title="English">🇬🇧</button>
-      </div>
+      <!-- Location refresh button in header -->
+      <button class="location-refresh-btn" id="refreshLocationBtn" title="Update Location">
+        <span id="refreshIcon">📍</span>
+      </button>
     </div>
   </header>
 
@@ -24,24 +23,19 @@
   <div class="app__content-bg">
     <!-- PRAYER (clickable to open detailed page) -->
     <section class="prayer">
-      <div class="prayer-card-wrapper">
-        <!-- Top section with date and location -->
-        <div class="prayer-card-header">
-          <div class="date-section">
+      <button class="prayer-card minimal-layout" onclick="window.location.href='pages/prayers.html'">
+        <div class="top-row">
+          <div class="left-side">
             <p class="weekday" id="weekday">Loading...</p>
             <p class="hijri" id="hijri">Loading...</p>
           </div>
-          <div class="location-section">
+          <div class="right-side">
             <span class="location-icon">📍</span>
             <span class="city-name" id="cityName">Loading...</span>
-            <button class="prayer-refresh-btn" id="refreshLocationBtn" title="Update Location">
-              <span id="refreshIcon">🔄</span>
-            </button>
           </div>
         </div>
 
-        <!-- Prayer times section (clickable) -->
-        <button class="prayer-times-card" onclick="window.location.href='pages/prayers.html'">
+        <div class="middle-row">
           <div class="prayer-current">
             <h2 class="prayer-name" id="currentPrayer">--</h2>
             <p class="prayer-time" id="prayerTime">--:--</p>
@@ -53,8 +47,8 @@
             <h2 class="next-name" id="nextPrayer">--</h2>
             <p class="countdown" id="countdown">--:--:--</p>
           </div>
-        </button>
-      </div>
+        </div>
+      </button>
     </section>
 
     <!-- MAIN (cards) -->
@@ -101,6 +95,12 @@
     </main>
   </div>
 
+  <!-- LANGUAGE -->
+  <footer class="lang">
+    <button class="lang__btn">🇷🇺 Russian</button>
+    <button class="lang__btn">🇬🇧 English</button>
+  </footer>
+
   <!-- JS Scripts -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="js/locationManager.js"></script>
@@ -139,7 +139,7 @@
           icon.classList.remove('spinning');
           icon.innerText = '✅';
           setTimeout(() => {
-            icon.innerText = '🔄';
+            icon.innerText = '📍';
           }, 2000);
         }
       } catch (error) {
@@ -150,7 +150,7 @@
           icon.classList.remove('spinning');
           icon.innerText = '❌';
           setTimeout(() => {
-            icon.innerText = '🔄';
+            icon.innerText = '📍';
           }, 2000);
         }
       } finally {
@@ -159,17 +159,6 @@
         btn.disabled = false;
         isRefreshing = false;
       }
-    });
-
-    // Language flag buttons
-    document.getElementById('flagRu').addEventListener('click', () => {
-      console.log('Russian selected');
-      // TODO: Implement language switching
-    });
-
-    document.getElementById('flagEn').addEventListener('click', () => {
-      console.log('English selected');
-      // TODO: Implement language switching
     });
 
     // Update timestamp display when location updates

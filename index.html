@@ -24,26 +24,24 @@
   <div class="app__content-bg">
     <!-- PRAYER (clickable to open detailed page) -->
     <section class="prayer">
-      <button class="prayer-card minimal-layout" onclick="window.location.href='pages/prayers.html'">
-        <div class="top-row">
-          <div class="left-side">
+      <div class="prayer-card-wrapper">
+        <!-- Top section with date and location -->
+        <div class="prayer-card-header">
+          <div class="date-section">
             <p class="weekday" id="weekday">Loading...</p>
             <p class="hijri" id="hijri">Loading...</p>
           </div>
-          <div class="right-side">
-            <div class="city-with-refresh">
-              <div class="city-info">
-                <span class="location-icon">📍</span>
-                <span class="city-name" id="cityName">Loading...</span>
-              </div>
-              <button class="prayer-refresh-btn" id="refreshLocationBtn" title="Update Location">
-                <span id="refreshIcon">🔄</span>
-              </button>
-            </div>
+          <div class="location-section">
+            <span class="location-icon">📍</span>
+            <span class="city-name" id="cityName">Loading...</span>
+            <button class="prayer-refresh-btn" id="refreshLocationBtn" title="Update Location">
+              <span id="refreshIcon">🔄</span>
+            </button>
           </div>
         </div>
 
-        <div class="middle-row">
+        <!-- Prayer times section (clickable) -->
+        <button class="prayer-times-card" onclick="window.location.href='pages/prayers.html'">
           <div class="prayer-current">
             <h2 class="prayer-name" id="currentPrayer">--</h2>
             <p class="prayer-time" id="prayerTime">--:--</p>
@@ -55,8 +53,8 @@
             <h2 class="next-name" id="nextPrayer">--</h2>
             <p class="countdown" id="countdown">--:--:--</p>
           </div>
-        </div>
-      </button>
+        </button>
+      </div>
     </section>
 
     <!-- MAIN (cards) -->

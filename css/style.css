@@ -218,53 +218,39 @@ body {
 }
 
 /* =========================
-   3) PRAYER PANEL (Optimized version)
+   3) PRAYER PANEL (Redesigned)
    ========================= */
 .prayer {
   background: #f6f3eb;
-  padding: 10px 12px;
+  padding: 0;
   border-radius: 18px;
   font-family: 'Poppins', sans-serif;
   color: #1f3d33;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   max-width: 95%;
   margin: 0 auto 18px;
-  box-sizing: border-box;
   overflow: hidden;
 }
 
-.prayer-card {
-  all: unset;
-  display: block;
+.prayer-card-wrapper {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  box-sizing: border-box;
-  background: #f6f3eb;
-  border-radius: 18px;
-  padding: 16px 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.prayer-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
-}
-
-.prayer-card:focus {
-  outline: none;
-}
-
-/* ---- TOP ROW ---- */
-.top-row {
+/* Top header section (NOT clickable) */
+.prayer-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 10px;
+  padding: 16px 20px 12px;
+  background: #f6f3eb;
 }
 
-.left-side {
-  text-align: left;
+.date-section {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
 .weekday {
@@ -272,43 +258,42 @@ body {
   font-weight: 600;
   margin: 0;
   color: #0b3c33;
+  line-height: 1.2;
 }
 
 .hijri {
   font-size: 0.9rem;
   color: #49645b;
-  margin-top: 3px;
+  margin: 0;
+  line-height: 1.2;
 }
 
-.right-side {
+.location-section {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   gap: 6px;
   font-size: 0.95rem;
   color: #2e5147;
 }
 
-.city-with-refresh {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.location-icon {
+  font-size: 1rem;
+  line-height: 1;
 }
 
-.city-info {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.city-name {
+  font-weight: 500;
+  line-height: 1;
 }
 
-/* Prayer refresh button (in prayer card) */
+/* Prayer refresh button (small, inline) */
 .prayer-refresh-btn {
-  background: rgba(0, 123, 94, 0.15);
-  border: 2px solid rgba(0, 123, 94, 0.3);
+  background: rgba(0, 123, 94, 0.12);
+  border: 1.5px solid rgba(0, 123, 94, 0.25);
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  font-size: 0.9rem;
+  width: 26px;
+  height: 26px;
+  font-size: 0.75rem;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -320,13 +305,13 @@ body {
 }
 
 .prayer-refresh-btn:hover:not(:disabled) {
-  background: rgba(0, 123, 94, 0.25);
-  border-color: rgba(0, 123, 94, 0.5);
-  transform: scale(1.1);
+  background: rgba(0, 123, 94, 0.2);
+  border-color: rgba(0, 123, 94, 0.4);
+  transform: scale(1.08);
 }
 
 .prayer-refresh-btn:active:not(:disabled) {
-  transform: scale(0.9);
+  transform: scale(0.92);
 }
 
 .prayer-refresh-btn:disabled {
@@ -336,43 +321,56 @@ body {
 
 .prayer-refresh-btn #refreshIcon {
   display: inline-block;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+  line-height: 1;
 }
 
 .prayer-refresh-btn #refreshIcon.spinning {
   animation: spin 1s linear infinite !important;
 }
 
-.location-icon {
-  font-size: 1.1rem;
-}
-
-/* ---- MIDDLE ROW ---- */
-.middle-row {
+/* Prayer times card (CLICKABLE) */
+.prayer-times-card {
+  all: unset;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  text-align: center;
-  margin-top: 8px;
+  padding: 16px 20px;
+  background: #f6f3eb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.prayer-times-card:hover {
+  background: #f0ede5;
+}
+
+.prayer-times-card:active {
+  transform: scale(0.98);
 }
 
 .prayer-current,
 .prayer-next {
   flex: 1;
+  text-align: center;
 }
 
 .prayer-name,
 .next-name {
   font-size: 1.6rem;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin: 0 0 4px 0;
   color: #004d40;
+  line-height: 1.2;
 }
 
 .prayer-time,
 .countdown {
   font-size: 1.2rem;
   color: #2f4f4f;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .arrow {
@@ -380,6 +378,7 @@ body {
   font-size: 1.5rem;
   color: #007d5e;
   margin: 0 18px;
+  line-height: 1;
 }
 
 /* =========================

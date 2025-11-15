@@ -88,6 +88,41 @@ body {
   flex: 1;
 }
 
+/* Language flag buttons in header */
+.lang-flags {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.flag-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.flag-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.flag-btn:active, .flag-btn.active {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.7);
+  transform: scale(0.95);
+}
+
 /* Location refresh button in header */
 .location-refresh-btn {
   background: rgba(255, 255, 255, 0.2);
@@ -247,10 +282,65 @@ body {
 
 .right-side {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-end;
   gap: 6px;
   font-size: 0.95rem;
   color: #2e5147;
+}
+
+.city-with-refresh {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.city-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Prayer refresh button (in prayer card) */
+.prayer-refresh-btn {
+  background: rgba(0, 123, 94, 0.15);
+  border: 2px solid rgba(0, 123, 94, 0.3);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.prayer-refresh-btn:hover:not(:disabled) {
+  background: rgba(0, 123, 94, 0.25);
+  border-color: rgba(0, 123, 94, 0.5);
+  transform: scale(1.1);
+}
+
+.prayer-refresh-btn:active:not(:disabled) {
+  transform: scale(0.9);
+}
+
+.prayer-refresh-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.prayer-refresh-btn #refreshIcon {
+  display: inline-block;
+  font-size: 0.85rem;
+}
+
+.prayer-refresh-btn #refreshIcon.spinning {
+  animation: spin 1s linear infinite !important;
 }
 
 .location-icon {

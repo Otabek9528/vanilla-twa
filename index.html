@@ -12,10 +12,11 @@
     <div class="header-content">
       <img src="assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
       <h1>Muslim Vegukin Bot</h1>
-      <!-- Location refresh button in header -->
-      <button class="location-refresh-btn" id="refreshLocationBtn" title="Update Location">
-        <span id="refreshIcon">📍</span>
-      </button>
+      <!-- Language flags in header -->
+      <div class="lang-flags">
+        <button class="flag-btn" id="flagRu" title="Русский">🇷🇺</button>
+        <button class="flag-btn" id="flagEn" title="English">🇬🇧</button>
+      </div>
     </div>
   </header>
 
@@ -30,8 +31,15 @@
             <p class="hijri" id="hijri">Loading...</p>
           </div>
           <div class="right-side">
-            <span class="location-icon">📍</span>
-            <span class="city-name" id="cityName">Loading...</span>
+            <div class="city-with-refresh">
+              <div class="city-info">
+                <span class="location-icon">📍</span>
+                <span class="city-name" id="cityName">Loading...</span>
+              </div>
+              <button class="prayer-refresh-btn" id="refreshLocationBtn" title="Update Location">
+                <span id="refreshIcon">🔄</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -95,12 +103,6 @@
     </main>
   </div>
 
-  <!-- LANGUAGE -->
-  <footer class="lang">
-    <button class="lang__btn">🇷🇺 Russian</button>
-    <button class="lang__btn">🇬🇧 English</button>
-  </footer>
-
   <!-- JS Scripts -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="js/locationManager.js"></script>
@@ -139,7 +141,7 @@
           icon.classList.remove('spinning');
           icon.innerText = '✅';
           setTimeout(() => {
-            icon.innerText = '📍';
+            icon.innerText = '🔄';
           }, 2000);
         }
       } catch (error) {
@@ -150,7 +152,7 @@
           icon.classList.remove('spinning');
           icon.innerText = '❌';
           setTimeout(() => {
-            icon.innerText = '📍';
+            icon.innerText = '🔄';
           }, 2000);
         }
       } finally {
@@ -159,6 +161,17 @@
         btn.disabled = false;
         isRefreshing = false;
       }
+    });
+
+    // Language flag buttons
+    document.getElementById('flagRu').addEventListener('click', () => {
+      console.log('Russian selected');
+      // TODO: Implement language switching
+    });
+
+    document.getElementById('flagEn').addEventListener('click', () => {
+      console.log('English selected');
+      // TODO: Implement language switching
     });
 
     // Update timestamp display when location updates

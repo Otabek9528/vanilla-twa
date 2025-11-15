@@ -431,15 +431,53 @@ body {
 }
 
 /* =========================
-   4) Main – cards grid
+   4) MAIN PANEL (Panel 3) - WITH BACKGROUND
+   ========================= */
+.main-panel {
+  /* Background image covering the full area */
+  background-image: url('../assets/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  
+  /* Padding for the container */
+  padding: 24px 16px;
+  
+  /* Make it fill remaining space */
+  flex: 1;
+  
+  /* Optional: Add a subtle overlay for better card visibility */
+  position: relative;
+}
+
+/* Optional overlay to improve card contrast */
+.main-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(249, 250, 251, 0.4);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* =========================
+   5) Main – cards grid
    ========================= */
 .main {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
-  padding: 0; /* Remove extra padding, parent container has it */
+  padding: 0;
   justify-items: center;
   width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .card {
@@ -480,7 +518,7 @@ body {
 }
 
 /* =========================
-   5) Language
+   6) Language
    ========================= */
 .lang {
   background: #f1f7f4;
@@ -523,7 +561,7 @@ body {
 }
 
 /* =========================
-   6) BACK FOOTER BUTTON
+   7) BACK FOOTER BUTTON
    ========================= */
 .back-footer {
   position: fixed;
@@ -566,7 +604,7 @@ body {
 }
 
 /* =========================
-   7) PRAYERS DETAILED PAGE
+   8) PRAYERS DETAILED PAGE
    ========================= */
 .prayers-detailed {
   background-color: #f8fff8;
@@ -751,13 +789,39 @@ body {
   }
 }
 
+/* Next prayer countdown on prayers page */
+.next-prayer-countdown {
+  background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+  border: 2px solid #ffc107;
+  border-radius: 16px;
+  padding: 16px;
+  margin: 20px auto;
+  max-width: 400px;
+  box-shadow: 0 3px 10px rgba(255, 193, 7, 0.2);
+}
+
+.next-prayer-countdown p {
+  margin: 8px 0;
+  font-size: 1.1rem;
+  color: #e65100;
+  font-weight: 600;
+}
+
+.countdown-text {
+  font-size: 1.3rem !important;
+  color: #ff6f00 !important;
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+}
+
 /* =========================
-   8) Responsive tweaks
+   9) Responsive tweaks
    ========================= */
 @media (max-width: 420px) {
   .app { max-width: 100%; }
-  .main { gap: 14px; padding: 40px 14px 24px; }
+  .main { gap: 14px; }
   .card { max-width: 150px; padding: 18px 10px; }
-  .app__header h1 { font-size: 1.35rem; }
-  .app__content-bg { padding-bottom: 70px; }
+  .app__header h1 { font-size: 1rem; }
+  .main-panel { padding: 20px 12px; }
 }

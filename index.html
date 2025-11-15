@@ -20,22 +20,17 @@
     </div>
   </header>
 
-  <!-- PRAYER PANEL (Panel 2) - Contains the entire prayer card -->
+  <!-- PRAYER PANEL (Panel 2) -->
   <section class="prayer-panel">
     <button class="prayer-card-timeline" onclick="window.location.href='pages/prayers.html'">
-      <!-- Header: Location with refresh button -->
-      <div class="timeline-header">
-        <div class="location-row">
-          <span class="location-icon">📍</span>
-          <span class="city-name" id="cityName">Loading...</span>
+      <!-- Top Row: Location Pin on left, Date info on right -->
+      <div class="card-top-row">
+        <span class="location-icon">📍</span>
+        <div class="date-location-group">
+          <p class="city-name" id="cityName">Loading...</p>
+          <p class="weekday-line" id="weekday">Loading...</p>
+          <p class="hijri" id="hijri">Loading...</p>
         </div>
-        
-      </div>
-
-      <!-- Date info -->
-      <div class="timeline-date">
-        <p class="weekday" id="weekday">Loading...</p>
-        <p class="hijri" id="hijri">Loading...</p>
       </div>
 
       <!-- Timeline: Current → Next -->
@@ -112,61 +107,6 @@
   <script src="js/locationManager.js"></script>
   <script src="js/prayerTimes.js"></script>
   <script>
-    // Handle manual location refresh with debouncing
-    let isRefreshing = false;
-    
-    document.getElementById('refreshLocationBtn').addEventListener('click', async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      if (isRefreshing) {
-        console.log('⏳ Refresh already in progress...');
-        return;
-      }
-      
-      isRefreshing = true;
-      const btn = e.currentTarget;
-      const icon = document.getElementById('refreshIcon');
-      
-      // Visual feedback - spinning
-      if (icon) {
-        icon.innerText = '🔄';
-        icon.classList.add('spinning');
-      }
-      btn.style.opacity = '0.5';
-      btn.disabled = true;
-      
-      try {
-        await LocationManager.manualRefresh();
-        console.log('✅ Manual refresh completed');
-        
-        // Success feedback
-        if (icon) {
-          icon.classList.remove('spinning');
-          icon.innerText = '✅';
-          setTimeout(() => {
-            icon.innerText = '🔄';
-          }, 2000);
-        }
-      } catch (error) {
-        console.error('Refresh error:', error);
-        
-        // Error feedback
-        if (icon) {
-          icon.classList.remove('spinning');
-          icon.innerText = '❌';
-          setTimeout(() => {
-            icon.innerText = '🔄';
-          }, 2000);
-        }
-      } finally {
-        // Re-enable button
-        btn.style.opacity = '1';
-        btn.disabled = false;
-        isRefreshing = false;
-      }
-    });
-
     // Language flag buttons
     document.getElementById('flagRu').addEventListener('click', () => {
       console.log('Russian selected');
@@ -182,11 +122,6 @@
     window.addEventListener('locationUpdated', (event) => {
       console.log('✅ Location updated:', event.detail.city);
     });
-
-    // Show stale location warning
-    if (LocationManager.isLocationStale && LocationManager.isLocationStale()) {
-      console.warn('⚠️ Location data is more than 24 hours old');
-    }
   </script>
 </body>
 </html>

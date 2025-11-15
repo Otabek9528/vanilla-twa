@@ -127,8 +127,8 @@ body {
   box-sizing: border-box;
   margin-top: 0; /* No negative margin */
   position: relative;
-  z-index: 5; /* Below header */
-  margin-top: 10; /* ← ADJUST THIS if needed */
+  z-index: 50; /* Below header */
+  margin-top: 50; /* ← ADJUST THIS if needed */
 }
 
 /* =========================

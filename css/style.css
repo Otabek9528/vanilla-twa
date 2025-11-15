@@ -451,36 +451,111 @@ body {
 .prayer-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  padding: 0 10px;
 }
 
 .prayer-item {
   display: flex;
   justify-content: space-between;
-  background: #e7f4e8;
-  border-radius: 10px;
-  padding: 10px 15px;
+  align-items: center;
+  background: linear-gradient(135deg, #f0f9f4 0%, #e7f4e8 100%);
+  border-radius: 16px;
+  padding: 16px 20px;
   font-size: 1.1rem;
   color: #2c5e2e;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
 }
 
-.next-prayer-countdown {
-  margin-bottom: 20px;
-  color: #2c5e2e;
+.prayer-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Special styling for Sunrise (not a prayer, just a time marker) */
+.sunrise-marker {
+  background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+  border: 2px dashed #ffa726;
+  opacity: 0.95;
+}
+
+.sunrise-marker .prayer-emoji {
+  font-size: 1.6rem;
+}
+
+.sunrise-marker .prayer-name-text {
+  color: #e65100;
   font-weight: 500;
 }
 
-.next-prayer-countdown .countdown-text {
-  font-size: 1.2rem;
-  margin-top: 5px;
+.sunrise-marker .prayer-time-text {
+  color: #f57c00;
   font-weight: 600;
 }
 
-.current-prayer {
-  background: #c8e6c9;
+.prayer-subtitle {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #ff6f00;
+  font-style: italic;
+  display: block;
+  margin-top: 2px;
+}
+
+.prayer-name-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.prayer-emoji {
+  font-size: 1.8rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.prayer-name-text {
   font-weight: 600;
-  box-shadow: 0 0 6px rgba(56, 142, 60, 0.4);
+  font-size: 1.15rem;
+  color: #1a4d2e;
+}
+
+.prayer-time-text {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #2c5e2e;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+}
+
+.current-prayer {
+  background: linear-gradient(135deg, #a8d5ba 0%, #c8e6c9 100%);
+  border: 2px solid #4caf50;
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+  transform: scale(1.02);
+}
+
+.current-prayer .prayer-emoji {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.current-prayer .prayer-name-text,
+.current-prayer .prayer-time-text {
+  color: #1b5e20;
+  font-weight: 700;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  }
+  50% {
+    transform: scale(1.1);
+    filter: drop-shadow(0 4px 8px rgba(76, 175, 80, 0.4));
+  }
 }
 
 /* =========================

@@ -160,27 +160,63 @@ function populateDetailedPrayerList(timings, currentPrayerName) {
   const prayerListElem = document.getElementById("prayerList");
   if (!prayerListElem) return;
 
-  const prayerOrder = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+  // Prayer emojis for visual appeal
+  const prayerEmojis = {
+    "Fajr": "🌅",
+    "Sunrise": "🌄",
+    "Dhuhr": "☀️",
+    "Asr": "🌤️",
+    "Maghrib": "🌇",
+    "Isha": "🌙"
+  };
+
+  // Include Sunrise between Fajr and Dhuhr
+  const prayerOrder = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
   prayerListElem.innerHTML = '';
 
   prayerOrder.forEach(prayer => {
     const div = document.createElement('div');
     div.className = 'prayer-item';
     
-    // Highlight current prayer
-    if (prayer === currentPrayerName) {
+    // Special styling for Sunrise (it's not a prayer time, just a marker)
+    if (prayer === "Sunrise") {
+      div.classList.add('sunrise-marker');
+    }
+    
+    // Highlight current prayer (but not Sunrise)
+    if (prayer === currentPrayerName && prayer !== "Sunrise") {
       div.classList.add('current-prayer');
     }
 
+    // Create emoji + name container
+    const nameContainer = document.createElement('div');
+    nameContainer.className = 'prayer-name-container';
+    
+    const emoji = document.createElement('span');
+    emoji.className = 'prayer-emoji';
+    emoji.textContent = prayerEmojis[prayer] || '🕌';
+    
     const nameSpan = document.createElement('span');
+    nameSpan.className = 'prayer-name-text';
     nameSpan.textContent = prayer;
-    nameSpan.style.fontWeight = '600';
+    
+    // Add subtitle for Sunrise
+    if (prayer === "Sunrise") {
+      const subtitle = document.createElement('span');
+      subtitle.className = 'prayer-subtitle';
+      subtitle.textContent = '(End of Fajr time)';
+      nameSpan.appendChild(document.createElement('br'));
+      nameSpan.appendChild(subtitle);
+    }
+
+    nameContainer.appendChild(emoji);
+    nameContainer.appendChild(nameSpan);
 
     const timeSpan = document.createElement('span');
-    timeSpan.textContent = timings[prayer];
-    timeSpan.style.fontWeight = '500';
+    timeSpan.className = 'prayer-time-text';
+    timeSpan.textContent = timings[prayer] || '--:--';
 
-    div.appendChild(nameSpan);
+    div.appendChild(nameContainer);
     div.appendChild(timeSpan);
     prayerListElem.appendChild(div);
   });

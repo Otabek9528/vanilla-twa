@@ -43,7 +43,7 @@ body {
   box-shadow: var(--shadow-1);
   position: relative;
   overflow: hidden;
-  z-index: 80; /* Ensure header stays on top */
+  z-index: 10; /* Ensure header stays on top */
 }
 
 .header-content {
@@ -122,7 +122,7 @@ body {
    ========================= */
 .prayer-panel {
   background: #ffffff;
-  padding: 20px 16px 16px 16px; /* Added top padding to prevent overlap */
+  padding: 50px 16px 16px 16px; /* Added top padding to prevent overlap */
   width: 100%;
   box-sizing: border-box;
   margin-top: 0; /* No negative margin */

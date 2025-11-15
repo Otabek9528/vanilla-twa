@@ -432,6 +432,7 @@ body {
 .prayers-detailed {
   background-color: #f8fff8;
   padding: 20px;
+  padding-bottom: 80px; /* Extra padding to prevent overlap with back button */
   text-align: center;
   min-height: calc(100vh - 160px);
 }
@@ -446,6 +447,59 @@ body {
   font-size: 1rem;
   color: #4c4c4c;
   margin-bottom: 20px;
+}
+
+/* Location update row with inline refresh button */
+.location-update-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 8px 0 20px 0;
+}
+
+/* Inline refresh button (smaller, next to timestamp) */
+.inline-refresh-btn {
+  background: rgba(0, 123, 94, 0.1);
+  border: 2px solid rgba(0, 123, 94, 0.3);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.inline-refresh-btn:hover:not(:disabled) {
+  background: rgba(0, 123, 94, 0.2);
+  border-color: rgba(0, 123, 94, 0.5);
+  transform: scale(1.1);
+}
+
+.inline-refresh-btn:active:not(:disabled) {
+  transform: scale(0.95);
+  background: rgba(0, 123, 94, 0.3);
+}
+
+.inline-refresh-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Refresh icon inside inline button */
+.inline-refresh-btn #refreshIcon {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.inline-refresh-btn #refreshIcon.spinning {
+  animation: spin 1s linear infinite !important;
 }
 
 .prayer-list {

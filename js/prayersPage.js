@@ -22,14 +22,14 @@ function initPrayersPage() {
     });
   }
 
-  // Handle manual location refresh
+  // Handle manual location refresh (now inline button)
   const refreshBtn = document.getElementById('refreshLocationBtn');
   const refreshIcon = document.getElementById('refreshIcon');
   
   console.log('🔍 Prayers page - Refresh button:', refreshBtn);
   console.log('🔍 Prayers page - Refresh icon:', refreshIcon);
   
-  if (refreshBtn) {
+  if (refreshBtn && refreshIcon) {
     let isRefreshing = false;
     
     refreshBtn.addEventListener('click', async (e) => {
@@ -45,14 +45,9 @@ function initPrayersPage() {
       isRefreshing = true;
       
       // Visual feedback - spinning animation
-      if (refreshIcon) {
-        console.log('🔄 Starting animation...');
-        refreshIcon.innerText = '🔄';
-        refreshIcon.classList.add('spinning');
-      } else {
-        console.warn('⚠️ refreshIcon not found!');
-      }
-      
+      console.log('🔄 Starting animation...');
+      refreshIcon.innerText = '🔄';
+      refreshIcon.classList.add('spinning');
       refreshBtn.style.opacity = '0.5';
       refreshBtn.disabled = true;
       
@@ -62,26 +57,22 @@ function initPrayersPage() {
         console.log('✅ Refresh completed:', result);
         
         // Success feedback
-        if (refreshIcon) {
-          console.log('✅ Showing success icon');
-          refreshIcon.classList.remove('spinning');
-          refreshIcon.innerText = '✅';
-          setTimeout(() => {
-            refreshIcon.innerText = '📍';
-            console.log('🔙 Reset to location icon');
-          }, 2000);
-        }
+        console.log('✅ Showing success icon');
+        refreshIcon.classList.remove('spinning');
+        refreshIcon.innerText = '✅';
+        setTimeout(() => {
+          refreshIcon.innerText = '📍';
+          console.log('🔙 Reset to location icon');
+        }, 2000);
       } catch (error) {
         console.error('❌ Refresh error:', error);
         
         // Error feedback
-        if (refreshIcon) {
-          refreshIcon.classList.remove('spinning');
-          refreshIcon.innerText = '❌';
-          setTimeout(() => {
-            refreshIcon.innerText = '📍';
-          }, 2000);
-        }
+        refreshIcon.classList.remove('spinning');
+        refreshIcon.innerText = '❌';
+        setTimeout(() => {
+          refreshIcon.innerText = '📍';
+        }, 2000);
       } finally {
         // Re-enable button
         refreshBtn.style.opacity = '1';
@@ -93,7 +84,7 @@ function initPrayersPage() {
     
     console.log('✅ Prayers page - Click listener added');
   } else {
-    console.error('❌ Refresh button NOT FOUND on prayers page!');
+    console.error('❌ Refresh button or icon NOT FOUND on prayers page!');
   }
 
   // Update timestamp display when location updates

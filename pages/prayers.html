@@ -13,10 +13,6 @@
     <div class="header-content">
       <img src="../assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
       <h1>Muslim Vegukin Bot</h1>
-      <!-- Location refresh button -->
-      <button class="location-refresh-btn" id="refreshLocationBtn" title="Update Location">
-        <span id="refreshIcon">📍</span>
-      </button>
     </div>
   </header>
 
@@ -25,7 +21,14 @@
     <h2 id="cityName">Loading...</h2>
     <p id="coords" style="color:#666;font-size:0.9rem;margin-bottom:10px;">Coordinates: -- , --</p>
     <p id="todayDate">Fetching date...</p>
-    <p id="locationTimestamp" style="color:#888;font-size:0.85rem;font-style:italic;margin:8px 0;">Loading...</p>
+    
+    <!-- Location timestamp with inline refresh button -->
+    <div class="location-update-row">
+      <p id="locationTimestamp" style="color:#888;font-size:0.85rem;font-style:italic;margin:0;">Loading...</p>
+      <button class="inline-refresh-btn" id="refreshLocationBtn" title="Update Location">
+        <span id="refreshIcon">📍</span>
+      </button>
+    </div>
 
     <!-- Countdown -->
     <div class="next-prayer-countdown">

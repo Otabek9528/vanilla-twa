@@ -435,7 +435,7 @@ body {
    ========================= */
 .main-panel {
   /* Background image covering the full area */
-  background-image: url('../assets/background.jpg');
+  background-image: url('../assets/main_bg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

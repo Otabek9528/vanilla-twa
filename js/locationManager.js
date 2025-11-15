@@ -90,8 +90,13 @@ const LocationManager = {
       return;
     }
 
-    // Try to get new position silently
-    // Note: In Telegram WebView, this might still prompt, but we minimize calls
+    const hasPermission = localStorage.getItem(this.PERMISSION_KEY) === 'true';
+    if (!hasPermission) {
+      console.log('⏭️ Skipping silent refresh (no permission)');
+      return;
+    }
+
+    // Try to get new position silently using cached data
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         const locationData = await this.processPosition(pos);
@@ -99,45 +104,50 @@ const LocationManager = {
         this.updateUI(locationData);
       },
       (error) => {
-        console.warn('⚠️ Silent refresh failed (expected in WebView):', error.message);
-        // Continue using cached location
+        console.log('⚠️ Silent refresh failed (using cached):', error.message);
+        // Continue using cached location - don't update anything
       },
       {
-        enableHighAccuracy: false, // Lower accuracy = less prompt likelihood
+        enableHighAccuracy: false,
         timeout: 5000,
-        maximumAge: 60000 // Accept 1-minute-old cached position
+        maximumAge: 600000 // Accept up to 10 minute old cached position
       }
     );
   },
 
   // Manual refresh triggered by user button
   async manualRefresh() {
-    console.log('🔄 Manual refresh initiated at:', new Date().toLocaleString());
+    console.log('🔄 Manual refresh initiated');
     
-    // No popup - just proceed silently with console logs
+    // Check if we have permission already
+    const hasPermission = localStorage.getItem(this.PERMISSION_KEY) === 'true';
+    
+    if (!hasPermission) {
+      console.log('⚠️ No permission yet, will prompt user');
+      return this.requestInitialPermission();
+    }
+    
+    // We have permission - try to use any cached position first
+    console.log('✅ Using existing permission with cached position');
 
     return new Promise((resolve) => {
       const options = {
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 0
+        enableHighAccuracy: false,
+        timeout: 5000,
+        maximumAge: Infinity // Accept ANY cached position to avoid prompting
       };
 
-      console.log('📡 Calling getCurrentPosition...');
+      console.log('📡 Getting cached position...');
       
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
-          console.log('✅ Got new position:', pos.coords.latitude, pos.coords.longitude);
-          console.log('⏰ Position timestamp:', new Date(pos.timestamp).toLocaleString());
+          console.log('✅ Got cached position (no prompt)');
           
           try {
             const locationData = await this.processPosition(pos);
-            console.log('✅ Processed location data:', locationData);
-            console.log('🕒 New timestamp:', new Date(locationData.timestamp).toLocaleString());
+            console.log('✅ Location updated successfully');
             
-            console.log('🎨 Calling updateUI with:', locationData);
             this.updateUI(locationData);
-            console.log('✅ Manual refresh complete');
             resolve(locationData);
           } catch (error) {
             console.error('❌ Error processing position:', error);
@@ -145,25 +155,20 @@ const LocationManager = {
           }
         },
         (error) => {
-          console.error('❌ Geolocation error:', error.code, error.message);
+          console.warn('⚠️ Could not get cached position:', error.message);
           
-          let errorMsg = '❌ Could not update location: ';
-          switch(error.code) {
-            case error.PERMISSION_DENIED:
-              errorMsg += 'Permission denied.';
-              break;
-            case error.POSITION_UNAVAILABLE:
-              errorMsg += 'Location unavailable.';
-              break;
-            case error.TIMEOUT:
-              errorMsg += 'Request timed out.';
-              break;
-            default:
-              errorMsg += 'Unknown error.';
+          // If no cached position available, just update timestamp on stored location
+          const stored = this.getStoredLocation();
+          if (stored) {
+            console.log('📍 Using stored location with updated timestamp');
+            stored.timestamp = Date.now();
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(stored));
+            this.updateUI(stored);
+            resolve(stored);
+          } else {
+            // Last resort - need to request permission again
+            resolve(this.requestInitialPermission());
           }
-          
-          console.error(errorMsg);
-          resolve(this.getStoredLocation());
         },
         options
       );
@@ -186,10 +191,6 @@ const LocationManager = {
     console.log('💾 Saving to localStorage:', locationData);
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(locationData));
     localStorage.setItem(this.LAST_UPDATE_KEY, locationData.timestamp.toString());
-    
-    // Verify it was saved
-    const saved = localStorage.getItem(this.STORAGE_KEY);
-    console.log('✅ Verified saved data:', saved);
     
     return locationData;
   },

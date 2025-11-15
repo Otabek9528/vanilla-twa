@@ -1,4 +1,4 @@
-// prayerTimes.js - Updated to work with LocationManager
+// prayerTimes.js - Updated to work with LocationManager and USER'S LOCAL TIMEZONE
 Telegram.WebApp.ready();
 
 async function getPrayerTimes(lat, lon) {
@@ -9,13 +9,18 @@ async function getPrayerTimes(lat, lon) {
 }
 
 function getCurrentPrayer(timings) {
+  // CRITICAL: Use user's local time, not server time
   const now = new Date();
   const currentTime = now.getHours() * 60 + now.getMinutes();
+  
+  console.log('🕐 Current local time:', now.toLocaleTimeString(), '(' + currentTime + ' minutes)');
 
   const prayerOrder = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
   const times = prayerOrder.map((p) => {
     const [h, m] = timings[p].split(":").map(Number);
-    return { name: p, total: h * 60 + m };
+    const totalMinutes = h * 60 + m;
+    console.log(`   ${p}: ${timings[p]} (${totalMinutes} minutes)`);
+    return { name: p, total: totalMinutes };
   });
 
   let current = times[0];
@@ -32,19 +37,24 @@ function getCurrentPrayer(timings) {
     }
   }
 
+  console.log('✅ Current prayer:', current.name, '| Next prayer:', next.name);
   return { current, next };
 }
 
 function formatCountdown(nextTime) {
+  // CRITICAL: Use user's local time, not server time
   const now = new Date();
   const [h, m] = nextTime.split(":").map(Number);
   const next = new Date();
   next.setHours(h, m, 0, 0);
+  
   let diff = (next - now) / 1000;
-  if (diff < 0) diff += 24 * 3600;
+  if (diff < 0) diff += 24 * 3600; // Add 24 hours if next prayer is tomorrow
+  
   const hrs = Math.floor(diff / 3600);
   const mins = Math.floor((diff % 3600) / 60);
   const secs = Math.floor(diff % 60);
+  
   return `${hrs.toString().padStart(2, "0")}:${mins
     .toString()
     .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
@@ -52,6 +62,8 @@ function formatCountdown(nextTime) {
 
 async function updatePrayerData(lat, lon, city) {
   try {
+    console.log('📿 Fetching prayer times for:', city, '(' + lat + ', ' + lon + ')');
+    
     const data = await getPrayerTimes(lat, lon);
     const { current, next } = getCurrentPrayer(data.timings);
 
@@ -65,21 +77,32 @@ async function updatePrayerData(lat, lon, city) {
     if (prayerTimeElem) prayerTimeElem.innerText = data.timings[current.name];
     if (nextPrayerElem) nextPrayerElem.innerText = next.name;
 
-    // Update countdown every second
+    // Update countdown every second (using local time)
     function updateCountdown() {
       if (countdownElem) {
         countdownElem.innerText = formatCountdown(data.timings[next.name]);
       }
     }
     updateCountdown();
-    setInterval(updateCountdown, 1000);
+    
+    // Clear any existing interval to prevent duplicates
+    if (window.prayerCountdownInterval) {
+      clearInterval(window.prayerCountdownInterval);
+    }
+    window.prayerCountdownInterval = setInterval(updateCountdown, 1000);
 
-    // Update date displays
+    // Update date displays (using local time)
+    const localDate = new Date();
+    const weekday = localDate.toLocaleDateString('en-US', { weekday: 'long' });
+    const gregorianDate = localDate.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    });
+    
     if (document.getElementById("weekday")) {
       const hijri = data.date.hijri.date;
-      const greg = data.date.gregorian.date;
-      const weekday = data.date.gregorian.weekday.en;
-      document.getElementById("weekday").innerText = `${weekday}, ${greg}`;
+      document.getElementById("weekday").innerText = `${weekday}, ${gregorianDate}`;
       
       const hijriElem = document.getElementById("hijri");
       if (hijriElem) {
@@ -90,7 +113,7 @@ async function updatePrayerData(lat, lon, city) {
     // Update detailed page elements if they exist
     const todayDateElem = document.getElementById("todayDate");
     if (todayDateElem) {
-      todayDateElem.innerText = `${data.date.gregorian.weekday.en}, ${data.date.gregorian.date}`;
+      todayDateElem.innerText = `${weekday}, ${gregorianDate}`;
     }
 
     const nextPrayerNameElem = document.getElementById("nextPrayerName");
@@ -98,43 +121,19 @@ async function updatePrayerData(lat, lon, city) {
       nextPrayerNameElem.innerText = next.name;
     }
 
-    // Populate prayer list if on detailed page
-    const prayerListElem = document.getElementById("prayerList");
-    if (prayerListElem) {
-      populatePrayerList(data.timings, current.name);
-    }
+    // Dispatch event with prayer data for detailed page
+    window.dispatchEvent(new CustomEvent('prayerDataUpdated', {
+      detail: {
+        timings: data.timings,
+        currentPrayer: current.name,
+        nextPrayer: next.name,
+        date: data.date
+      }
+    }));
 
   } catch (error) {
     console.error("Error updating prayer data:", error);
-    Telegram.WebApp.showAlert("⚠️ Could not load prayer times. Please check your connection.");
   }
-}
-
-// Populate detailed prayer list
-function populatePrayerList(timings, currentPrayerName) {
-  const prayerListElem = document.getElementById("prayerList");
-  if (!prayerListElem) return;
-
-  const prayerOrder = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
-  prayerListElem.innerHTML = '';
-
-  prayerOrder.forEach(prayer => {
-    const div = document.createElement('div');
-    div.className = 'prayer-item';
-    if (prayer === currentPrayerName) {
-      div.classList.add('current-prayer');
-    }
-
-    const nameSpan = document.createElement('span');
-    nameSpan.textContent = prayer;
-
-    const timeSpan = document.createElement('span');
-    timeSpan.textContent = timings[prayer];
-
-    div.appendChild(nameSpan);
-    div.appendChild(timeSpan);
-    prayerListElem.appendChild(div);
-  });
 }
 
 // Listen for location updates from LocationManager

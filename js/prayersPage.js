@@ -24,63 +24,89 @@ function initPrayersPage() {
 
   // Handle manual location refresh
   const refreshBtn = document.getElementById('refreshLocationBtn');
-  console.log('🔍 Looking for refresh button:', refreshBtn);
+  const refreshIcon = document.getElementById('refreshIcon');
+  
+  console.log('🔍 Prayers page - Refresh button:', refreshBtn);
+  console.log('🔍 Prayers page - Refresh icon:', refreshIcon);
   
   if (refreshBtn) {
-    console.log('✅ Refresh button found! Adding click listener...');
     let isRefreshing = false;
     
     refreshBtn.addEventListener('click', async (e) => {
-      console.log('🖱️ REFRESH BUTTON CLICKED!');
+      console.log('🖱️ PRAYERS PAGE - Refresh button clicked!');
       e.preventDefault();
       e.stopPropagation();
       
       if (isRefreshing) {
-        console.log('⏳ Refresh already in progress...');
+        console.log('⏳ Already refreshing...');
         return;
       }
       
       isRefreshing = true;
-      console.log('🔄 Starting refresh process...');
       
-      // Visual feedback
+      // Visual feedback - spinning animation
+      if (refreshIcon) {
+        console.log('🔄 Starting animation...');
+        refreshIcon.innerText = '🔄';
+        refreshIcon.classList.add('spinning');
+      } else {
+        console.warn('⚠️ refreshIcon not found!');
+      }
+      
       refreshBtn.style.opacity = '0.5';
       refreshBtn.disabled = true;
       
       try {
-        console.log('📞 Calling LocationManager.manualRefresh()...');
+        console.log('📞 Calling manualRefresh...');
         const result = await LocationManager.manualRefresh();
-        console.log('✅ manualRefresh returned:', result);
+        console.log('✅ Refresh completed:', result);
+        
+        // Success feedback
+        if (refreshIcon) {
+          console.log('✅ Showing success icon');
+          refreshIcon.classList.remove('spinning');
+          refreshIcon.innerText = '✅';
+          setTimeout(() => {
+            refreshIcon.innerText = '📍';
+            console.log('🔙 Reset to location icon');
+          }, 2000);
+        }
       } catch (error) {
         console.error('❌ Refresh error:', error);
+        
+        // Error feedback
+        if (refreshIcon) {
+          refreshIcon.classList.remove('spinning');
+          refreshIcon.innerText = '❌';
+          setTimeout(() => {
+            refreshIcon.innerText = '📍';
+          }, 2000);
+        }
       } finally {
         // Re-enable button
-        console.log('🔓 Re-enabling button...');
         refreshBtn.style.opacity = '1';
         refreshBtn.disabled = false;
         isRefreshing = false;
+        console.log('🔓 Button re-enabled');
       }
     });
     
-    console.log('✅ Click listener added successfully');
+    console.log('✅ Prayers page - Click listener added');
   } else {
-    console.error('❌ REFRESH BUTTON NOT FOUND!');
+    console.error('❌ Refresh button NOT FOUND on prayers page!');
   }
 
   // Update timestamp display when location updates
   window.addEventListener('locationUpdated', (event) => {
-    console.log('🎉 locationUpdated EVENT received!', event.detail);
     updateTimestampDisplay(event.detail.timestamp);
   });
 
   // Show initial timestamp from cached location
   const location = LocationManager.getStoredLocation();
-  console.log('📍 Initial location on page load:', location);
   
   if (location && location.timestamp) {
     updateTimestampDisplay(location.timestamp);
   } else {
-    console.warn('⚠️ No location data available on page load');
     const timestampElem = document.getElementById('locationTimestamp');
     if (timestampElem) {
       timestampElem.innerText = 'Last updated: Never';
@@ -91,84 +117,11 @@ function initPrayersPage() {
   if (LocationManager.isLocationStale()) {
     showStaleLocationWarning();
   }
-  
-  // DEBUG BUTTON - Force update timestamp to test if element works
-  const debugBtn = document.getElementById('debugTimestamp');
-  if (debugBtn) {
-    debugBtn.addEventListener('click', () => {
-      const timestampElem = document.getElementById('locationTimestamp');
-      const now = Date.now();
-      const date = new Date(now);
-      
-      console.log('🐛 DEBUG: Forcing timestamp update');
-      console.log('🐛 Element found:', timestampElem);
-      console.log('🐛 New time:', date.toLocaleString());
-      
-      if (timestampElem) {
-        timestampElem.innerText = `Last updated: ${date.toLocaleTimeString()}, ${date.toLocaleDateString()}`;
-        timestampElem.style.color = '#ff0000'; // Red to show it was forced
-        console.log('✅ DEBUG: Timestamp element updated to:', timestampElem.innerText);
-        
-        // Also update localStorage to test
-        const location = LocationManager.getStoredLocation();
-        if (location) {
-          location.timestamp = now;
-          localStorage.setItem('userLocation', JSON.stringify(location));
-          console.log('✅ DEBUG: localStorage also updated');
-        }
-      } else {
-        console.error('❌ DEBUG: Timestamp element not found!');
-      }
-    });
-  }
-  
-  // TEST: Add direct test for refresh button
-  console.log('🧪 Testing if refresh button is accessible...');
-  const testRefreshBtn = document.getElementById('refreshLocationBtn');
-  if (testRefreshBtn) {
-    console.log('✅ Refresh button IS in DOM');
-    console.log('   Tag:', testRefreshBtn.tagName);
-    console.log('   Class:', testRefreshBtn.className);
-    console.log('   Disabled:', testRefreshBtn.disabled);
-    console.log('   Visible:', window.getComputedStyle(testRefreshBtn).display !== 'none');
-    console.log('   Try clicking it now!');
-  } else {
-    console.error('❌ Refresh button NOT in DOM!');
-  }
-  
-  // BLUE TEST BUTTON - Directly call LocationManager.manualRefresh
-  const testRefreshCall = document.getElementById('testRefreshCall');
-  if (testRefreshCall) {
-    testRefreshCall.addEventListener('click', async () => {
-      console.log('🧪 BLUE TEST BUTTON CLICKED - Calling manualRefresh directly...');
-      
-      // First, verify timestamp element exists and is visible
-      const tsElem = document.getElementById('locationTimestamp');
-      console.log('🔍 Before refresh - timestamp element:', tsElem);
-      console.log('   Current text:', tsElem ? tsElem.innerText : 'NOT FOUND');
-      console.log('   Visible:', tsElem ? (window.getComputedStyle(tsElem).display !== 'none') : 'N/A');
-      
-      try {
-        const result = await LocationManager.manualRefresh();
-        console.log('✅ Test refresh completed:', result);
-        
-        // Check again after refresh
-        console.log('🔍 After refresh - timestamp element text:', tsElem ? tsElem.innerText : 'NOT FOUND');
-        
-        alert('Refresh complete! Check if timestamp changed on page.');
-      } catch (error) {
-        console.error('❌ Test refresh failed:', error);
-        alert('Failed! Error: ' + error.message);
-      }
-    });
-    console.log('✅ Blue test button listener added');
-  }
 }
 
 // Update the timestamp display element
 function updateTimestampDisplay(timestamp) {
   const timestampElem = document.getElementById('locationTimestamp');
-  console.log('🕒 updateTimestampDisplay called with:', timestamp, 'Element:', timestampElem);
   
   if (timestampElem && timestamp) {
     const date = new Date(timestamp);
@@ -178,22 +131,12 @@ function updateTimestampDisplay(timestamp) {
     
     // Update the text
     timestampElem.innerText = newText;
-    timestampElem.textContent = newText; // Try both methods
     
-    // Force visual update
-    timestampElem.style.color = '#ff0000';
-    timestampElem.style.fontWeight = 'bold';
+    // Reset to normal styling
+    timestampElem.style.color = '#888';
+    timestampElem.style.fontWeight = 'normal';
     
-    // Force repaint
-    void timestampElem.offsetHeight;
-    
-    console.log('✅ Timestamp updated to:', timestampElem.innerText);
-    console.log('   Element text content:', timestampElem.textContent);
-    console.log('   Element innerHTML:', timestampElem.innerHTML);
-    console.log('   Element visible:', window.getComputedStyle(timestampElem).display !== 'none');
-    console.log('   Element in viewport:', timestampElem.getBoundingClientRect().top < window.innerHeight);
-  } else {
-    console.warn('⚠️ Could not update timestamp. Element:', timestampElem, 'Timestamp:', timestamp);
+    console.log('✅ Timestamp updated to:', newText);
   }
 }
 

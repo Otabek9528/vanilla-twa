@@ -22,24 +22,24 @@ html, body {
 }
 
 body {
-  margin: 0;               /* neutralize host styles */
+  margin: 0;
   background: var(--bg);
   color: var(--text);
 }
 
-/* A centered, max-width container prevents weird stretching inside Telegram */
 .app {
   min-height: 100%;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
   width: 100%;
-  max-width: 640px;        /* safe, readable width */
+  max-width: 640px;
   background: var(--bg);
 }
 
 /* =========================
-/* 1)=====HEADER (compact version) ===== */
+   1) HEADER (compact version)
+   ========================= */
 .app__header {
   background: linear-gradient(135deg, var(--green-1), var(--green-2));
   color: #fff;
@@ -68,6 +68,7 @@ body {
   gap: 10px;
   position: relative;
   z-index: 1;
+  width: 100%;
 }
 
 .bot-logo {
@@ -84,12 +85,95 @@ body {
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0;
+  flex: 1;
 }
 
+/* Location refresh button in header */
+.location-refresh-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 0;
+  line-height: 1;
+}
 
+.location-refresh-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.1);
+}
+
+.location-refresh-btn:active:not(:disabled) {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.location-refresh-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Spinning animation for refresh icon */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Apply spinning to the icon span */
+#refreshIcon {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+#refreshIcon.spinning {
+  animation: spin 1s linear infinite !important;
+}
+
+/* Make sure the animation applies */
+.spinning {
+  animation: spin 1s linear infinite !important;
+}
+
+/* Pulsing animation for stale location */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.location-refresh-btn.stale {
+  animation: pulse 2s infinite;
+  border-color: #ffa726;
+  background: rgba(255, 167, 38, 0.2);
+}
+
+/* Location timestamp styling */
+#locationTimestamp {
+  color: #888;
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-top: 5px;
+}
 
 /* =========================
-   2) Background wrapper for sections 2–3
+   2) Background wrapper for sections
    ========================= */
 .app__content-bg {
   background: url('../assets/main_bg.jpg') no-repeat bottom center/cover;
@@ -99,9 +183,10 @@ body {
 }
 
 /* =========================
-/* ===== 2️⃣ PRAYER PANEL (Optimized version) ===== */
+   3) PRAYER PANEL (Optimized version)
+   ========================= */
 .prayer {
-  background: #f6f3eb; /* same tone as your lower section background */
+  background: #f6f3eb;
   padding: 10px 12px;
   border-radius: 18px;
   font-family: 'Poppins', sans-serif;
@@ -113,12 +198,11 @@ body {
   overflow: hidden;
 }
 
-
 .prayer-card {
-  all: unset; /* remove default button styles */
+  all: unset;
   display: block;
   width: 100%;
-  box-sizing: border-box; /* ensures consistent sizing */
+  box-sizing: border-box;
   background: #f6f3eb;
   border-radius: 18px;
   padding: 16px 20px;
@@ -127,19 +211,14 @@ body {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* hover effect (optional) */
 .prayer-card:hover {
   transform: scale(1.02);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
 
-/* remove focus outline (especially on mobile) */
 .prayer-card:focus {
   outline: none;
 }
-
-
-
 
 /* ---- TOP ROW ---- */
 .top-row {
@@ -213,10 +292,6 @@ body {
   margin: 0 18px;
 }
 
-
-
-
-
 /* =========================
    4) Main – cards grid
    ========================= */
@@ -224,7 +299,7 @@ body {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
-  padding: 48px 20px 28px;    /* top padding leaves room after prayer blend */
+  padding: 48px 20px 28px;
   justify-items: center;
 }
 
@@ -308,8 +383,9 @@ body {
   transform: scale(0.95);
 }
 
-
-/* ===== BACK FOOTER BUTTON ===== */
+/* =========================
+   6) BACK FOOTER BUTTON
+   ========================= */
 .back-footer {
   position: fixed;
   bottom: 0;
@@ -350,7 +426,9 @@ body {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-
+/* =========================
+   7) PRAYERS DETAILED PAGE
+   ========================= */
 .prayers-detailed {
   background-color: #f8fff8;
   padding: 20px;
@@ -405,192 +483,13 @@ body {
   box-shadow: 0 0 6px rgba(56, 142, 60, 0.4);
 }
 
-
-
-/* Add these styles to your existing style.css */
-
-/* Location refresh button in header */
-.location-refresh-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-  flex-shrink: 0;
-  padding: 0;
-  line-height: 1;
-}
-
-.location-refresh-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.6);
-  transform: scale(1.1);
-}
-
-.location-refresh-btn:active:not(:disabled) {
-  transform: scale(0.95);
-  background: rgba(255, 255, 255, 0.4);
-}
-
-.location-refresh-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-/* Pulsing animation for stale location */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.location-refresh-btn.stale {
-  animation: pulse 2s infinite;
-  border-color: #ffa726;
-  background: rgba(255, 167, 38, 0.2);
-}
-
-/* Update header-content to accommodate button */
-.header-content {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  position: relative;
-  z-index: 1;
-  width: 100%;
-}
-
-.header-content h1 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0;
-  flex: 1; /* Allow title to take available space */
-}
-
-/* Location timestamp styling */
-#locationTimestamp {
-  color: #888;
-  font-size: 0.85rem;
-  font-style: italic;
-  margin-top: 5px;
-}
-
-/* Add these styles to your existing style.css */
-
-/* Location refresh button in header */
-.location-refresh-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-  flex-shrink: 0;
-  padding: 0;
-  line-height: 1;
-}
-
-.location-refresh-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.6);
-  transform: scale(1.1);
-}
-
-.location-refresh-btn:active:not(:disabled) {
-  transform: scale(0.95);
-  background: rgba(255, 255, 255, 0.4);
-}
-
-.location-refresh-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-/* Spinning animation for refresh icon */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-#refreshIcon {
-  display: inline-block;
-}
-
-#refreshIcon.spinning {
-  animation: spin 1s linear infinite;
-}
-
-/* Pulsing animation for stale location */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.location-refresh-btn.stale {
-  animation: pulse 2s infinite;
-  border-color: #ffa726;
-  background: rgba(255, 167, 38, 0.2);
-}
-
-/* Update header-content to accommodate button */
-.header-content {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  position: relative;
-  z-index: 1;
-  width: 100%;
-}
-
-.header-content h1 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0;
-  flex: 1; /* Allow title to take available space */
-}
-
-/* Location timestamp styling */
-#locationTimestamp {
-  color: #888;
-  font-size: 0.85rem;
-  font-style: italic;
-  margin-top: 5px;
-}
-
-
 /* =========================
-   6) Responsive tweaks
+   8) Responsive tweaks
    ========================= */
 @media (max-width: 420px) {
   .app { max-width: 100%; }
   .main { gap: 14px; padding: 40px 14px 24px; }
   .card { max-width: 150px; padding: 18px 10px; }
   .app__header h1 { font-size: 1.35rem; }
-  .app__content-bg {padding-bottom: 70px;} /* ensures last row of content isn’t hidden */
-
-
+  .app__content-bg { padding-bottom: 70px; }
 }

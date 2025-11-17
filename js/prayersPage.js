@@ -5,25 +5,35 @@
 function initPrayersPage() {
   const tg = window.Telegram.WebApp;
   
-  // Show and configure Telegram's BackButton
+  console.log('🔧 Initializing prayers page...');
+  console.log('📱 Telegram WebApp object:', tg);
+  console.log('🔙 BackButton available:', !!tg.BackButton);
+  
+  // Show and configure Telegram's BackButton using event listener
   try {
     if (tg.BackButton) {
       console.log('✅ Telegram BackButton API available');
       
-      // Show the back button
+      // Show the back button first
       tg.BackButton.show();
+      console.log('👁️ BackButton.show() called');
+      console.log('📊 BackButton.isVisible:', tg.BackButton.isVisible);
       
-      // Handle back button click
-      tg.BackButton.onClick(() => {
-        console.log('📱 Telegram BackButton clicked');
-        // Navigate back to index.html
+      // Use onEvent instead of onClick for better compatibility
+      const handleBackButton = () => {
+        console.log('🔙 Back button event fired!');
         window.location.href = "../index.html";
-      });
+      };
       
-      console.log('✅ Telegram BackButton configured');
+      // Listen to the backButtonClicked event
+      tg.onEvent('backButtonClicked', handleBackButton);
+      
+      console.log('✅ BackButton event listener registered');
+    } else {
+      console.warn('⚠️ BackButton not available in this Telegram version');
     }
   } catch (e) {
-    console.log('⚠️ BackButton not supported:', e);
+    console.error('❌ Error setting up BackButton:', e);
   }
 
   // Handle footer back button click

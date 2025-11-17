@@ -115,11 +115,18 @@
     // Initialize Telegram WebApp
     const tg = window.Telegram.WebApp;
     
+    console.log('🚀 Main page script loading...');
+    
+    // Notify Telegram that the web app is ready
+    tg.ready();
+    console.log('✅ WebApp.ready() called');
+    
     // Expand the WebApp to full height
     try {
       tg.expand();
+      console.log('✅ WebApp.expand() called');
     } catch (e) {
-      console.log('Expand not supported');
+      console.log('⚠️ Expand not supported:', e);
     }
     
     // Hide Telegram's BackButton on main page
@@ -129,7 +136,7 @@
         console.log('✅ Telegram BackButton hidden on main page');
       }
     } catch (e) {
-      console.log('⚠️ BackButton not available');
+      console.log('⚠️ BackButton not available:', e);
     }
 
     // Handle prayer card click with proper navigation

@@ -62,11 +62,19 @@
     // Initialize Telegram WebApp on prayers page
     const tg = window.Telegram.WebApp;
     
+    console.log('🚀 Prayers page script loading...');
+    console.log('📱 Telegram.WebApp:', tg);
+    
+    // Notify Telegram that the web app is ready
+    tg.ready();
+    console.log('✅ WebApp.ready() called');
+    
     // Expand the WebApp to full height
     try {
       tg.expand();
+      console.log('✅ WebApp.expand() called');
     } catch (e) {
-      console.log('Expand not supported');
+      console.log('⚠️ Expand not supported:', e);
     }
   </script>
 

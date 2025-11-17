@@ -10,7 +10,10 @@
   --radius-lg: 20px;
   --shadow-1: 0 4px 12px rgba(0,0,0,.15);
   --shadow-2: 0 3px 10px rgba(0,0,0,.15);
-  --light-bg: #fffbf0; /* Light warm yellow/cream background */
+  --light-bg: #faf7f0; /* Soft warm cream background */
+  --islamic-gold: #d4af37;
+  --islamic-teal: #00a884;
+  --islamic-mint: #e8f5f0;
 }
 
 .app, .app * {
@@ -27,7 +30,7 @@ html, body {
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: var(--light-bg);
   color: var(--text);
   display: flex;
   flex-direction: column;
@@ -128,21 +131,20 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--light-bg); /* Light warm yellow/cream solid color */
+  background: var(--light-bg); /* Unified light warm cream background */
   position: relative;
 }
 
 /* =========================
-   3) PRAYER SECTION (Fixed at top)
+   3) PRAYER SECTION (Fixed at top) - MERGED BACKGROUND
    ========================= */
 .prayer-section-fixed {
-  background: #ffffff;
+  background: var(--light-bg); /* Same as main panel - merged! */
   padding: 20px 16px 16px 16px;
   width: 100%;
   box-sizing: border-box;
   flex-shrink: 0; /* Don't shrink when scrolling */
   z-index: 5;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Subtle shadow for depth */
 }
 
 /* =========================
@@ -370,7 +372,7 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 24px 16px;
-  background: var(--light-bg); /* Light warm yellow/cream solid color */
+  background: var(--light-bg); /* Light warm cream solid color */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
@@ -394,12 +396,12 @@ body {
 }
 
 /* =========================
-   6) Main — cards grid (Inside Scrollable Section)
+   6) Main — ISLAMIC-INSPIRED CARDS GRID
    ========================= */
 .main {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  gap: 20px;
   padding: 0;
   justify-items: center;
   width: 100%;
@@ -407,40 +409,133 @@ body {
   margin: 0 auto;
 }
 
+/* Islamic-inspired feature cards */
 .card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
   max-width: 170px;
-  background: rgba(255, 255, 255, 0.95);
+  
+  /* Soft gradient with Islamic color palette */
+  background: linear-gradient(145deg, 
+    #ffffff 0%, 
+    #f8fdf9 50%, 
+    #f0f9f4 100%
+  );
+  
   border: 0;
-  border-radius: 18px;
-  padding: 22px 12px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 24px; /* Softer, more rounded */
+  padding: 26px 16px;
+  
+  /* Elegant shadow with subtle teal tint */
+  box-shadow: 
+    0 4px 12px rgba(0, 123, 94, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.04);
+  
   cursor: pointer;
-  transition: transform .15s ease, box-shadow .15s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-.card:active,
+/* Subtle Islamic geometric pattern overlay */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(0, 168, 132, 0.03) 0%, transparent 60%),
+    radial-gradient(circle at 0% 100%, rgba(212, 175, 55, 0.02) 0%, transparent 60%);
+  pointer-events: none;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+/* Decorative border accent inspired by Islamic art */
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 24px;
+  padding: 2px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 168, 132, 0.15) 0%,
+    rgba(212, 175, 55, 0.1) 50%,
+    rgba(0, 168, 132, 0.15) 100%
+  );
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+  /* Lift effect with enhanced shadow */
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 8px 20px rgba(0, 123, 94, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.06);
+  
+  /* Enhanced gradient on hover */
+  background: linear-gradient(145deg, 
+    #ffffff 0%, 
+    #f0fdf7 50%, 
+    #e8f5f0 100%
+  );
+}
+
+/* Show decorative border on hover */
+.card:hover::after {
+  opacity: 1;
+}
+
+.card:active {
+  transform: translateY(-2px) scale(1);
+  transition: all 0.1s ease;
 }
 
 .card img {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   object-fit: contain;
   display: block;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+  transition: transform 0.3s ease;
+}
+
+.card:hover img {
+  transform: scale(1.1);
 }
 
 .card p {
   margin: 0;
   color: var(--card-text);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.05rem;
+  position: relative;
+  z-index: 2;
+  letter-spacing: 0.3px;
+  transition: color 0.3s ease;
+}
+
+.card:hover p {
+  color: #006b5f;
 }
 
 /* =========================
@@ -710,8 +805,19 @@ body {
    9) Responsive tweaks
    ========================= */
 @media (max-width: 420px) {
-  .main { gap: 14px; }
-  .card { max-width: 150px; padding: 18px 10px; }
+  .main { gap: 16px; }
+  .card { 
+    max-width: 150px; 
+    padding: 22px 12px;
+    border-radius: 20px;
+  }
+  .card img {
+    width: 48px;
+    height: 48px;
+  }
+  .card p {
+    font-size: 1rem;
+  }
   .app__header h1 { font-size: 1rem; }
   .scrollable-features { padding: 20px 12px; }
   

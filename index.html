@@ -112,6 +112,26 @@
   <script src="js/locationManager.js"></script>
   <script src="js/prayerTimes.js"></script>
   <script>
+    // Initialize Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    
+    // Expand the WebApp to full height
+    try {
+      tg.expand();
+    } catch (e) {
+      console.log('Expand not supported');
+    }
+    
+    // Hide Telegram's BackButton on main page
+    try {
+      if (tg.BackButton) {
+        tg.BackButton.hide();
+        console.log('✅ Telegram BackButton hidden on main page');
+      }
+    } catch (e) {
+      console.log('⚠️ BackButton not available');
+    }
+
     // Handle prayer card click with proper navigation
     const prayerCardBtn = document.getElementById('prayerCardBtn');
     if (prayerCardBtn) {

@@ -58,6 +58,17 @@
   <script src="../js/locationManager.js"></script>
   <script src="../js/prayerTimes.js"></script>
   <script src="../js/prayersPage.js"></script>
+  <script>
+    // Initialize Telegram WebApp on prayers page
+    const tg = window.Telegram.WebApp;
+    
+    // Expand the WebApp to full height
+    try {
+      tg.expand();
+    } catch (e) {
+      console.log('Expand not supported');
+    }
+  </script>
 
 </body>
 </html>

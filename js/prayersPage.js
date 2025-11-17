@@ -5,32 +5,36 @@
 function initPrayersPage() {
   const tg = window.Telegram.WebApp;
   
-  // Try to hide Telegram native back button (ignore if not supported)
+  // Show and configure Telegram's BackButton
   try {
-    if (tg.BackButton && tg.BackButton.hide) {
-      tg.BackButton.hide();
+    if (tg.BackButton) {
+      console.log('✅ Telegram BackButton API available');
+      
+      // Show the back button
+      tg.BackButton.show();
+      
+      // Handle back button click
+      tg.BackButton.onClick(() => {
+        console.log('📱 Telegram BackButton clicked');
+        // Navigate back to index.html
+        window.location.href = "../index.html";
+      });
+      
+      console.log('✅ Telegram BackButton configured');
     }
   } catch (e) {
-    console.log('BackButton not supported, skipping...');
+    console.log('⚠️ BackButton not supported:', e);
   }
 
   // Handle footer back button click
   const backBtn = document.getElementById("backToMain");
   if (backBtn) {
     backBtn.addEventListener("click", () => {
-      // Use history.back() instead of direct navigation
-      // This ensures consistent behavior with native back button
-      window.history.back();
+      console.log('🖱️ Footer back button clicked');
+      // Navigate back to index.html
+      window.location.href = "../index.html";
     });
   }
-
-  // Handle browser/phone native back button
-  // This event fires when user presses back button
-  window.addEventListener('popstate', (event) => {
-    console.log('📱 Native back button pressed');
-    // Browser will automatically navigate back
-    // We can add custom logic here if needed
-  });
 
   // Handle manual location refresh (now inline button)
   const refreshBtn = document.getElementById('refreshLocationBtn');

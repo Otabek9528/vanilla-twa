@@ -545,10 +545,8 @@ body {
   background-color: #f8fff8;
   padding: 20px;
   text-align: center;
-  min-height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .prayers-detailed h2 {

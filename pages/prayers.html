@@ -6,10 +6,31 @@
   <title>Today's Prayer Times</title>
   <link rel="stylesheet" href="../css/style.css" />
   <style>
-    /* Page-specific fix for bottom spacing */
+    /* Page-specific overrides for prayers page */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: visible !important; /* Override the hidden from main CSS */
+    }
+    
     body {
-      padding-bottom: 0;
-      margin-bottom: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Make header stay at top */
+    .app__header {
+      flex-shrink: 0;
+    }
+    
+    /* Make prayers section scrollable */
+    .prayers-detailed {
+      flex: 1;
+      overflow-y: auto !important;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 40px; /* Extra padding at bottom */
     }
   </style>
 </head>
@@ -47,17 +68,29 @@
     <div class="prayer-list" id="prayerList"></div>
   </section>  
 
-  <!-- BOTTOM BACK BUTTON -->
-  <footer class="back-footer">
-    <button class="back-btn" id="backToMain">
-      ⬅️ Back to Main
-    </button>
-  </footer>
-
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="../js/locationManager.js"></script>
   <script src="../js/prayerTimes.js"></script>
   <script src="../js/prayersPage.js"></script>
+  <script>
+    // Initialize Telegram WebApp on prayers page
+    const tg = window.Telegram.WebApp;
+    
+    console.log('🚀 Prayers page script loading...');
+    console.log('📱 Telegram.WebApp:', tg);
+    
+    // Notify Telegram that the web app is ready
+    tg.ready();
+    console.log('✅ WebApp.ready() called');
+    
+    // Expand the WebApp to full height
+    try {
+      tg.expand();
+      console.log('✅ WebApp.expand() called');
+    } catch (e) {
+      console.log('⚠️ Expand not supported:', e);
+    }
+  </script>
 
 </body>
 </html>

@@ -18,16 +18,26 @@ function initPrayersPage() {
   const backBtn = document.getElementById("backToMain");
   if (backBtn) {
     backBtn.addEventListener("click", () => {
-      window.location.href = "../index.html";
+      // Use history.back() instead of direct navigation
+      // This ensures consistent behavior with native back button
+      window.history.back();
     });
   }
+
+  // Handle browser/phone native back button
+  // This event fires when user presses back button
+  window.addEventListener('popstate', (event) => {
+    console.log('📱 Native back button pressed');
+    // Browser will automatically navigate back
+    // We can add custom logic here if needed
+  });
 
   // Handle manual location refresh (now inline button)
   const refreshBtn = document.getElementById('refreshLocationBtn');
   const refreshIcon = document.getElementById('refreshIcon');
   
-  console.log('🔍 Prayers page - Refresh button:', refreshBtn);
-  console.log('🔍 Prayers page - Refresh icon:', refreshIcon);
+  console.log('📍 Prayers page - Refresh button:', refreshBtn);
+  console.log('📍 Prayers page - Refresh icon:', refreshIcon);
   
   if (refreshBtn && refreshIcon) {
     let isRefreshing = false;

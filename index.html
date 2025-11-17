@@ -24,7 +24,7 @@
   <div class="merged-content-panel">
     <!-- PRAYER SECTION (Fixed at top when scrolling) -->
     <section class="prayer-section-fixed">
-      <button class="prayer-card-timeline" onclick="window.location.href='pages/prayers.html'">
+      <button class="prayer-card-timeline" id="prayerCardBtn">
         <!-- Top Row: Date/Hijri on left, Location on right (same line) -->
         <div class="top-row">
           <div class="left-side">
@@ -112,6 +112,15 @@
   <script src="js/locationManager.js"></script>
   <script src="js/prayerTimes.js"></script>
   <script>
+    // Handle prayer card click with proper navigation
+    const prayerCardBtn = document.getElementById('prayerCardBtn');
+    if (prayerCardBtn) {
+      prayerCardBtn.addEventListener('click', () => {
+        // Navigate to prayers page
+        window.location.href = 'pages/prayers.html';
+      });
+    }
+
     // Language flag buttons
     document.getElementById('flagRu').addEventListener('click', () => {
       console.log('Russian selected');

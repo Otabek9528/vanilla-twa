@@ -36,16 +36,6 @@ function initPrayersPage() {
     console.error('❌ Error setting up BackButton:', e);
   }
 
-  // Handle footer back button click
-  const backBtn = document.getElementById("backToMain");
-  if (backBtn) {
-    backBtn.addEventListener("click", () => {
-      console.log('🖱️ Footer back button clicked');
-      // Navigate back to index.html
-      window.location.href = "../index.html";
-    });
-  }
-
   // Handle manual location refresh (now inline button)
   const refreshBtn = document.getElementById('refreshLocationBtn');
   const refreshIcon = document.getElementById('refreshIcon');

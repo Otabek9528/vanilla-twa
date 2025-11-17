@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mosques Search Options</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="mosque-options.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app__header">
+    <div class="header-content">
+      <img src="../../assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
+      <h1>Muslim Vegukin Bot</h1>
+    </div>
+  </header>
+
+  <!-- OPTIONS CONTAINER -->
+  <div class="options-container">
+    
+    <!-- Page Title -->
+    <h2 class="options-page-title">🕌 Masjidlarni qidirish</h2>
+    <p class="options-page-subtitle">Qidiruv turini tanlang</p>
+
+    <!-- Option 1: Current Location -->
+    <div class="option-card location-card">
+      <div class="option-card-header">
+        <span class="option-icon">📍</span>
+        <h3 class="option-title">Hozirgi joylashuvim asosida</h3>
+      </div>
+      
+      <div class="option-card-content">
+        <!-- Current Location Info -->
+        <div class="location-info">
+          <div class="location-info-row">
+            <span class="info-label">Shahar:</span>
+            <span class="info-value" id="currentCity">Yuklanmoqda...</span>
+          </div>
+          <div class="location-info-row">
+            <span class="info-label">Yangilangan:</span>
+            <span class="info-value" id="lastUpdated">--</span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <p class="option-description">
+          💡 Sizning hozirgi joylashuvingizga eng yaqin 5 ta masjidni topamiz. 
+          Aniq natijalar uchun lokatsiyangizni yangilab oling.
+        </p>
+
+        <!-- Action Button -->
+        <button class="option-action-btn primary-btn" id="locationOptionBtn">
+          <span class="btn-icon" id="locationBtnIcon">🔄</span>
+          <span class="btn-text">Lokatsiyani yangilash va davom etish</span>
+        </button>
+
+        <!-- Or Skip Update -->
+        <button class="option-secondary-btn" id="skipUpdateBtn">
+          <span>Yangilamasdan davom etish</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Option 2: Address Search -->
+    <div class="option-card address-card">
+      <div class="option-card-header">
+        <span class="option-icon">🔍</span>
+        <h3 class="option-title">Manzil bo'yicha qidirish</h3>
+      </div>
+      
+      <div class="option-card-content">
+        <!-- Description -->
+        <p class="option-description">
+          💡 Istalgan manzil yoki hudud nomini kiriting. 
+          Biz o'sha hudud atrofidagi eng yaqin 5 ta masjidni topamiz.
+        </p>
+
+        <!-- Search Input -->
+        <div class="address-search-container">
+          <label class="search-label" for="addressInput">Manzilni kiriting:</label>
+          <input 
+            type="text" 
+            class="address-input" 
+            id="addressInput"
+            placeholder="Masalan: Gangnam-gu, Seoul"
+          />
+          <p class="search-hint">
+            🏙️ Shahar, tuman, ko'cha yoki bino nomini yozishingiz mumkin
+          </p>
+        </div>
+
+        <!-- Action Button -->
+        <button class="option-action-btn secondary-btn" id="addressOptionBtn" disabled>
+          <span class="btn-icon">🔍</span>
+          <span class="btn-text">Qidirish va davom etish</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="mosque-options.js"></script>
+
+</body>
+</html>

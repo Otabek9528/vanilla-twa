@@ -1,0 +1,325 @@
+/* =========================
+   MOSQUE OPTIONS PAGE STYLES
+   ========================= */
+
+/* Page Layout */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: visible !important;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  background: var(--light-bg, #faf7f0);
+}
+
+.app__header {
+  flex-shrink: 0;
+}
+
+.options-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 24px 16px 40px 16px;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Page Title & Subtitle */
+.options-page-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #2c5e2e;
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+
+.options-page-subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin: 0 0 28px 0;
+  text-align: center;
+}
+
+/* Option Cards */
+.option-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.option-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 123, 94, 0.15);
+  border-color: rgba(0, 168, 132, 0.2);
+}
+
+/* Card Header */
+.option-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.option-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.option-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2c5e2e;
+  margin: 0;
+  line-height: 1.3;
+  flex: 1;
+}
+
+/* Card Content */
+.option-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Location Info (for location card) */
+.location-info {
+  background: linear-gradient(135deg, #e8f5f0 0%, #f0f9f5 100%);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.location-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-label {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 1rem;
+  color: #2c5e2e;
+  font-weight: 700;
+  text-align: right;
+}
+
+.info-value.stale {
+  color: #ff9800;
+}
+
+/* Description */
+.option-description {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+  padding: 12px 14px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  border-left: 3px solid #00a884;
+}
+
+/* Address Search Container */
+.address-search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.search-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2c5e2e;
+  margin: 0;
+}
+
+.address-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #d0d0d0;
+  border-radius: 12px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  background: #f9f9f9;
+}
+
+.address-input:focus {
+  outline: none;
+  border-color: #00a884;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.1);
+}
+
+.address-input::placeholder {
+  color: #999;
+}
+
+.search-hint {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Action Buttons */
+.option-action-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  border-radius: 14px;
+  padding: 15px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 4px;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #00a884 0%, #007b5e 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 168, 132, 0.3);
+}
+
+.primary-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 168, 132, 0.4);
+}
+
+.primary-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.primary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.primary-btn.updating .btn-icon {
+  animation: spin 1s linear infinite;
+}
+
+.secondary-btn {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.secondary-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+}
+
+.secondary-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.secondary-btn:disabled {
+  background: linear-gradient(135deg, #ccc 0%, #bbb 100%);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.btn-text {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Secondary Button (skip update) */
+.option-secondary-btn {
+  width: 100%;
+  background: transparent;
+  color: #666;
+  border: 2px solid #d0d0d0;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.option-secondary-btn:hover {
+  background: #f9f9f9;
+  border-color: #00a884;
+  color: #00a884;
+}
+
+.option-secondary-btn:active {
+  transform: scale(0.98);
+}
+
+/* Specific Card Styling */
+.location-card {
+  border-left: 4px solid #00a884;
+}
+
+.address-card {
+  border-left: 4px solid #4caf50;
+}
+
+/* Responsive Design */
+@media (max-width: 420px) {
+  .options-container {
+    padding: 20px 12px 40px 12px;
+  }
+
+  .options-page-title {
+    font-size: 1.4rem;
+  }
+
+  .option-card {
+    padding: 20px;
+  }
+
+  .option-title {
+    font-size: 1.2rem;
+  }
+
+  .option-action-btn {
+    padding: 13px 20px;
+    font-size: 0.95rem;
+  }
+
+  .btn-text {
+    font-size: 0.95rem;
+  }
+}

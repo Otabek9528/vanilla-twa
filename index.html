@@ -20,88 +20,91 @@
     </div>
   </header>
 
-  <!-- PRAYER PANEL (Panel 2) -->
-  <section class="prayer-panel">
-    <button class="prayer-card-timeline" onclick="window.location.href='pages/prayers.html'">
-      <!-- Top Row: Date/Hijri on left, Location on right (same line) -->
-      <div class="top-row">
-        <div class="left-side">
-          <p class="weekday" id="weekday">Loading...</p>
-          <p class="hijri" id="hijri">Loading...</p>
-        </div>
-        <div class="right-side">
-          <span class="location-icon">📍</span>
-          <span class="city-name" id="cityName">Loading...</span>
-        </div>
-      </div>
-
-      <!-- Timeline: Current → Next -->
-      <div class="timeline-prayer">
-        <div class="timeline-start">
-          <span class="timeline-emoji" id="currentEmoji">🌅</span>
-          <h3 class="timeline-name" id="currentPrayer">--</h3>
-          <p class="timeline-time" id="prayerTime">--:--</p>
-        </div>
-
-        <div class="timeline-progress">
-          <div class="progress-line"></div>
-          <div class="countdown-badge">
-            <span id="countdown">--:--:--</span>
+  <!-- MERGED PANEL (Panels 2 & 3 Combined) -->
+  <div class="merged-content-panel">
+    <!-- PRAYER SECTION (Fixed at top when scrolling) -->
+    <section class="prayer-section-fixed">
+      <button class="prayer-card-timeline" onclick="window.location.href='pages/prayers.html'">
+        <!-- Top Row: Date/Hijri on left, Location on right (same line) -->
+        <div class="top-row">
+          <div class="left-side">
+            <p class="weekday" id="weekday">Loading...</p>
+            <p class="hijri" id="hijri">Loading...</p>
+          </div>
+          <div class="right-side">
+            <span class="location-icon">📍</span>
+            <span class="city-name" id="cityName">Loading...</span>
           </div>
         </div>
 
-        <div class="timeline-end">
-          <span class="timeline-emoji" id="nextEmoji">☀️</span>
-          <h3 class="timeline-name" id="nextPrayer">--</h3>
-          <p class="timeline-time" id="nextPrayerTime">--:--</p>
+        <!-- Timeline: Current → Next -->
+        <div class="timeline-prayer">
+          <div class="timeline-start">
+            <span class="timeline-emoji" id="currentEmoji">🌅</span>
+            <h3 class="timeline-name" id="currentPrayer">--</h3>
+            <p class="timeline-time" id="prayerTime">--:--</p>
+          </div>
+
+          <div class="timeline-progress">
+            <div class="progress-line"></div>
+            <div class="countdown-badge">
+              <span id="countdown">--:--:--</span>
+            </div>
+          </div>
+
+          <div class="timeline-end">
+            <span class="timeline-emoji" id="nextEmoji">☀️</span>
+            <h3 class="timeline-name" id="nextPrayer">--</h3>
+            <p class="timeline-time" id="nextPrayerTime">--:--</p>
+          </div>
         </div>
-      </div>
-    </button>
-  </section>
-
-  <!-- MAIN PANEL (Panel 3) - Only feature buttons with background -->
-  <div class="main-panel">
-    <main class="main">
-      <button class="card">
-        <img src="assets/mosque.png" alt="Mosques" />
-        <p>Mosques</p>
       </button>
+    </section>
 
-      <button class="card">
-        <img src="assets/restaurant.jpg" alt="News" />
-        <p>News</p>
-      </button>
+    <!-- SCROLLABLE FEATURES SECTION -->
+    <div class="scrollable-features">
+      <main class="main">
+        <button class="card">
+          <img src="assets/mosque.png" alt="Mosques" />
+          <p>Mosques</p>
+        </button>
 
-      <button class="card">
-        <img src="assets/store.jpg" alt="Cafe" />
-        <p>Cafe</p>
-      </button>
+        <button class="card">
+          <img src="assets/restaurant.jpg" alt="News" />
+          <p>News</p>
+        </button>
 
-      <button class="card">
-        <img src="assets/store.jpg" alt="Store" />
-        <p>Store</p>
-      </button>
+        <button class="card">
+          <img src="assets/store.jpg" alt="Cafe" />
+          <p>Cafe</p>
+        </button>
 
-      <button class="card">
-        <img src="assets/store.jpg" alt="Cafe" />
-        <p>Cafe</p>
-      </button>
+        <button class="card">
+          <img src="assets/store.jpg" alt="Store" />
+          <p>Store</p>
+        </button>
 
-      <button class="card">
-        <img src="assets/store.jpg" alt="Store" />
-        <p>Store</p>
-      </button>
+        <button class="card">
+          <img src="assets/store.jpg" alt="Cafe" />
+          <p>Cafe</p>
+        </button>
 
-      <button class="card">
-        <img src="assets/store.jpg" alt="Cafe" />
-        <p>Cafe</p>
-      </button>
+        <button class="card">
+          <img src="assets/store.jpg" alt="Store" />
+          <p>Store</p>
+        </button>
 
-      <button class="card">
-        <img src="assets/store.jpg" alt="Store" />
-        <p>Store</p>
-      </button>
-    </main>
+        <button class="card">
+          <img src="assets/store.jpg" alt="Cafe" />
+          <p>Cafe</p>
+        </button>
+
+        <button class="card">
+          <img src="assets/store.jpg" alt="Store" />
+          <p>Store</p>
+        </button>
+      </main>
+    </div>
   </div>
 
   <!-- JS Scripts -->

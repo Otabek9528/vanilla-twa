@@ -10,6 +10,7 @@
   --radius-lg: 20px;
   --shadow-1: 0 4px 12px rgba(0,0,0,.15);
   --shadow-2: 0 3px 10px rgba(0,0,0,.15);
+  --light-bg: #fffbf0; /* Light warm yellow/cream background */
 }
 
 .app, .app * {
@@ -21,6 +22,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden; /* Prevent body scroll */
 }
 
 body {
@@ -43,7 +45,8 @@ body {
   box-shadow: var(--shadow-1);
   position: relative;
   overflow: hidden;
-  z-index: 10; /* Ensure header stays on top */
+  z-index: 10;
+  flex-shrink: 0; /* Prevent header from shrinking */
 }
 
 .header-content {
@@ -118,20 +121,32 @@ body {
 }
 
 /* =========================
-   2) PRAYER PANEL (Panel 2 - White/Light background)
+   2) MERGED CONTENT PANEL (Panels 2 & 3 Combined)
    ========================= */
-.prayer-panel {
-  background: #ffffff;
-  padding: 20px 16px 16px 16px; /* Added top padding to prevent overlap */
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 0; /* No negative margin */
+.merged-content-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--light-bg); /* Light warm yellow/cream solid color */
   position: relative;
-  z-index: 5; /* Below header */
 }
 
 /* =========================
-   3) PRAYER CARD (Better themed background)
+   3) PRAYER SECTION (Fixed at top)
+   ========================= */
+.prayer-section-fixed {
+  background: #ffffff;
+  padding: 20px 16px 16px 16px;
+  width: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0; /* Don't shrink when scrolling */
+  z-index: 5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Subtle shadow for depth */
+}
+
+/* =========================
+   4) PRAYER CARD (Better themed background)
    ========================= */
 .prayer-card-timeline {
   all: unset;
@@ -348,42 +363,38 @@ body {
 }
 
 /* =========================
-   4) MAIN PANEL (Panel 3) - WITH BACKGROUND IMAGE
+   5) SCROLLABLE FEATURES SECTION
    ========================= */
-.main-panel {
-  /* Background image covering the full area */
-  background-image: url('../assets/main_bg.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  
-  /* Padding for the container */
-  padding: 24px 16px;
-  
-  /* Make it fill remaining space */
+.scrollable-features {
   flex: 1;
-  min-height: 400px;
-  
-  /* Position for overlay */
-  position: relative;
-  z-index: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px 16px;
+  background: var(--light-bg); /* Light warm yellow/cream solid color */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
-/* Subtle overlay to improve card visibility */
-.main-panel::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.25);
-  pointer-events: none;
-  z-index: 0;
+/* Hide scrollbar for cleaner look (optional) */
+.scrollable-features::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollable-features::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.scrollable-features::-webkit-scrollbar-thumb {
+  background: rgba(0, 123, 94, 0.3);
+  border-radius: 3px;
+}
+
+.scrollable-features::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 123, 94, 0.5);
 }
 
 /* =========================
-   5) Main – cards grid (Inside Panel 3)
+   6) Main — cards grid (Inside Scrollable Section)
    ========================= */
 .main {
   display: grid;
@@ -394,8 +405,6 @@ body {
   width: 100%;
   max-width: 640px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
 }
 
 .card {
@@ -405,20 +414,19 @@ body {
   gap: 12px;
   width: 100%;
   max-width: 170px;
-  background: rgba(255,255,255,.92);
+  background: rgba(255, 255, 255, 0.95);
   border: 0;
   border-radius: 18px;
   padding: 22px 12px;
-  box-shadow: 0 3px 8px rgba(0,0,0,.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform .15s ease, box-shadow .15s ease;
-  backdrop-filter: blur(6px);
 }
 
 .card:active,
 .card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 14px rgba(0,0,0,.18);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
 }
 
 .card img {
@@ -436,7 +444,7 @@ body {
 }
 
 /* =========================
-   6) BACK FOOTER BUTTON (for prayers page)
+   7) BACK FOOTER BUTTON (for prayers page)
    ========================= */
 .back-footer {
   position: fixed;
@@ -479,7 +487,7 @@ body {
 }
 
 /* =========================
-   7) PRAYERS DETAILED PAGE
+   8) PRAYERS DETAILED PAGE
    ========================= */
 .prayers-detailed {
   background-color: #f8fff8;
@@ -699,13 +707,13 @@ body {
 }
 
 /* =========================
-   8) Responsive tweaks
+   9) Responsive tweaks
    ========================= */
 @media (max-width: 420px) {
   .main { gap: 14px; }
   .card { max-width: 150px; padding: 18px 10px; }
   .app__header h1 { font-size: 1rem; }
-  .main-panel { padding: 20px 12px; }
+  .scrollable-features { padding: 20px 12px; }
   
   /* Adjust top row for smaller screens */
   .top-row {

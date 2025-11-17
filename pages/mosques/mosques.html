@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nearby Mosques</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="mosques.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app__header">
+    <div class="header-content">
+      <img src="../../assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
+      <h1>Muslim Vegukin Bot</h1>
+    </div>
+  </header>
+
+  <!-- MOSQUES CONTAINER -->
+  <div class="mosques-container">
+    
+    <!-- Page Title -->
+    <h2 class="mosques-page-title">🕌 Yaqin atrofdagi masjidlar</h2>
+    <p class="mosques-page-subtitle">Sizga eng yaqin 5 ta masjid</p>
+
+    <!-- Location Update Section -->
+    <div class="location-update-section">
+      <div class="location-info-box">
+        <p class="location-info-icon">📍</p>
+        <p class="location-info-text">
+          Yanada aniq natijalarni ko'rish uchun lokatsiya ma'lumotlaringizni yangilang.
+        </p>
+      </div>
+      <button class="location-update-btn" id="updateLocationBtn">
+        <span class="update-btn-icon" id="updateBtnIcon">🔄</span>
+        <span class="update-btn-text">Lokatsiyani yangilash</span>
+      </button>
+    </div>
+
+    <!-- Search Bar Section -->
+    <div class="search-section">
+      <div class="search-mode-indicator">
+        <span class="search-mode-icon" id="searchModeIcon">📍</span>
+        <span class="search-mode-text" id="searchModeText">Hozirgi joylashuvingiz asosida</span>
+      </div>
+      
+      <div class="search-bar-container">
+        <input 
+          type="text" 
+          class="search-bar" 
+          id="addressSearchBar" 
+          placeholder="Manzilni kiriting (masalan: Gangnam-gu, Seoul)"
+        />
+        <button class="search-clear-btn" id="clearSearchBtn" style="display: none;">
+          <span>✕</span>
+        </button>
+      </div>
+      
+      <p class="search-hint">
+        💡 Biror manzilni kiritish orqali o'sha hudud atrofidagi masjidlarni qidiring
+      </p>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" id="loadingIndicator" style="display: none;">
+      <div class="spinner"></div>
+      <p>Masjidlar izlanmoqda...</p>
+    </div>
+
+    <!-- Mosque Cards Container -->
+    <div class="mosque-cards" id="mosqueCards">
+      <!-- Cards will be dynamically inserted here by JS -->
+    </div>
+
+    <!-- No Results Message -->
+    <div class="no-results" id="noResults" style="display: none;">
+      <p class="no-results-icon">🔍</p>
+      <p class="no-results-text">Hech qanday masjid topilmadi</p>
+      <p class="no-results-hint">Iltimos, boshqa manzilni sinab ko'ring</p>
+    </div>
+
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="mosques.js"></script>
+
+</body>
+</html>

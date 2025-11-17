@@ -758,88 +758,80 @@ body {
   letter-spacing: 1px;
 }
 
-/* Informative Note Section */
+/* Informative Note Section - Clean & Simple Design */
 .prayer-info-note {
-  background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
-  border: 2px solid #ffc107;
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
   border-radius: 16px;
   padding: 20px;
-  margin: 30px auto 20px auto;
-  max-width: 500px;
-  box-shadow: 0 3px 10px rgba(255, 193, 7, 0.2);
-  text-align: left;
-}
-
-.info-icon {
-  font-size: 2rem;
+  margin: 30px 10px 20px 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   text-align: center;
-  margin-bottom: 10px;
 }
 
-.info-title {
-  font-size: 1.2rem;
+.info-header {
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #e65100;
+  color: #2c5e2e;
   margin: 0 0 12px 0;
-  text-align: center;
 }
 
-.info-text {
-  font-size: 0.95rem;
-  color: #5d4037;
+.info-method {
+  font-size: 0.9rem;
+  color: #555;
   line-height: 1.6;
   margin: 0 0 16px 0;
-  text-align: center;
 }
 
-.info-text strong {
-  color: #e65100;
-  font-weight: 700;
-}
-
-.info-recommendations {
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
-  padding: 14px;
-  margin-top: 12px;
-}
-
-.info-subtitle {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #d84315;
-  margin: 0 0 10px 0;
-  text-align: center;
-}
-
-.info-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.info-list li {
-  font-size: 0.9rem;
-  color: #5d4037;
-  margin: 8px 0;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 8px;
-  border-left: 3px solid #ff9800;
-  line-height: 1.5;
-}
-
-.info-list li strong {
-  color: #e65100;
+.info-method strong {
+  color: #2c5e2e;
   font-weight: 600;
 }
 
-.info-list .highlight {
-  background: linear-gradient(135deg, #ffe082 0%, #ffcc80 100%);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: 700;
+.info-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d0d0d0, transparent);
+  margin: 16px 0;
+}
+
+.info-advice-title {
+  font-size: 0.95rem;
+  font-weight: 600;
   color: #e65100;
+  margin: 0 0 12px 0;
+}
+
+.info-advice {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.advice-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  padding: 10px 12px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  border-left: 3px solid #00a884;
+}
+
+.advice-emoji {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.advice-text {
+  font-size: 0.9rem;
+  color: #444;
+  line-height: 1.4;
+}
+
+.advice-text strong {
+  color: #00a884;
+  font-weight: 700;
 }
 
 /* =========================

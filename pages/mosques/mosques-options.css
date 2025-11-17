@@ -1,5 +1,6 @@
 /* =========================
    MOSQUE OPTIONS PAGE STYLES
+   Modern & Clean Design
    ========================= */
 
 /* Page Layout */
@@ -25,8 +26,8 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  padding: 24px 16px 40px 16px;
-  max-width: 640px;
+  padding: 30px 20px 40px 20px;
+  max-width: 500px;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
@@ -34,292 +35,291 @@ body {
 
 /* Page Title & Subtitle */
 .options-page-title {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #2c5e2e;
+  color: #1a1a1a;
   margin: 0 0 8px 0;
   text-align: center;
+  letter-spacing: -0.5px;
 }
 
 .options-page-subtitle {
   font-size: 1rem;
-  color: #666;
-  margin: 0 0 28px 0;
+  color: #888;
+  margin: 0 0 32px 0;
   text-align: center;
+  font-weight: 400;
 }
 
-/* Option Cards */
+/* Option Cards - Clean Modern Design */
 .option-card {
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: 24px;
   padding: 24px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  border: 2px solid transparent;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
   transition: all 0.3s ease;
 }
 
 .option-card:hover {
-  box-shadow: 0 6px 20px rgba(0, 123, 94, 0.15);
-  border-color: rgba(0, 168, 132, 0.2);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 /* Card Header */
-.option-card-header {
+.option-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #f0f0f0;
 }
 
-.option-icon {
-  font-size: 2rem;
-  line-height: 1;
+.option-icon-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
   flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.location-icon {
+  background: linear-gradient(135deg, #e8f5f0 0%, #d4f1e8 100%);
+}
+
+.address-icon {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+}
+
+.option-header-text {
+  flex: 1;
 }
 
 .option-title {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #2c5e2e;
+  color: #1a1a1a;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+}
+
+.option-subtitle {
+  font-size: 0.9rem;
+  color: #888;
   margin: 0;
-  line-height: 1.3;
-  flex: 1;
+  font-weight: 400;
 }
 
 /* Card Content */
-.option-card-content {
+.option-content {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* Location Info (for location card) */
-.location-info {
-  background: linear-gradient(135deg, #e8f5f0 0%, #f0f9f5 100%);
+/* Location Display */
+.location-display {
+  background: #f8f8f8;
   border-radius: 12px;
-  padding: 14px 16px;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
-.location-info-row {
+.location-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
 }
 
-.info-label {
+.location-label {
   font-size: 0.9rem;
   color: #666;
   font-weight: 500;
 }
 
-.info-value {
-  font-size: 1rem;
-  color: #2c5e2e;
-  font-weight: 700;
+.location-value {
+  font-size: 0.95rem;
+  color: #1a1a1a;
+  font-weight: 600;
   text-align: right;
 }
 
-.info-value.stale {
+.location-value.stale {
   color: #ff9800;
 }
 
-/* Description */
-.option-description {
-  font-size: 0.95rem;
-  color: #555;
-  line-height: 1.6;
-  margin: 0;
-  padding: 12px 14px;
-  background: #f9f9f9;
-  border-radius: 10px;
-  border-left: 3px solid #00a884;
-}
-
-/* Address Search Container */
-.address-search-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.search-label {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #2c5e2e;
-  margin: 0;
+/* Input Container */
+.input-container {
+  position: relative;
 }
 
 .address-input {
   width: 100%;
   padding: 14px 16px;
-  border: 2px solid #d0d0d0;
+  border: 2px solid #e8e8e8;
   border-radius: 12px;
   font-size: 1rem;
   box-sizing: border-box;
   transition: all 0.3s ease;
-  background: #f9f9f9;
+  background: #f8f8f8;
+  color: #1a1a1a;
 }
 
 .address-input:focus {
   outline: none;
   border-color: #00a884;
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.1);
+  box-shadow: 0 0 0 4px rgba(0, 168, 132, 0.08);
 }
 
 .address-input::placeholder {
-  color: #999;
+  color: #aaa;
 }
 
-.search-hint {
-  font-size: 0.85rem;
-  color: #888;
-  margin: 0;
-  line-height: 1.4;
-}
-
-/* Action Buttons */
-.option-action-btn {
+/* Option Buttons - Modern Minimal */
+.option-btn {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
+  justify-content: space-between;
+  padding: 16px 20px;
   border: none;
   border-radius: 14px;
-  padding: 15px 24px;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 4px;
+  position: relative;
+  overflow: hidden;
 }
 
-.primary-btn {
-  background: linear-gradient(135deg, #00a884 0%, #007b5e 100%);
+.location-btn {
+  background: linear-gradient(135deg, #00a884 0%, #00c896 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(0, 168, 132, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 168, 132, 0.25);
 }
 
-.primary-btn:hover:not(:disabled) {
+.location-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 168, 132, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 168, 132, 0.35);
 }
 
-.primary-btn:active:not(:disabled) {
+.location-btn:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.primary-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.primary-btn.updating .btn-icon {
-  animation: spin 1s linear infinite;
-}
-
-.secondary-btn {
-  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+.address-btn {
+  background: linear-gradient(135deg, #ff9800 0%, #ffab00 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 4px 16px rgba(255, 152, 0, 0.25);
 }
 
-.secondary-btn:hover:not(:disabled) {
+.address-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.35);
 }
 
-.secondary-btn:active:not(:disabled) {
+.address-btn:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.secondary-btn:disabled {
-  background: linear-gradient(135deg, #ccc 0%, #bbb 100%);
+.option-btn:disabled {
+  background: linear-gradient(135deg, #e0e0e0 0%, #d0d0d0 100%);
   box-shadow: none;
   cursor: not-allowed;
-}
-
-.btn-icon {
-  font-size: 1.2rem;
-  line-height: 1;
-  transition: transform 0.3s ease;
+  opacity: 0.6;
 }
 
 .btn-text {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.btn-arrow {
+  font-size: 1.3rem;
+  font-weight: 700;
+  transition: transform 0.3s ease;
 }
 
-/* Secondary Button (skip update) */
-.option-secondary-btn {
-  width: 100%;
-  background: transparent;
-  color: #666;
-  border: 2px solid #d0d0d0;
-  border-radius: 12px;
-  padding: 10px 20px;
+.option-btn:hover:not(:disabled) .btn-arrow {
+  transform: translateX(4px);
+}
+
+/* Loading state for location button */
+.location-btn.loading {
+  pointer-events: none;
+}
+
+.location-btn.loading .btn-text::after {
+  content: '...';
+  animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}
+
+/* Divider */
+.divider-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+}
+
+.divider-text {
   font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.option-secondary-btn:hover {
-  background: #f9f9f9;
-  border-color: #00a884;
-  color: #00a884;
-}
-
-.option-secondary-btn:active {
-  transform: scale(0.98);
-}
-
-/* Specific Card Styling */
-.location-card {
-  border-left: 4px solid #00a884;
-}
-
-.address-card {
-  border-left: 4px solid #4caf50;
+  color: #aaa;
+  font-weight: 500;
+  text-transform: lowercase;
 }
 
 /* Responsive Design */
 @media (max-width: 420px) {
   .options-container {
-    padding: 20px 12px 40px 12px;
+    padding: 24px 16px 40px 16px;
   }
 
   .options-page-title {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
   }
 
   .option-card {
     padding: 20px;
   }
 
+  .option-icon-circle {
+    width: 52px;
+    height: 52px;
+    font-size: 1.6rem;
+  }
+
   .option-title {
     font-size: 1.2rem;
   }
 
-  .option-action-btn {
-    padding: 13px 20px;
-    font-size: 0.95rem;
+  .option-btn {
+    padding: 14px 18px;
+    font-size: 1rem;
   }
 
   .btn-text {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 }

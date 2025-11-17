@@ -25,76 +25,72 @@
     <p class="options-page-subtitle">Qidiruv turini tanlang</p>
 
     <!-- Option 1: Current Location -->
-    <div class="option-card location-card">
-      <div class="option-card-header">
-        <span class="option-icon">📍</span>
-        <h3 class="option-title">Hozirgi joylashuvim asosida</h3>
+    <div class="option-card">
+      <div class="option-header">
+        <div class="option-icon-circle location-icon">
+          <span>📍</span>
+        </div>
+        <div class="option-header-text">
+          <h3 class="option-title">Hozirgi joylashuvim</h3>
+          <p class="option-subtitle">Eng yaqin masjidlarni toping</p>
+        </div>
       </div>
       
-      <div class="option-card-content">
+      <div class="option-content">
         <!-- Current Location Info -->
-        <div class="location-info">
-          <div class="location-info-row">
-            <span class="info-label">Shahar:</span>
-            <span class="info-value" id="currentCity">Yuklanmoqda...</span>
+        <div class="location-display">
+          <div class="location-row">
+            <span class="location-label">📍 Shahar:</span>
+            <span class="location-value" id="currentCity">Yuklanmoqda...</span>
           </div>
-          <div class="location-info-row">
-            <span class="info-label">Yangilangan:</span>
-            <span class="info-value" id="lastUpdated">--</span>
+          <div class="location-row">
+            <span class="location-label">🕐 Yangilangan:</span>
+            <span class="location-value" id="lastUpdated">--</span>
           </div>
         </div>
 
-        <!-- Description -->
-        <p class="option-description">
-          💡 Sizning hozirgi joylashuvingizga eng yaqin 5 ta masjidni topamiz. 
-          Aniq natijalar uchun lokatsiyangizni yangilab oling.
-        </p>
-
         <!-- Action Button -->
-        <button class="option-action-btn primary-btn" id="locationOptionBtn">
-          <span class="btn-icon" id="locationBtnIcon">🔄</span>
-          <span class="btn-text">Lokatsiyani yangilash va davom etish</span>
-        </button>
-
-        <!-- Or Skip Update -->
-        <button class="option-secondary-btn" id="skipUpdateBtn">
-          <span>Yangilamasdan davom etish</span>
+        <button class="option-btn location-btn" id="locationOptionBtn">
+          <span class="btn-text">Izlash</span>
+          <span class="btn-arrow">→</span>
         </button>
       </div>
     </div>
 
+    <!-- Divider -->
+    <div class="divider-container">
+      <div class="divider-line"></div>
+      <span class="divider-text">yoki</span>
+      <div class="divider-line"></div>
+    </div>
+
     <!-- Option 2: Address Search -->
-    <div class="option-card address-card">
-      <div class="option-card-header">
-        <span class="option-icon">🔍</span>
-        <h3 class="option-title">Manzil bo'yicha qidirish</h3>
+    <div class="option-card">
+      <div class="option-header">
+        <div class="option-icon-circle address-icon">
+          <span>🔍</span>
+        </div>
+        <div class="option-header-text">
+          <h3 class="option-title">Manzil bo'yicha</h3>
+          <p class="option-subtitle">Istalgan joyni qidiring</p>
+        </div>
       </div>
       
-      <div class="option-card-content">
-        <!-- Description -->
-        <p class="option-description">
-          💡 Istalgan manzil yoki hudud nomini kiriting. 
-          Biz o'sha hudud atrofidagi eng yaqin 5 ta masjidni topamiz.
-        </p>
-
+      <div class="option-content">
         <!-- Search Input -->
-        <div class="address-search-container">
-          <label class="search-label" for="addressInput">Manzilni kiriting:</label>
+        <div class="input-container">
           <input 
             type="text" 
             class="address-input" 
             id="addressInput"
-            placeholder="Masalan: Gangnam-gu, Seoul"
+            placeholder="Shahar yoki hudud nomini kiriting"
           />
-          <p class="search-hint">
-            🏙️ Shahar, tuman, ko'cha yoki bino nomini yozishingiz mumkin
-          </p>
         </div>
 
         <!-- Action Button -->
-        <button class="option-action-btn secondary-btn" id="addressOptionBtn" disabled>
-          <span class="btn-icon">🔍</span>
-          <span class="btn-text">Qidirish va davom etish</span>
+        <button class="option-btn address-btn" id="addressOptionBtn" disabled>
+          <span class="btn-text">Izlash</span>
+          <span class="btn-arrow">→</span>
         </button>
       </div>
     </div>

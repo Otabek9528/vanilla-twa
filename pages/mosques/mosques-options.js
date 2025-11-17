@@ -28,8 +28,6 @@ try {
 const currentCityElem = document.getElementById('currentCity');
 const lastUpdatedElem = document.getElementById('lastUpdated');
 const locationOptionBtn = document.getElementById('locationOptionBtn');
-const locationBtnIcon = document.getElementById('locationBtnIcon');
-const skipUpdateBtn = document.getElementById('skipUpdateBtn');
 const addressInput = document.getElementById('addressInput');
 const addressOptionBtn = document.getElementById('addressOptionBtn');
 
@@ -77,15 +75,13 @@ function updateLocationDisplay() {
   }
 }
 
-// Handle location option button (update and continue)
+// Handle location option button (always updates, then continues)
 locationOptionBtn.addEventListener('click', async () => {
-  console.log('📍 Location option selected - updating location');
+  console.log('📍 Location option selected - updating and searching');
   
-  // Add updating state
-  locationOptionBtn.classList.add('updating');
+  // Add loading state
+  locationOptionBtn.classList.add('loading');
   locationOptionBtn.disabled = true;
-  locationBtnIcon.textContent = '🔄';
-  skipUpdateBtn.disabled = true;
   
   // Simulate location update (2 seconds)
   setTimeout(() => {
@@ -93,25 +89,10 @@ locationOptionBtn.addEventListener('click', async () => {
     currentLocation.lastUpdated = new Date();
     currentLocation.city = 'Seoul, Gangnam-gu'; // Simulate updated city
     
-    // Update display
-    updateLocationDisplay();
-    
-    // Show success icon
-    locationOptionBtn.classList.remove('updating');
-    locationBtnIcon.textContent = '✅';
-    
-    // Navigate to mosques list page after 1 second
-    setTimeout(() => {
-      console.log('✅ Navigating to mosques list (location mode)');
-      window.location.href = 'mosques.html?mode=location';
-    }, 1000);
+    // Navigate to mosques list page
+    console.log('✅ Navigating to mosques list (location mode)');
+    window.location.href = 'mosques.html?mode=location';
   }, 2000);
-});
-
-// Handle skip update button (continue without updating)
-skipUpdateBtn.addEventListener('click', () => {
-  console.log('📍 Continuing without location update');
-  window.location.href = 'mosques.html?mode=location';
 });
 
 // Handle address input
@@ -151,6 +132,7 @@ function performAddressSearch(address) {
   // Disable button and input
   addressOptionBtn.disabled = true;
   addressInput.disabled = true;
+  addressOptionBtn.classList.add('loading');
   
   // Navigate to mosques list page with address parameter
   const encodedAddress = encodeURIComponent(address);
@@ -163,17 +145,4 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Display current location info
   updateLocationDisplay();
-  
-  // Set focus on address input when user scrolls to that card
-  const addressCard = document.querySelector('.address-card');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-        // Card is mostly visible
-        console.log('📝 Address card is visible');
-      }
-    });
-  }, { threshold: 0.5 });
-  
-  observer.observe(addressCard);
 });

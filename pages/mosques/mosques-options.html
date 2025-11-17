@@ -21,78 +21,50 @@
   <div class="options-container">
     
     <!-- Page Title -->
-    <h2 class="options-page-title">🕌 Masjidlarni qidirish</h2>
-    <p class="options-page-subtitle">Qidiruv turini tanlang</p>
+    <h2 class="options-page-title">🕌 Yaqin atrofdagi masjidlar</h2>
+    <p class="options-page-subtitle">Sizga eng yaqin 5 ta masjid</p>
 
-    <!-- Option 1: Current Location -->
-    <div class="option-card">
-      <div class="option-header">
-        <div class="option-icon-circle location-icon">
-          <span>📍</span>
+    <!-- Option 1: Current Location Card -->
+    <div class="search-option-card">
+      <div class="card-info-section">
+        <div class="info-icon-box">
+          <span class="info-icon">📍</span>
         </div>
-        <div class="option-header-text">
-          <h3 class="option-title">Hozirgi joylashuvim</h3>
-          <p class="option-subtitle">Eng yaqin masjidlarni toping</p>
-        </div>
+        <p class="card-info-text">
+          Yanada aniq natijalarni ko'rish uchun lokatsiya ma'lumotlaringizni yangilang.
+        </p>
       </div>
       
-      <div class="option-content">
-        <!-- Current Location Info -->
-        <div class="location-display">
-          <div class="location-row">
-            <span class="location-label">📍 Shahar:</span>
-            <span class="location-value" id="currentCity">Yuklanmoqda...</span>
-          </div>
-          <div class="location-row">
-            <span class="location-label">🕐 Yangilangan:</span>
-            <span class="location-value" id="lastUpdated">--</span>
-          </div>
-        </div>
-
-        <!-- Action Button -->
-        <button class="option-btn location-btn" id="locationOptionBtn">
-          <span class="btn-text">Izlash</span>
-          <span class="btn-arrow">→</span>
-        </button>
-      </div>
+      <button class="search-action-btn" id="locationSearchBtn">
+        <span class="btn-icon">🔄</span>
+        <span class="btn-text">Lokatsiyani yangilash</span>
+      </button>
     </div>
 
-    <!-- Divider -->
-    <div class="divider-container">
-      <div class="divider-line"></div>
-      <span class="divider-text">yoki</span>
-      <div class="divider-line"></div>
-    </div>
-
-    <!-- Option 2: Address Search -->
-    <div class="option-card">
-      <div class="option-header">
-        <div class="option-icon-circle address-icon">
-          <span>🔍</span>
-        </div>
-        <div class="option-header-text">
-          <h3 class="option-title">Manzil bo'yicha</h3>
-          <p class="option-subtitle">Istalgan joyni qidiring</p>
-        </div>
+    <!-- Option 2: Address Search Card -->
+    <div class="search-option-card">
+      <div class="card-header-section">
+        <span class="header-icon">📍</span>
+        <h3 class="card-header-title">Hozirgi joylashuvingiz asosida</h3>
       </div>
       
-      <div class="option-content">
-        <!-- Search Input -->
-        <div class="input-container">
-          <input 
-            type="text" 
-            class="address-input" 
-            id="addressInput"
-            placeholder="Shahar yoki hudud nomini kiriting"
-          />
-        </div>
-
-        <!-- Action Button -->
-        <button class="option-btn address-btn" id="addressOptionBtn" disabled>
-          <span class="btn-text">Izlash</span>
-          <span class="btn-arrow">→</span>
-        </button>
+      <div class="address-input-wrapper">
+        <input 
+          type="text" 
+          class="address-search-input" 
+          id="addressInput"
+          placeholder="Manzilni kiriting (masalan: Gangnam-gu, Seoul)"
+        />
       </div>
+      
+      <p class="card-hint-text">
+        💡 Biror manzilni kiritish orqali o'sha hudud atrofidagi masjidlarni qidiring
+      </p>
+      
+      <button class="search-action-btn" id="addressSearchBtn" disabled>
+        <span class="btn-icon">🔍</span>
+        <span class="btn-text">Qidirish</span>
+      </button>
     </div>
 
   </div>

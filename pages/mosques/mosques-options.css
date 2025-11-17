@@ -1,6 +1,6 @@
 /* =========================
    MOSQUE OPTIONS PAGE STYLES
-   Modern & Clean Design
+   Beautiful Card Design
    ========================= */
 
 /* Page Layout */
@@ -14,7 +14,7 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
-  background: var(--light-bg, #faf7f0);
+  background: #f5f5f5;
 }
 
 .app__header {
@@ -26,8 +26,8 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  padding: 30px 20px 40px 20px;
-  max-width: 500px;
+  padding: 24px 16px 40px 16px;
+  max-width: 680px;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
@@ -35,291 +35,208 @@ body {
 
 /* Page Title & Subtitle */
 .options-page-title {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 8px 0;
+  color: #4a5568;
+  margin: 0 0 6px 0;
   text-align: center;
-  letter-spacing: -0.5px;
 }
 
 .options-page-subtitle {
-  font-size: 1rem;
-  color: #888;
-  margin: 0 0 32px 0;
+  font-size: 0.95rem;
+  color: #718096;
+  margin: 0 0 28px 0;
   text-align: center;
-  font-weight: 400;
 }
 
-/* Option Cards - Clean Modern Design */
-.option-card {
+/* Search Option Cards */
+.search-option-card {
   background: #ffffff;
-  border-radius: 24px;
+  border-radius: 20px;
   padding: 24px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  transition: all 0.3s ease;
-}
-
-.option-card:hover {
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-}
-
-/* Card Header */
-.option-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
   margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e8e8e8;
 }
 
-.option-icon-circle {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
+/* Card Info Section (for location card) */
+.card-info-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 16px;
+  background: linear-gradient(135deg, #e6f7f5 0%, #d4f4f0 100%);
+  border-radius: 14px;
+}
+
+.info-icon-box {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  background: #ffffff;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.8rem;
-  flex-shrink: 0;
-  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.location-icon {
-  background: linear-gradient(135deg, #e8f5f0 0%, #d4f1e8 100%);
+.info-icon {
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
-.address-icon {
-  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-}
-
-.option-header-text {
+.card-info-text {
   flex: 1;
-}
-
-.option-title {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 4px 0;
-  line-height: 1.2;
-}
-
-.option-subtitle {
-  font-size: 0.9rem;
-  color: #888;
+  font-size: 0.95rem;
+  color: #2d3748;
+  line-height: 1.6;
   margin: 0;
-  font-weight: 400;
+  padding-top: 4px;
 }
 
-/* Card Content */
-.option-content {
+/* Card Header Section (for address card) */
+.card-header-section {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Location Display */
-.location-display {
-  background: #f8f8f8;
-  border-radius: 12px;
-  padding: 12px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.location-row {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 12px;
+  margin-bottom: 16px;
+  padding: 14px;
+  background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%);
+  border-radius: 14px;
 }
 
-.location-label {
-  font-size: 0.9rem;
-  color: #666;
-  font-weight: 500;
+.header-icon {
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
-.location-value {
-  font-size: 0.95rem;
-  color: #1a1a1a;
+.card-header-title {
+  font-size: 1.1rem;
   font-weight: 600;
-  text-align: right;
+  color: #2d3748;
+  margin: 0;
 }
 
-.location-value.stale {
-  color: #ff9800;
+/* Address Input Wrapper */
+.address-input-wrapper {
+  margin-bottom: 12px;
 }
 
-/* Input Container */
-.input-container {
-  position: relative;
-}
-
-.address-input {
+.address-search-input {
   width: 100%;
   padding: 14px 16px;
-  border: 2px solid #e8e8e8;
+  border: 2px solid #e2e8f0;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   box-sizing: border-box;
   transition: all 0.3s ease;
-  background: #f8f8f8;
-  color: #1a1a1a;
+  background: #f7fafc;
+  color: #2d3748;
 }
 
-.address-input:focus {
+.address-search-input:focus {
   outline: none;
   border-color: #00a884;
   background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(0, 168, 132, 0.08);
+  box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.1);
 }
 
-.address-input::placeholder {
-  color: #aaa;
+.address-search-input::placeholder {
+  color: #a0aec0;
+  font-size: 0.9rem;
 }
 
-/* Option Buttons - Modern Minimal */
-.option-btn {
+/* Card Hint Text */
+.card-hint-text {
+  font-size: 0.85rem;
+  color: #718096;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+  padding-left: 4px;
+}
+
+/* Search Action Buttons */
+.search-action-btn {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
   border: none;
-  border-radius: 14px;
-  font-size: 1.05rem;
+  border-radius: 12px;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.location-btn {
-  background: linear-gradient(135deg, #00a884 0%, #00c896 100%);
+  background: linear-gradient(135deg, #00bfa5 0%, #00a884 100%);
   color: white;
-  box-shadow: 0 4px 16px rgba(0, 168, 132, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 168, 132, 0.25);
 }
 
-.location-btn:hover:not(:disabled) {
+.search-action-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 168, 132, 0.35);
+  box-shadow: 0 6px 16px rgba(0, 168, 132, 0.35);
 }
 
-.location-btn:active:not(:disabled) {
+.search-action-btn:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.address-btn {
-  background: linear-gradient(135deg, #ff9800 0%, #ffab00 100%);
-  color: white;
-  box-shadow: 0 4px 16px rgba(255, 152, 0, 0.25);
-}
-
-.address-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.35);
-}
-
-.address-btn:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.option-btn:disabled {
-  background: linear-gradient(135deg, #e0e0e0 0%, #d0d0d0 100%);
+.search-action-btn:disabled {
+  background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
   box-shadow: none;
   cursor: not-allowed;
   opacity: 0.6;
 }
 
+.btn-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
 .btn-text {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 600;
-  letter-spacing: 0.3px;
 }
 
-.btn-arrow {
-  font-size: 1.3rem;
-  font-weight: 700;
-  transition: transform 0.3s ease;
-}
-
-.option-btn:hover:not(:disabled) .btn-arrow {
-  transform: translateX(4px);
-}
-
-/* Loading state for location button */
-.location-btn.loading {
+/* Loading state */
+.search-action-btn.loading {
   pointer-events: none;
 }
 
-.location-btn.loading .btn-text::after {
-  content: '...';
-  animation: dots 1.5s infinite;
+.search-action-btn.loading .btn-icon {
+  animation: spin 1s linear infinite;
 }
 
-@keyframes dots {
-  0%, 20% { content: '.'; }
-  40% { content: '..'; }
-  60%, 100% { content: '...'; }
-}
-
-/* Divider */
-.divider-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 8px 0;
-}
-
-.divider-line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
-}
-
-.divider-text {
-  font-size: 0.9rem;
-  color: #aaa;
-  font-weight: 500;
-  text-transform: lowercase;
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* Responsive Design */
 @media (max-width: 420px) {
   .options-container {
-    padding: 24px 16px 40px 16px;
+    padding: 20px 12px 40px 12px;
   }
 
   .options-page-title {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
   }
 
-  .option-card {
+  .search-option-card {
     padding: 20px;
   }
 
-  .option-icon-circle {
-    width: 52px;
-    height: 52px;
-    font-size: 1.6rem;
+  .card-info-text,
+  .card-hint-text {
+    font-size: 0.9rem;
   }
 
-  .option-title {
-    font-size: 1.2rem;
-  }
-
-  .option-btn {
-    padding: 14px 18px;
-    font-size: 1rem;
-  }
-
-  .btn-text {
-    font-size: 1rem;
+  .search-action-btn {
+    padding: 13px 20px;
+    font-size: 0.95rem;
   }
 }

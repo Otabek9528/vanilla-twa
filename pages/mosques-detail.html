@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mosque Details</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    /* Page-specific overrides */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: visible !important;
+    }
+    
+    body {
+      display: flex;
+      flex-direction: column;
+      background: var(--light-bg);
+    }
+    
+    .app__header {
+      flex-shrink: 0;
+    }
+    
+    .mosque-detail-container {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 20px 16px 40px 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app__header">
+    <div class="header-content">
+      <img src="../assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
+      <h1>Muslim Vegukin Bot</h1>
+    </div>
+  </header>
+
+  <!-- MOSQUE DETAIL -->
+  <div class="mosque-detail-container" id="mosqueDetail">
+    <!-- Content will be dynamically inserted here -->
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    // Initialize Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    
+    try {
+      tg.expand();
+    } catch (e) {
+      console.log('Expand not supported');
+    }
+    
+    // Show back button
+    try {
+      if (tg.BackButton) {
+        tg.BackButton.show();
+        tg.onEvent('backButtonClicked', () => {
+          window.location.href = "mosques.html";
+        });
+      }
+    } catch (e) {
+      console.log('BackButton not supported');
+    }
+
+    // Dummy mosque data (same as mosques.html)
+    const mosques = [
+      {
+        id: 1,
+        name: "Seoul Central Mosque",
+        nameKo: "서울중앙성원",
+        phone: "+82-2-793-6908",
+        address: "39-1 Hannam-dong, Yongsan-gu, Seoul",
+        addressKo: "서울특별시 용산구 우사단로 10길 39-1",
+        distance: 1.2,
+        photo: "../assets/mosque.png",
+        lat: 37.5347,
+        lng: 126.9996,
+        rating: 4.5,
+        reviews: "Beautiful mosque with traditional architecture. Very welcoming community.",
+        kakaoMapUrl: "https://map.kakao.com/link/map/Seoul-Central-Mosque,37.5347,126.9996",
+        naverMapUrl: "https://map.naver.com/v5/entry/place/11862651"
+      },
+      {
+        id: 2,
+        name: "Busan Mosque",
+        nameKo: "부산 성원",
+        phone: "+82-51-631-2308",
+        address: "15 Jungang-daero 691, Busanjin-gu, Busan",
+        addressKo: "부산광역시 부산진구 중앙대로 691번길 15",
+        distance: 2.5,
+        photo: "../assets/mosque.png",
+        lat: 35.1543,
+        lng: 129.0598,
+        rating: 4.3,
+        reviews: "Clean and peaceful. Good location near the city center.",
+        kakaoMapUrl: "https://map.kakao.com/link/map/Busan-Mosque,35.1543,129.0598",
+        naverMapUrl: "https://map.naver.com/v5/entry/place/example2"
+      },
+      {
+        id: 3,
+        name: "Ansan Mosque",
+        nameKo: "안산 성원",
+        phone: "+82-31-491-5943",
+        address: "123 Wonkok-dong, Danwon-gu, Ansan",
+        addressKo: "경기도 안산시 단원구 원곡동 123",
+        distance: 3.8,
+        photo: "../assets/mosque.png",
+        lat: 37.3236,
+        lng: 126.8216,
+        rating: 4.7,
+        reviews: "Very active community. Great facilities for families.",
+        kakaoMapUrl: "https://map.kakao.com/link/map/Ansan-Mosque,37.3236,126.8216",
+        naverMapUrl: "https://map.naver.com/v5/entry/place/example3"
+      },
+      {
+        id: 4,
+        name: "Daegu Mosque",
+        nameKo: "대구 성원",
+        phone: "+82-53-743-9875",
+        address: "78 Dongseong-ro, Jung-gu, Daegu",
+        addressKo: "대구광역시 중구 동성로 78",
+        distance: 5.1,
+        photo: "../assets/mosque.png",
+        lat: 35.8686,
+        lng: 128.5936,
+        rating: 4.2,
+        reviews: "Nice mosque with friendly imam. Friday prayers are well organized.",
+        kakaoMapUrl: "https://map.kakao.com/link/map/Daegu-Mosque,35.8686,128.5936",
+        naverMapUrl: "https://map.naver.com/v5/entry/place/example4"
+      },
+      {
+        id: 5,
+        name: "Gwangju Mosque",
+        nameKo: "광주 성원",
+        phone: "+82-62-222-1234",
+        address: "456 Geumnam-ro, Dong-gu, Gwangju",
+        addressKo: "광주광역시 동구 금남로 456",
+        distance: 6.3,
+        photo: "../assets/mosque.png",
+        lat: 35.1468,
+        lng: 126.9213,
+        rating: 4.4,
+        reviews: "Small but comfortable mosque. Good for daily prayers.",
+        kakaoMapUrl: "https://map.kakao.com/link/map/Gwangju-Mosque,35.1468,126.9213",
+        naverMapUrl: "https://map.naver.com/v5/entry/place/example5"
+      }
+    ];
+
+    // Get mosque ID from URL
+    function getMosqueId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return parseInt(urlParams.get('id')) || 1;
+    }
+
+    // Render mosque detail
+    function renderMosqueDetail() {
+      const mosqueId = getMosqueId();
+      const mosque = mosques.find(m => m.id === mosqueId);
+      
+      if (!mosque) {
+        document.getElementById('mosqueDetail').innerHTML = '<p>Mosque not found</p>';
+        return;
+      }
+
+      const container = document.getElementById('mosqueDetail');
+      
+      // Generate star rating
+      const fullStars = Math.floor(mosque.rating);
+      const hasHalfStar = mosque.rating % 1 >= 0.5;
+      let starsHTML = '';
+      for (let i = 0; i < fullStars; i++) {
+        starsHTML += '⭐';
+      }
+      if (hasHalfStar) {
+        starsHTML += '✨';
+      }
+      
+      container.innerHTML = `
+        <div class="mosque-detail-card">
+          <!-- Photo -->
+          <div class="mosque-detail-photo">
+            <img src="${mosque.photo}" alt="${mosque.name}" />
+            <div class="mosque-distance-badge-large">${mosque.distance} km</div>
+          </div>
+          
+          <!-- Name & Rating -->
+          <div class="mosque-detail-header">
+            <h2 class="mosque-detail-name">${mosque.name}</h2>
+            <p class="mosque-detail-name-ko">${mosque.nameKo}</p>
+            <div class="mosque-rating">
+              <span class="rating-stars">${starsHTML}</span>
+              <span class="rating-number">${mosque.rating}/5</span>
+            </div>
+          </div>
+          
+          <!-- Contact Info -->
+          <div class="mosque-detail-section">
+            <h3 class="section-title">📞 Kontakt</h3>
+            <div class="detail-info-item">
+              <span class="detail-icon">📱</span>
+              <a href="tel:${mosque.phone}" class="detail-link">${mosque.phone}</a>
+            </div>
+          </div>
+          
+          <!-- Address -->
+          <div class="mosque-detail-section">
+            <h3 class="section-title">📍 Manzil</h3>
+            <div class="detail-info-item">
+              <span class="detail-icon">🇰🇷</span>
+              <span class="detail-text">${mosque.addressKo}</span>
+            </div>
+            <div class="detail-info-item">
+              <span class="detail-icon">🌐</span>
+              <span class="detail-text">${mosque.address}</span>
+            </div>
+          </div>
+          
+          <!-- Reviews -->
+          <div class="mosque-detail-section">
+            <h3 class="section-title">💬 Sharhlar</h3>
+            <div class="review-box">
+              <p class="review-text">${mosque.reviews}</p>
+            </div>
+          </div>
+          
+          <!-- Navigation Buttons -->
+          <div class="mosque-detail-section">
+            <h3 class="section-title">🗺️ Navigatsiya</h3>
+            <div class="nav-buttons">
+              <a href="${mosque.kakaoMapUrl}" target="_blank" class="nav-button kakao-button">
+                <span class="nav-icon">🟡</span>
+                <span class="nav-text">KakaoMap</span>
+              </a>
+              <a href="${mosque.naverMapUrl}" target="_blank" class="nav-button naver-button">
+                <span class="nav-icon">🟢</span>
+                <span class="nav-text">NaverMap</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render detail when page loads
+    document.addEventListener('DOMContentLoaded', renderMosqueDetail);
+  </script>
+
+</body>
+</html>

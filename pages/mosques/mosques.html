@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nearby Mosques</title>
+  <title>Yaqin Masjidlar</title>
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="stylesheet" href="mosques.css" />
 </head>
@@ -20,17 +20,8 @@
   <!-- MOSQUES CONTAINER -->
   <div class="mosques-container">
     
-    <!-- Page Title -->
-    <h2 class="mosques-page-title">🕌 Yaqin atrofdagi masjidlar</h2>
-    <p class="mosques-page-subtitle">Sizga eng yaqin 5 ta masjid</p>
-
-    <!-- Search Bar Section -->
+    <!-- Search Bar Section (Moved to Top) -->
     <div class="search-section">
-      <div class="search-mode-indicator">
-        <span class="search-mode-icon" id="searchModeIcon">📍</span>
-        <span class="search-mode-text" id="searchModeText">Hozirgi joylashuvingiz asosida</span>
-      </div>
-      
       <div class="search-bar-container">
         <input 
           type="text" 
@@ -46,10 +37,35 @@
       <p class="search-hint">
         💡 Biror manzilni kiritish orqali o'sha hudud atrofidagi masjidlarni qidiring
       </p>
+      
+      <button class="search-action-btn" id="searchBtn">
+        <span class="btn-icon">🔍</span>
+        <span class="btn-text">Qidirish</span>
+      </button>
+    </div>
+
+    <!-- Current Location Info -->
+    <div class="current-location-info">
+      <span class="location-info-icon">📍</span>
+      <span class="location-info-text">Natijalar hozirgi joylashuvingiz asosida ko'rsatilmoqda</span>
+    </div>
+
+    <!-- Location Update Section -->
+    <div class="location-update-section">
+      <div class="location-info-box">
+        <p class="location-info-icon">📍</p>
+        <p class="location-info-text">
+          Yanada aniq natijalarni ko'rish uchun lokatsiya ma'lumotlaringizni yangilang.
+        </p>
+      </div>
+      <button class="location-update-btn" id="updateLocationBtn">
+        <span class="update-btn-icon" id="updateBtnIcon">🔄</span>
+        <span class="update-btn-text">Lokatsiyani yangilash</span>
+      </button>
     </div>
 
     <!-- Loading Indicator -->
-    <div class="loading-indicator" id="loadingIndicator" style="display: flex;">
+    <div class="loading-indicator" id="loadingIndicator" style="display: none;">
       <div class="spinner"></div>
       <p>Masjidlar izlanmoqda...</p>
     </div>
@@ -69,7 +85,6 @@
   </div>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="../../js/locationManager.js"></script>
   <script src="mosques.js"></script>
 
 </body>

@@ -1,4 +1,4 @@
-// mosques.js - Mosques feature logic with dummy data
+// mosques.js - Mosques feature logic with star ratings
 
 // Initialize Telegram WebApp
 const tg = window.Telegram.WebApp;
@@ -24,11 +24,7 @@ try {
   console.log('⚠️ BackButton not supported');
 }
 
-// Check if LocationManager is available
-const hasLocationManager = typeof LocationManager !== 'undefined';
-console.log('📍 LocationManager available:', hasLocationManager);
-
-// Dummy mosque data
+// Dummy mosque data with star ratings
 const DUMMY_MOSQUES = [
   {
     id: 1,
@@ -40,7 +36,8 @@ const DUMMY_MOSQUES = [
     distance: 1.2,
     photo: "../../assets/mosque.png",
     lat: 37.5347,
-    lng: 126.9996
+    lng: 126.9996,
+    rating: 4.5 // Star rating added
   },
   {
     id: 2,
@@ -52,7 +49,8 @@ const DUMMY_MOSQUES = [
     distance: 2.5,
     photo: "../../assets/mosque.png",
     lat: 35.1543,
-    lng: 129.0598
+    lng: 129.0598,
+    rating: 3 // Star rating added
   },
   {
     id: 3,
@@ -64,7 +62,8 @@ const DUMMY_MOSQUES = [
     distance: 3.8,
     photo: "../../assets/mosque.png",
     lat: 37.3236,
-    lng: 126.8216
+    lng: 126.8216,
+    rating: 5 // Star rating added
   },
   {
     id: 4,
@@ -76,7 +75,8 @@ const DUMMY_MOSQUES = [
     distance: 5.1,
     photo: "../../assets/mosque.png",
     lat: 35.8686,
-    lng: 128.5936
+    lng: 128.5936,
+    rating: null // No rating - will show "Baholanmagan"
   },
   {
     id: 5,
@@ -88,7 +88,8 @@ const DUMMY_MOSQUES = [
     distance: 6.3,
     photo: "../../assets/mosque.png",
     lat: 35.1468,
-    lng: 126.9213
+    lng: 126.9213,
+    rating: 2 // Star rating added
   }
 ];
 
@@ -100,10 +101,47 @@ let currentSearchAddress = '';
 const mosqueCardsContainer = document.getElementById('mosqueCards');
 const searchBar = document.getElementById('addressSearchBar');
 const clearSearchBtn = document.getElementById('clearSearchBtn');
-const searchModeIcon = document.getElementById('searchModeIcon');
-const searchModeText = document.getElementById('searchModeText');
+const searchBtn = document.getElementById('searchBtn');
+const updateLocationBtn = document.getElementById('updateLocationBtn');
+const updateBtnIcon = document.getElementById('updateBtnIcon');
 const loadingIndicator = document.getElementById('loadingIndicator');
 const noResults = document.getElementById('noResults');
+
+// Generate star rating HTML
+function generateStarRating(rating) {
+  if (rating === null || rating === undefined) {
+    // No rating - show "Baholanmagan"
+    return `
+      <div class="mosque-rating-badge">
+        <span class="no-rating-text">Baholanmagan</span>
+      </div>
+    `;
+  }
+
+  // Round rating to nearest integer for full stars
+  const fullStars = Math.round(rating);
+  const emptyStars = 5 - fullStars;
+  
+  let starsHTML = '<div class="star-container">';
+  
+  // Add gold stars
+  for (let i = 0; i < fullStars; i++) {
+    starsHTML += '<span class="star gold">⭐</span>';
+  }
+  
+  // Add grey stars
+  for (let i = 0; i < emptyStars; i++) {
+    starsHTML += '<span class="star grey">⭐</span>';
+  }
+  
+  starsHTML += '</div>';
+  
+  return `
+    <div class="mosque-rating-badge">
+      ${starsHTML}
+    </div>
+  `;
+}
 
 // Render mosque cards
 function renderMosqueCards(mosques) {
@@ -125,17 +163,20 @@ function renderMosqueCards(mosques) {
     const card = document.createElement('div');
     card.className = 'mosque-card';
     card.onclick = () => {
-      // Navigate to detail page (will implement later)
+      // Navigate to detail page
       console.log('Clicked mosque:', mosque.id);
-      // window.location.href = `mosque-detail.html?id=${mosque.id}`;
+      window.location.href = `mosques-detail.html?id=${mosque.id}`;
     };
     
     card.innerHTML = `
       <div class="mosque-card-image">
         <img src="${mosque.photo}" alt="${mosque.name}" />
-        <div class="mosque-distance-badge">
-          <span>📍</span>
-          <span>${mosque.distance} km</span>
+        <div class="card-top-badges">
+          ${generateStarRating(mosque.rating)}
+          <div class="mosque-distance-badge">
+            <span>📍</span>
+            <span>${mosque.distance} km</span>
+          </div>
         </div>
       </div>
       <div class="mosque-card-content">
@@ -158,83 +199,47 @@ function renderMosqueCards(mosques) {
   });
 }
 
-// Update search mode indicator
-function updateSearchModeIndicator(mode, address = '') {
-  if (mode === 'location') {
-    searchModeIcon.textContent = '📍';
-    searchModeText.textContent = 'Hozirgi joylashuvingiz asosida';
-  } else {
-    searchModeIcon.textContent = '🔍';
-    searchModeText.textContent = `"${address}" atrofida`;
-  }
-}
-
-// Auto-update location and load mosques
-async function autoUpdateLocationAndLoadMosques() {
-  console.log('🔄 Loading mosques...');
+// Handle location update button
+updateLocationBtn.addEventListener('click', async () => {
+  console.log('🔄 Location update button clicked');
+  
+  // Add updating state
+  updateLocationBtn.classList.add('updating');
+  updateLocationBtn.disabled = true;
+  updateBtnIcon.textContent = '🔄';
   
   // Show loading
   loadingIndicator.style.display = 'flex';
   mosqueCardsContainer.style.display = 'none';
   noResults.style.display = 'none';
   
-  try {
-    // Check if LocationManager is available
-    if (hasLocationManager) {
-      console.log('📍 Checking cached location...');
-      
-      // First, try to get cached location
-      let currentLocation = LocationManager.getStoredLocation();
-      
-      // Check if location is stale (older than 1 hour)
-      const isStale = LocationManager.isLocationStale();
-      
-      if (!currentLocation || isStale) {
-        console.log('🔄 Location is stale or missing, refreshing...');
-        
-        // Only refresh if location is stale or missing
-        try {
-          await LocationManager.manualRefresh();
-          currentLocation = LocationManager.getStoredLocation();
-          console.log('✅ Location refreshed:', currentLocation);
-        } catch (error) {
-          console.warn('⚠️ Location refresh failed, using cached data:', error);
-          // Continue with cached location even if refresh fails
-        }
-      } else {
-        console.log('✅ Using cached location (fresh):', currentLocation);
-      }
-      
-      // TODO: Here you would call your mosque database/API with the location
-      // For now, we'll use dummy data
-      // Example: const mosques = await fetchNearbyMosques(currentLocation.lat, currentLocation.lng);
-      
-      // Simulate a small delay for data fetching
-      setTimeout(() => {
-        loadingIndicator.style.display = 'none';
-        renderMosqueCards(DUMMY_MOSQUES);
-        console.log('✅ Mosques loaded');
-      }, 500);
-      
-    } else {
-      console.warn('⚠️ LocationManager not available, using dummy data');
-      
-      // Fallback: just load dummy data after a delay
-      setTimeout(() => {
-        loadingIndicator.style.display = 'none';
-        renderMosqueCards(DUMMY_MOSQUES);
-        console.log('✅ Mosques loaded (without location update)');
-      }, 1500);
-    }
+  // Simulate location update (2 seconds)
+  setTimeout(() => {
+    // Remove updating state
+    updateLocationBtn.classList.remove('updating');
+    updateLocationBtn.disabled = false;
+    updateBtnIcon.textContent = '✅';
     
-  } catch (error) {
-    console.error('❌ Error loading mosques:', error);
-    
-    // On error, still show dummy data
+    // Hide loading
     loadingIndicator.style.display = 'none';
+    
+    // Reset mode to location
+    currentMode = 'location';
+    currentSearchAddress = '';
+    searchBar.value = '';
+    clearSearchBtn.style.display = 'none';
+    
+    // Render mosques based on location
     renderMosqueCards(DUMMY_MOSQUES);
-  }
-}
+    
+    // Reset icon after 2 seconds
+    setTimeout(() => {
+      updateBtnIcon.textContent = '🔄';
+    }, 2000);
+    
+    console.log('✅ Location updated');
+  }, 2000);
+});
 
 // Handle search bar input
 searchBar.addEventListener('input', (e) => {
@@ -259,6 +264,20 @@ searchBar.addEventListener('keypress', (e) => {
   }
 });
 
+// Handle search button click
+searchBtn.addEventListener('click', () => {
+  const address = searchBar.value.trim();
+  
+  if (address) {
+    performAddressSearch(address);
+  } else {
+    // Show alert if search bar is empty
+    if (tg.showAlert) {
+      tg.showAlert('Iltimos, manzilni kiriting');
+    }
+  }
+});
+
 // Handle clear search button
 clearSearchBtn.addEventListener('click', () => {
   searchBar.value = '';
@@ -268,7 +287,6 @@ clearSearchBtn.addEventListener('click', () => {
   // Reset to location mode
   currentMode = 'location';
   currentSearchAddress = '';
-  updateSearchModeIndicator('location');
   
   // Show loading
   loadingIndicator.style.display = 'flex';
@@ -288,7 +306,6 @@ function performAddressSearch(address) {
   // Update mode
   currentMode = 'address';
   currentSearchAddress = address;
-  updateSearchModeIndicator('address', address);
   
   // Show loading
   loadingIndicator.style.display = 'flex';
@@ -322,13 +339,10 @@ function performAddressSearch(address) {
   }, 2000);
 }
 
-// Initialize page - auto-update location and load mosques
+// Initialize page - render mosques based on current location
 document.addEventListener('DOMContentLoaded', () => {
   console.log('📱 Mosques page initialized');
   
-  // Set initial mode
-  updateSearchModeIndicator('location');
-  
-  // Auto-update location and load mosques
-  autoUpdateLocationAndLoadMosques();
+  // Initial render with dummy data
+  renderMosqueCards(DUMMY_MOSQUES);
 });

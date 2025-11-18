@@ -1,4 +1,4 @@
-// prayersPage.js - Logic specific to the detailed prayers page
+// prayersPage.js - Logic specific to the detailed prayers page with UZBEK translations
 // This file handles the prayer list display and page-specific interactions
 
 // Initialize the prayers page
@@ -114,7 +114,7 @@ function initPrayersPage() {
   } else {
     const timestampElem = document.getElementById('locationTimestamp');
     if (timestampElem) {
-      timestampElem.innerText = 'Last updated: Never';
+      timestampElem.innerText = 'Oxirgi yangilanish: Hech qachon';
     }
   }
 
@@ -132,7 +132,7 @@ function updateTimestampDisplay(timestamp) {
     const date = new Date(timestamp);
     const timeString = date.toLocaleTimeString();
     const dateString = date.toLocaleDateString();
-    const newText = `Last updated: ${timeString}, ${dateString}`;
+    const newText = `Oxirgi yangilanish: ${timeString}, ${dateString}`;
     
     // Update the text
     timestampElem.innerText = newText;
@@ -150,7 +150,7 @@ function showStaleLocationWarning() {
   const timestampElem = document.getElementById('locationTimestamp');
   if (timestampElem) {
     timestampElem.style.color = '#ff9800';
-    timestampElem.innerHTML += ' ⚠️ <small>(Consider refreshing)</small>';
+    timestampElem.innerHTML += ' ⚠️ <small>(Yangilashni maslahat beramiz)</small>';
   }
 
   // Add pulse animation to refresh button
@@ -160,7 +160,7 @@ function showStaleLocationWarning() {
   }
 }
 
-// Populate the detailed prayer list
+// Populate the detailed prayer list with UZBEK translations and comments
 function populateDetailedPrayerList(timings, currentPrayerName) {
   const prayerListElem = document.getElementById("prayerList");
   if (!prayerListElem) return;
@@ -173,6 +173,16 @@ function populateDetailedPrayerList(timings, currentPrayerName) {
     "Asr": "🌤️",
     "Maghrib": "🌇",
     "Isha": "🌙"
+  };
+
+  // Prayer comments in Uzbek
+  const prayerComments = {
+    "Fajr": "Xuftonning oxirgi vaqti",
+    "Sunrise": "Bomdod vaqti tugaydi",
+    "Dhuhr": null, // No comment under Peshin
+    "Asr": "Peshinning oxirgi vaqti",
+    "Maghrib": "Asrning oxirgi vaqti",
+    "Isha": "Shomning oxirgi vaqti"
   };
 
   // Include Sunrise between Fajr and Dhuhr
@@ -203,13 +213,15 @@ function populateDetailedPrayerList(timings, currentPrayerName) {
     
     const nameSpan = document.createElement('span');
     nameSpan.className = 'prayer-name-text';
-    nameSpan.textContent = prayer;
+    // Use translation function if available
+    const translatedName = window.translatePrayer ? window.translatePrayer(prayer) : prayer;
+    nameSpan.textContent = translatedName;
     
-    // Add subtitle for Sunrise
-    if (prayer === "Sunrise") {
+    // Add subtitle/comment if exists
+    if (prayerComments[prayer]) {
       const subtitle = document.createElement('span');
       subtitle.className = 'prayer-subtitle';
-      subtitle.textContent = '(End of Fajr time)';
+      subtitle.textContent = `(${prayerComments[prayer]})`;
       nameSpan.appendChild(document.createElement('br'));
       nameSpan.appendChild(subtitle);
     }

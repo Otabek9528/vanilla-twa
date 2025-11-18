@@ -24,20 +24,6 @@
     <h2 class="mosques-page-title">🕌 Yaqin atrofdagi masjidlar</h2>
     <p class="mosques-page-subtitle">Sizga eng yaqin 5 ta masjid</p>
 
-    <!-- Location Update Section -->
-    <div class="location-update-section">
-      <div class="location-info-box">
-        <p class="location-info-icon">📍</p>
-        <p class="location-info-text">
-          Yanada aniq natijalarni ko'rish uchun lokatsiya ma'lumotlaringizni yangilang.
-        </p>
-      </div>
-      <button class="location-update-btn" id="updateLocationBtn">
-        <span class="update-btn-icon" id="updateBtnIcon">🔄</span>
-        <span class="update-btn-text">Lokatsiyani yangilash</span>
-      </button>
-    </div>
-
     <!-- Search Bar Section -->
     <div class="search-section">
       <div class="search-mode-indicator">
@@ -63,7 +49,7 @@
     </div>
 
     <!-- Loading Indicator -->
-    <div class="loading-indicator" id="loadingIndicator" style="display: none;">
+    <div class="loading-indicator" id="loadingIndicator" style="display: flex;">
       <div class="spinner"></div>
       <p>Masjidlar izlanmoqda...</p>
     </div>
@@ -83,6 +69,7 @@
   </div>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="../../js/locationManager.js"></script>
   <script src="mosques.js"></script>
 
 </body>

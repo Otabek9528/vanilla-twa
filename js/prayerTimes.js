@@ -1,5 +1,26 @@
-// prayerTimes.js - Updated to work with LocationManager and USER'S LOCAL TIMEZONE
+// prayerTimes.js - Updated with UZBEK translations and USER'S LOCAL TIMEZONE
 Telegram.WebApp.ready();
+
+// Uzbek translations
+const TRANSLATIONS = {
+  prayers: {
+    "Fajr": "Bomdod",
+    "Dhuhr": "Peshin",
+    "Asr": "Asr",
+    "Maghrib": "Shom",
+    "Isha": "Xufton",
+    "Sunrise": "Quyosh chiqishi"
+  },
+  weekdays: {
+    "Monday": "Dushanba",
+    "Tuesday": "Seshanba",
+    "Wednesday": "Chorshanba",
+    "Thursday": "Payshanba",
+    "Friday": "Juma",
+    "Saturday": "Shanba",
+    "Sunday": "Yakshanba"
+  }
+};
 
 async function getPrayerTimes(lat, lon) {
   const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=3&school=1`;
@@ -60,6 +81,16 @@ function formatCountdown(nextTime) {
     .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 }
 
+// Translate prayer name to Uzbek
+function translatePrayer(prayerName) {
+  return TRANSLATIONS.prayers[prayerName] || prayerName;
+}
+
+// Translate weekday to Uzbek
+function translateWeekday(weekdayEnglish) {
+  return TRANSLATIONS.weekdays[weekdayEnglish] || weekdayEnglish;
+}
+
 async function updatePrayerData(lat, lon, city) {
   try {
     console.log('📿 Fetching prayer times for:', city, '(' + lat + ', ' + lon + ')');
@@ -76,7 +107,7 @@ async function updatePrayerData(lat, lon, city) {
       "Isha": "🌙"
     };
 
-    // Update current prayer display
+    // Update current prayer display with UZBEK names
     const currentPrayerElem = document.getElementById("currentPrayer");
     const prayerTimeElem = document.getElementById("prayerTime");
     const currentEmojiElem = document.getElementById("currentEmoji");
@@ -86,11 +117,11 @@ async function updatePrayerData(lat, lon, city) {
     const nextEmojiElem = document.getElementById("nextEmoji");
     const nextPrayerTimeElem = document.getElementById("nextPrayerTime");
 
-    if (currentPrayerElem) currentPrayerElem.innerText = current.name;
+    if (currentPrayerElem) currentPrayerElem.innerText = translatePrayer(current.name);
     if (prayerTimeElem) prayerTimeElem.innerText = data.timings[current.name];
     if (currentEmojiElem) currentEmojiElem.innerText = prayerEmojis[current.name] || '🕌';
     
-    if (nextPrayerElem) nextPrayerElem.innerText = next.name;
+    if (nextPrayerElem) nextPrayerElem.innerText = translatePrayer(next.name);
     if (nextEmojiElem) nextEmojiElem.innerText = prayerEmojis[next.name] || '🕌';
     if (nextPrayerTimeElem) nextPrayerTimeElem.innerText = data.timings[next.name];
 
@@ -108,9 +139,10 @@ async function updatePrayerData(lat, lon, city) {
     }
     window.prayerCountdownInterval = setInterval(updateCountdown, 1000);
 
-    // Update date displays (using local time)
+    // Update date displays (using local time) with UZBEK weekday
     const localDate = new Date();
-    const weekday = localDate.toLocaleDateString('en-US', { weekday: 'long' });
+    const weekdayEnglish = localDate.toLocaleDateString('en-US', { weekday: 'long' });
+    const weekdayUzbek = translateWeekday(weekdayEnglish);
     const gregorianDate = localDate.toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: '2-digit', 
@@ -119,7 +151,7 @@ async function updatePrayerData(lat, lon, city) {
     
     if (document.getElementById("weekday")) {
       const hijri = data.date.hijri.date;
-      document.getElementById("weekday").innerText = `${weekday}, ${gregorianDate}`;
+      document.getElementById("weekday").innerText = `${weekdayUzbek}, ${gregorianDate}`;
       
       const hijriElem = document.getElementById("hijri");
       if (hijriElem) {
@@ -130,12 +162,12 @@ async function updatePrayerData(lat, lon, city) {
     // Update detailed page elements if they exist
     const todayDateElem = document.getElementById("todayDate");
     if (todayDateElem) {
-      todayDateElem.innerText = `${weekday}, ${gregorianDate}`;
+      todayDateElem.innerText = `${weekdayUzbek}, ${gregorianDate}`;
     }
 
     const nextPrayerNameElem = document.getElementById("nextPrayerName");
     if (nextPrayerNameElem) {
-      nextPrayerNameElem.innerText = next.name;
+      nextPrayerNameElem.innerText = translatePrayer(next.name);
     }
 
     // Dispatch event with prayer data for detailed page
@@ -161,3 +193,7 @@ window.addEventListener('locationUpdated', (event) => {
 
 // Make updatePrayerData available globally for LocationManager
 window.updatePrayerData = updatePrayerData;
+
+// Make translation functions available globally
+window.translatePrayer = translatePrayer;
+window.translateWeekday = translateWeekday;

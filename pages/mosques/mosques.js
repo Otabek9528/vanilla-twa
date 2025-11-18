@@ -24,6 +24,10 @@ try {
   console.log('⚠️ BackButton not supported');
 }
 
+// Check if LocationManager is available
+const hasLocationManager = typeof LocationManager !== 'undefined';
+console.log('📍 LocationManager available:', hasLocationManager);
+
 // Dummy mosque data
 const DUMMY_MOSQUES = [
   {
@@ -98,8 +102,6 @@ const searchBar = document.getElementById('addressSearchBar');
 const clearSearchBtn = document.getElementById('clearSearchBtn');
 const searchModeIcon = document.getElementById('searchModeIcon');
 const searchModeText = document.getElementById('searchModeText');
-const updateLocationBtn = document.getElementById('updateLocationBtn');
-const updateBtnIcon = document.getElementById('updateBtnIcon');
 const loadingIndicator = document.getElementById('loadingIndicator');
 const noResults = document.getElementById('noResults');
 
@@ -167,48 +169,72 @@ function updateSearchModeIndicator(mode, address = '') {
   }
 }
 
-// Handle location update button
-updateLocationBtn.addEventListener('click', async () => {
-  console.log('🔄 Location update button clicked');
-  
-  // Add updating state
-  updateLocationBtn.classList.add('updating');
-  updateLocationBtn.disabled = true;
-  updateBtnIcon.textContent = '🔄';
+// Auto-update location and load mosques
+async function autoUpdateLocationAndLoadMosques() {
+  console.log('🔄 Loading mosques...');
   
   // Show loading
   loadingIndicator.style.display = 'flex';
   mosqueCardsContainer.style.display = 'none';
   noResults.style.display = 'none';
   
-  // Simulate location update (2 seconds)
-  setTimeout(() => {
-    // Remove updating state
-    updateLocationBtn.classList.remove('updating');
-    updateLocationBtn.disabled = false;
-    updateBtnIcon.textContent = '✅';
+  try {
+    // Check if LocationManager is available
+    if (hasLocationManager) {
+      console.log('📍 Checking cached location...');
+      
+      // First, try to get cached location
+      let currentLocation = LocationManager.getStoredLocation();
+      
+      // Check if location is stale (older than 1 hour)
+      const isStale = LocationManager.isLocationStale();
+      
+      if (!currentLocation || isStale) {
+        console.log('🔄 Location is stale or missing, refreshing...');
+        
+        // Only refresh if location is stale or missing
+        try {
+          await LocationManager.manualRefresh();
+          currentLocation = LocationManager.getStoredLocation();
+          console.log('✅ Location refreshed:', currentLocation);
+        } catch (error) {
+          console.warn('⚠️ Location refresh failed, using cached data:', error);
+          // Continue with cached location even if refresh fails
+        }
+      } else {
+        console.log('✅ Using cached location (fresh):', currentLocation);
+      }
+      
+      // TODO: Here you would call your mosque database/API with the location
+      // For now, we'll use dummy data
+      // Example: const mosques = await fetchNearbyMosques(currentLocation.lat, currentLocation.lng);
+      
+      // Simulate a small delay for data fetching
+      setTimeout(() => {
+        loadingIndicator.style.display = 'none';
+        renderMosqueCards(DUMMY_MOSQUES);
+        console.log('✅ Mosques loaded');
+      }, 500);
+      
+    } else {
+      console.warn('⚠️ LocationManager not available, using dummy data');
+      
+      // Fallback: just load dummy data after a delay
+      setTimeout(() => {
+        loadingIndicator.style.display = 'none';
+        renderMosqueCards(DUMMY_MOSQUES);
+        console.log('✅ Mosques loaded (without location update)');
+      }, 1500);
+    }
     
-    // Hide loading
+  } catch (error) {
+    console.error('❌ Error loading mosques:', error);
+    
+    // On error, still show dummy data
     loadingIndicator.style.display = 'none';
-    
-    // Reset mode to location
-    currentMode = 'location';
-    currentSearchAddress = '';
-    searchBar.value = '';
-    clearSearchBtn.style.display = 'none';
-    updateSearchModeIndicator('location');
-    
-    // Render mosques based on location
     renderMosqueCards(DUMMY_MOSQUES);
-    
-    // Reset icon after 2 seconds
-    setTimeout(() => {
-      updateBtnIcon.textContent = '🔄';
-    }, 2000);
-    
-    console.log('✅ Location updated');
-  }, 2000);
-});
+  }
+}
 
 // Handle search bar input
 searchBar.addEventListener('input', (e) => {
@@ -296,13 +322,13 @@ function performAddressSearch(address) {
   }, 2000);
 }
 
-// Initialize page - render mosques based on current location
+// Initialize page - auto-update location and load mosques
 document.addEventListener('DOMContentLoaded', () => {
   console.log('📱 Mosques page initialized');
   
-  // Initial render with dummy data
-  renderMosqueCards(DUMMY_MOSQUES);
-  
   // Set initial mode
   updateSearchModeIndicator('location');
+  
+  // Auto-update location and load mosques
+  autoUpdateLocationAndLoadMosques();
 });

@@ -1,6 +1,7 @@
 // locationManager.js
 // Universal location manager for Telegram WebApp
 // Works across multiple HTML pages without re-prompting
+// Updated with UZBEK translations
 
 const LocationManager = {
   STORAGE_KEY: 'userLocation',
@@ -207,11 +208,11 @@ const LocationManager = {
         data.address.town ||
         data.address.village ||
         data.address.county ||
-        'Unknown'
+        'Noma\'lum'
       );
     } catch (error) {
       console.error('Geocoding error:', error);
-      return 'Unknown';
+      return 'Noma\'lum';
     }
   },
 
@@ -226,7 +227,7 @@ const LocationManager = {
     // Update coordinates if element exists
     const coordsElem = document.getElementById('coords');
     if (coordsElem) {
-      coordsElem.innerText = `Coordinates: ${locationData.lat.toFixed(4)}, ${locationData.lon.toFixed(4)}`;
+      coordsElem.innerText = `Koordinatalar: ${locationData.lat.toFixed(4)}, ${locationData.lon.toFixed(4)}`;
     }
 
     // Update timestamp display if exists
@@ -235,7 +236,7 @@ const LocationManager = {
       const date = new Date(locationData.timestamp);
       const timeString = date.toLocaleTimeString();
       const dateString = date.toLocaleDateString();
-      timestampElem.innerText = `Last updated: ${timeString}, ${dateString}`;
+      timestampElem.innerText = `Oxirgi yangilanish: ${timeString}, ${dateString}`;
     }
 
     // Trigger prayer times update

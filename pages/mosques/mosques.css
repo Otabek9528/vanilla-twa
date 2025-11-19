@@ -298,17 +298,19 @@ body {
 .mosque-cards {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .mosque-card {
   background: #ffffff;
-  border-radius: 16px;
-  overflow: hidden;
+  border-radius: 20px;
+  overflow: visible; /* Changed from hidden to allow badges outside */
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid transparent;
+  padding-top: 50px; /* Space for badges above photo */
+  position: relative;
 }
 
 .mosque-card:hover {
@@ -321,12 +323,92 @@ body {
   transform: translateY(-1px);
 }
 
+/* Card Top Badges Container - OUTSIDE PHOTO (Eyes of the card) */
+.card-top-badges {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.card-top-badges > * {
+  pointer-events: auto;
+}
+
+/* Star Rating Badge (Left Eye) */
+.mosque-rating-badge {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  padding: 10px 14px;
+  border-radius: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 1;
+  min-width: 0;
+  border: 2px solid rgba(255, 215, 0, 0.2);
+}
+
+.star-container {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.star {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.star.gold {
+  color: #ffd700;
+  text-shadow: 0 2px 4px rgba(255, 215, 0, 0.4);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.star.grey {
+  color: #d0d0d0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.no-rating-text {
+  font-size: 0.82rem;
+  color: #888;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Distance Badge (Right Eye) */
+.mosque-distance-badge {
+  background: linear-gradient(135deg, #00a884 0%, #007b5e 100%);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(0, 168, 132, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
 .mosque-card-image {
   position: relative;
   width: 100%;
-  height: 200px;
+  height: 220px;
   overflow: hidden;
   background: linear-gradient(135deg, #e8f5f0 0%, #f0f9f5 100%);
+  border-radius: 16px 16px 0 0;
 }
 
 /* Single Photo Display */
@@ -334,6 +416,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 16px 16px 0 0;
 }
 
 /* Photo Carousel Container */
@@ -342,6 +425,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  border-radius: 16px 16px 0 0;
 }
 
 .carousel-track {
@@ -353,12 +437,13 @@ body {
   justify-content: center;
 }
 
-/* Carousel Photos */
+/* Carousel Photos - ELEGANT STYLING */
 .carousel-photo {
   position: absolute;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 8px;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* Smooth bounce effect */
+  border-radius: 14px;
   overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .carousel-photo img {
@@ -368,63 +453,74 @@ body {
   display: block;
 }
 
-/* Center photo - largest and prominent */
+/* Center photo - largest, prominent, crisp */
 .carousel-photo.center {
-  width: 85%;
-  height: 90%;
-  left: 7.5%;
-  top: 5%;
-  z-index: 3;
+  width: 88%;
+  height: 92%;
+  left: 6%;
+  top: 4%;
+  z-index: 10;
   opacity: 1;
   transform: scale(1);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  border-radius: 16px; /* Larger rounded corners */
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.25),
+    0 0 0 3px rgba(255, 255, 255, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  filter: brightness(1) blur(0px);
 }
 
-/* Left photo - smaller, partially visible */
+/* Left photo - smaller, slightly blurred, behind effect */
 .carousel-photo.left {
-  width: 50%;
-  height: 70%;
-  left: -15%;
-  top: 15%;
-  z-index: 2;
-  opacity: 0.6;
-  transform: scale(0.85);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 55%;
+  height: 72%;
+  left: -18%;
+  top: 14%;
+  z-index: 5;
+  opacity: 0.5;
+  transform: scale(0.88) rotateY(5deg);
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  filter: brightness(0.85) blur(1px);
 }
 
-/* Right photo - smaller, partially visible */
+/* Right photo - smaller, slightly blurred, behind effect */
 .carousel-photo.right {
-  width: 50%;
-  height: 70%;
-  right: -15%;
-  top: 15%;
-  z-index: 2;
-  opacity: 0.6;
-  transform: scale(0.85);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 55%;
+  height: 72%;
+  right: -18%;
+  top: 14%;
+  z-index: 5;
+  opacity: 0.5;
+  transform: scale(0.88) rotateY(-5deg);
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  filter: brightness(0.85) blur(1px);
 }
 
 /* Hidden photos */
 .carousel-photo.hidden {
   opacity: 0;
-  transform: scale(0.5);
+  transform: scale(0.6);
   z-index: 1;
   pointer-events: none;
+  filter: blur(2px);
 }
 
 /* Carousel Navigation Dots */
 .carousel-dots {
   position: absolute;
-  bottom: 10px;
+  bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 6px;
-  z-index: 10;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 6px 10px;
-  border-radius: 20px;
-  backdrop-filter: blur(4px);
+  gap: 7px;
+  z-index: 15;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 8px 12px;
+  border-radius: 24px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .dot {
@@ -433,93 +529,20 @@ body {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .dot.active {
   background: white;
-  width: 20px;
+  width: 24px;
   border-radius: 4px;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
 }
 
 .dot:hover {
   background: rgba(255, 255, 255, 0.8);
-}
-
-/* Card Top Badges Container - FIXED POSITIONS */
-.card-top-badges {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 12px;
-  gap: 8px;
-  z-index: 15;
-  pointer-events: none;
-}
-
-.card-top-badges > * {
-  pointer-events: auto;
-}
-
-/* Star Rating Badge (Left Top) */
-.mosque-rating-badge {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
-  padding: 8px 12px;
-  border-radius: 20px;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-shrink: 1;
-  min-width: 0;
-}
-
-.star-container {
-  display: flex;
-  gap: 2px;
-  flex-wrap: wrap;
-}
-
-.star {
-  font-size: 0.95rem;
-  line-height: 1;
-}
-
-.star.gold {
-  color: #ffd700;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.star.grey {
-  color: #d0d0d0;
-}
-
-.no-rating-text {
-  font-size: 0.8rem;
-  color: #888;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-/* Distance Badge (Right Top) - FIXED POSITION */
-.mosque-distance-badge {
-  background: linear-gradient(135deg, #00a884 0%, #007b5e 100%);
-  color: white;
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-  flex-shrink: 0;
+  transform: scale(1.2);
 }
 
 /* Card Content */
@@ -578,8 +601,12 @@ body {
     padding: 12px 12px 40px 12px;
   }
 
+  .mosque-card {
+    padding-top: 48px;
+  }
+
   .mosque-card-image {
-    height: 180px;
+    height: 200px;
   }
 
   .mosque-name {
@@ -592,11 +619,25 @@ body {
   }
 
   .card-top-badges {
-    flex-direction: column;
-    align-items: flex-start;
+    left: 12px;
+    right: 12px;
+    top: 6px;
+  }
+
+  .mosque-rating-badge {
+    padding: 8px 10px;
+  }
+
+  .star {
+    font-size: 0.9rem;
   }
 
   .mosque-distance-badge {
-    align-self: flex-end;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .no-rating-text {
+    font-size: 0.75rem;
   }
 }

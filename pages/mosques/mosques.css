@@ -25,7 +25,7 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  padding: 16px 16px 40px 16px;
+  padding: 80px 16px 40px 16px; /* Increased to 80px to show badges */
   max-width: 680px;
   margin: 0 auto;
   width: 100%;
@@ -298,7 +298,7 @@ body {
 .mosque-cards {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 50px; /* Space between cards accounting for badges */
 }
 
 .mosque-card {
@@ -309,7 +309,6 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid transparent;
-  margin-top: 44px; /* Space for badges above */
   position: relative;
 }
 
@@ -598,11 +597,12 @@ body {
    ====================================== */
 @media (max-width: 420px) {
   .mosques-container {
-    padding: 12px 12px 40px 12px;
+    padding: 76px 12px 40px 12px; /* Increased top padding for mobile */
   }
 
-  .mosque-card {
-    margin-top: 40px;
+  .mosque-cards {
+    gap: 46px;
+    padding-top: 0; /* Remove extra padding since container has it */
   }
 
   .card-top-badges {

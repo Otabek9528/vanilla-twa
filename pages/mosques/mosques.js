@@ -204,15 +204,15 @@ function renderMosqueCards(mosques) {
     const photosHTML = generatePhotoCarousel(mosque.photos || [mosque.photo], mosque.id);
     
     card.innerHTML = `
+      <div class="card-top-badges">
+        ${generateStarRating(mosque.rating)}
+        <div class="mosque-distance-badge">
+          <span>📍</span>
+          <span>${mosque.distance} km</span>
+        </div>
+      </div>
       <div class="mosque-card-image">
         ${photosHTML}
-        <div class="card-top-badges">
-          ${generateStarRating(mosque.rating)}
-          <div class="mosque-distance-badge">
-            <span>📍</span>
-            <span>${mosque.distance} km</span>
-          </div>
-        </div>
       </div>
       <div class="mosque-card-content">
         <h3 class="mosque-name">${mosque.name}</h3>

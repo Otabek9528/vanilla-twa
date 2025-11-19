@@ -234,7 +234,10 @@ function renderMosqueCards(mosques) {
     
     // Initialize carousel for this mosque if it has multiple photos
     if (mosque.photos && mosque.photos.length > 1) {
-      initializeCarousel(mosque.id);
+      // Use requestAnimationFrame to ensure DOM is fully rendered
+      requestAnimationFrame(() => {
+        initializeCarousel(mosque.id);
+      });
     }
   });
 }

@@ -25,7 +25,7 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  padding: 80px 16px 40px 16px; /* Increased to 80px to show badges */
+  padding: 0 16px 40px 16px; /* Removed top padding - no gap after header */
   max-width: 680px;
   margin: 0 auto;
   width: 100%;
@@ -36,7 +36,7 @@ body {
    COLLAPSIBLE SEARCH SECTION
    ====================================== */
 .search-section-wrapper {
-  margin-bottom: 16px;
+  margin: 16px 0; /* Add margin for spacing from header */
 }
 
 /* Toggle Button */
@@ -299,6 +299,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 50px; /* Space between cards accounting for badges */
+  padding-top: 48px; /* Space for first card's badges above title */
 }
 
 .mosque-card {
@@ -597,12 +598,16 @@ body {
    ====================================== */
 @media (max-width: 420px) {
   .mosques-container {
-    padding: 76px 12px 40px 12px; /* Increased top padding for mobile */
+    padding: 0 12px 40px 12px; /* No top padding */
+  }
+
+  .search-section-wrapper {
+    margin: 12px 0;
   }
 
   .mosque-cards {
     gap: 46px;
-    padding-top: 0; /* Remove extra padding since container has it */
+    padding-top: 46px; /* Space for first card badges */
   }
 
   .card-top-badges {

@@ -607,7 +607,7 @@ body {
 
   .mosque-cards {
     gap: 46px;
-    padding-top: 46px; /* Space for first card badges */
+    padding-top: 36px; /* Space for first card badges */
   }
 
   .card-top-badges {

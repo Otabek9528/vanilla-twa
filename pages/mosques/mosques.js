@@ -250,12 +250,22 @@ function generatePhotoCarousel(photos, mosqueId) {
     return `<img src="${photos[0]}" alt="Mosque" class="mosque-photo-single" />`;
   }
   
-  // Multiple photos - carousel
+  // Multiple photos - carousel (initialize with proper positions)
   let carouselHTML = `<div class="photo-carousel" data-mosque-id="${mosqueId}">`;
   carouselHTML += `<div class="carousel-track" data-current="0">`;
   
   photos.forEach((photo, index) => {
-    const position = index === 0 ? 'center' : (index === 1 ? 'right' : 'hidden');
+    let position;
+    if (index === 0) {
+      position = 'center'; // First photo in center
+    } else if (index === 1) {
+      position = 'right'; // Second photo on right
+    } else if (index === photos.length - 1) {
+      position = 'left'; // Last photo on left (wrap around)
+    } else {
+      position = 'hidden'; // Others hidden
+    }
+    
     carouselHTML += `
       <div class="carousel-photo ${position}" data-index="${index}">
         <img src="${photo}" alt="Mosque photo ${index + 1}" />
@@ -294,17 +304,29 @@ function initializeCarousel(mosqueId) {
   
   // Update carousel positions
   function updateCarousel() {
+    console.log('📸 Updating carousel, current index:', currentIndex);
+    
     photos.forEach((photo, index) => {
       photo.classList.remove('left', 'center', 'right', 'hidden');
       
+      const totalPhotos = photos.length;
+      
+      // Calculate previous and next indices with wrapping
+      const prevIndex = (currentIndex - 1 + totalPhotos) % totalPhotos;
+      const nextIndex = (currentIndex + 1) % totalPhotos;
+      
       if (index === currentIndex) {
         photo.classList.add('center');
-      } else if (index === currentIndex - 1 || (currentIndex === 0 && index === photos.length - 1)) {
+        console.log(`  Photo ${index}: CENTER`);
+      } else if (index === prevIndex) {
         photo.classList.add('left');
-      } else if (index === currentIndex + 1 || (currentIndex === photos.length - 1 && index === 0)) {
+        console.log(`  Photo ${index}: LEFT`);
+      } else if (index === nextIndex) {
         photo.classList.add('right');
+        console.log(`  Photo ${index}: RIGHT`);
       } else {
         photo.classList.add('hidden');
+        console.log(`  Photo ${index}: HIDDEN`);
       }
     });
     

@@ -304,12 +304,12 @@ body {
 .mosque-card {
   background: #ffffff;
   border-radius: 20px;
-  overflow: visible; /* Changed from hidden to allow badges outside */
+  overflow: visible; /* Allow badges to show outside */
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid transparent;
-  padding-top: 50px; /* Space for badges above photo */
+  margin-top: 44px; /* Space for badges above */
   position: relative;
 }
 
@@ -326,7 +326,7 @@ body {
 /* Card Top Badges Container - OUTSIDE PHOTO (Eyes of the card) */
 .card-top-badges {
   position: absolute;
-  top: 8px;
+  top: -38px; /* Positioned above the card */
   left: 16px;
   right: 16px;
   display: flex;
@@ -602,7 +602,13 @@ body {
   }
 
   .mosque-card {
-    padding-top: 48px;
+    margin-top: 40px;
+  }
+
+  .card-top-badges {
+    top: -36px;
+    left: 12px;
+    right: 12px;
   }
 
   .mosque-card-image {
@@ -616,12 +622,6 @@ body {
   .search-bar {
     font-size: 0.95rem;
     padding: 12px 36px 12px 14px;
-  }
-
-  .card-top-badges {
-    left: 12px;
-    right: 12px;
-    top: 6px;
   }
 
   .mosque-rating-badge {

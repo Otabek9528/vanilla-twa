@@ -253,24 +253,14 @@ function generatePhotoCarousel(photos, mosqueId) {
     return `<img src="${photos[0]}" alt="Mosque" class="mosque-photo-single" />`;
   }
   
-  // Multiple photos - carousel (initialize with proper positions)
+  // Multiple photos - carousel (let updateCarousel handle positioning)
   let carouselHTML = `<div class="photo-carousel" data-mosque-id="${mosqueId}">`;
   carouselHTML += `<div class="carousel-track" data-current="0">`;
   
   photos.forEach((photo, index) => {
-    let position;
-    if (index === 0) {
-      position = 'center'; // First photo in center
-    } else if (index === 1) {
-      position = 'right'; // Second photo on right
-    } else if (index === photos.length - 1) {
-      position = 'left'; // Last photo on left (wrap around)
-    } else {
-      position = 'hidden'; // Others hidden
-    }
-    
+    // Start all as hidden, updateCarousel() will position them correctly
     carouselHTML += `
-      <div class="carousel-photo ${position}" data-index="${index}">
+      <div class="carousel-photo hidden" data-index="${index}">
         <img src="${photo}" alt="Mosque photo ${index + 1}" />
       </div>
     `;
@@ -295,11 +285,18 @@ function generatePhotoCarousel(photos, mosqueId) {
 // Initialize carousel with swipe functionality
 function initializeCarousel(mosqueId) {
   const carousel = document.querySelector(`[data-mosque-id="${mosqueId}"]`);
-  if (!carousel) return;
+  if (!carousel) {
+    console.error('❌ Carousel not found for mosque:', mosqueId);
+    return;
+  }
+  
+  console.log(`🎠 Initializing carousel for mosque ${mosqueId}`);
   
   const track = carousel.querySelector('.carousel-track');
   const photos = Array.from(track.querySelectorAll('.carousel-photo'));
   const dots = Array.from(carousel.querySelectorAll('.dot'));
+  
+  console.log(`  Total photos: ${photos.length}`);
   
   let currentIndex = 0;
   let startX = 0;
@@ -371,10 +368,14 @@ function initializeCarousel(mosqueId) {
     const endX = e.changedTouches[0].clientX;
     const diff = startX - endX;
     
+    console.log(`👆 Swipe detected: diff=${diff}`);
+    
     if (Math.abs(diff) > 50) { // Minimum swipe distance
       if (diff > 0) {
+        console.log('  ← Swiping LEFT (next photo)');
         nextPhoto();
       } else {
+        console.log('  → Swiping RIGHT (previous photo)');
         prevPhoto();
       }
     }

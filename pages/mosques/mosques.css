@@ -437,13 +437,14 @@ body {
   justify-content: center;
 }
 
-/* Carousel Photos - ELEGANT STYLING */
+/* Carousel Photos - ELEGANT STYLING WITH SMOOTH BIDIRECTIONAL ANIMATION */
 .carousel-photo {
   position: absolute;
   transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* Smooth bounce effect */
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  will-change: transform, opacity, left, right, width, height; /* Performance optimization */
 }
 
 .carousel-photo img {
@@ -461,7 +462,7 @@ body {
   top: 4%;
   z-index: 10;
   opacity: 1;
-  transform: scale(1);
+  transform: scale(1) translateX(0);
   border-radius: 16px; /* Larger rounded corners */
   box-shadow: 
     0 12px 32px rgba(0, 0, 0, 0.25),
@@ -470,38 +471,39 @@ body {
   filter: brightness(1) blur(0px);
 }
 
-/* Left photo - smaller, slightly blurred, behind effect */
+/* Left photo - smaller, slightly blurred, on LEFT side */
 .carousel-photo.left {
   width: 55%;
   height: 72%;
-  left: -18%;
+  left: -25%; /* More negative to ensure it's clearly on the left */
   top: 14%;
   z-index: 5;
   opacity: 0.5;
-  transform: scale(0.88) rotateY(5deg);
+  transform: scale(0.88) translateX(0);
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   filter: brightness(0.85) blur(1px);
 }
 
-/* Right photo - smaller, slightly blurred, behind effect */
+/* Right photo - smaller, slightly blurred, on RIGHT side */
 .carousel-photo.right {
   width: 55%;
   height: 72%;
-  right: -18%;
+  left: auto; /* Don't use left positioning */
+  right: -25%; /* More negative to ensure it's clearly on the right */
   top: 14%;
   z-index: 5;
   opacity: 0.5;
-  transform: scale(0.88) rotateY(-5deg);
+  transform: scale(0.88) translateX(0);
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   filter: brightness(0.85) blur(1px);
 }
 
-/* Hidden photos */
+/* Hidden photos - off screen completely */
 .carousel-photo.hidden {
   opacity: 0;
-  transform: scale(0.6);
+  transform: scale(0.6) translateX(0);
   z-index: 1;
   pointer-events: none;
   filter: blur(2px);
@@ -607,7 +609,7 @@ body {
 
   .mosque-cards {
     gap: 46px;
-    padding-top: 36px; /* Space for first card badges */
+    padding-top: 46px; /* Space for first card badges */
   }
 
   .card-top-badges {

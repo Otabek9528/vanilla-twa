@@ -254,17 +254,37 @@ function generatePhotoCarousel(photos, mosqueId) {
   }
   
   // Multiple photos - carousel (let updateCarousel handle positioning)
-  let carouselHTML = `<div class="photo-carousel" data-mosque-id="${mosqueId}">`;
+  let carouselHTML = `<div class="photo-carousel" data-mosque-id="${mosqueId}" data-total-photos="${photos.length}">`;
   carouselHTML += `<div class="carousel-track" data-current="0">`;
   
-  photos.forEach((photo, index) => {
-    // Start all as hidden, updateCarousel() will position them correctly
-    carouselHTML += `
-      <div class="carousel-photo hidden" data-index="${index}">
-        <img src="${photo}" alt="Mosque photo ${index + 1}" />
-      </div>
-    `;
-  });
+  // For 2-photo carousel, duplicate photos to show on both sides
+  if (photos.length === 2) {
+    // Create 4 photo elements: 0, 1, 0-duplicate, 1-duplicate
+    photos.forEach((photo, index) => {
+      carouselHTML += `
+        <div class="carousel-photo hidden" data-index="${index}" data-original="true">
+          <img src="${photo}" alt="Mosque photo ${index + 1}" />
+        </div>
+      `;
+    });
+    // Add duplicates
+    photos.forEach((photo, index) => {
+      carouselHTML += `
+        <div class="carousel-photo hidden" data-index="${index}" data-duplicate="true">
+          <img src="${photo}" alt="Mosque photo ${index + 1}" />
+        </div>
+      `;
+    });
+  } else {
+    // Normal carousel: 3+ photos
+    photos.forEach((photo, index) => {
+      carouselHTML += `
+        <div class="carousel-photo hidden" data-index="${index}">
+          <img src="${photo}" alt="Mosque photo ${index + 1}" />
+        </div>
+      `;
+    });
+  }
   
   carouselHTML += `</div>`;
   
@@ -293,42 +313,70 @@ function initializeCarousel(mosqueId) {
   console.log(`🎠 Initializing carousel for mosque ${mosqueId}`);
   
   const track = carousel.querySelector('.carousel-track');
+  const totalPhotos = parseInt(carousel.getAttribute('data-total-photos'));
   const photos = Array.from(track.querySelectorAll('.carousel-photo'));
   const dots = Array.from(carousel.querySelectorAll('.dot'));
   
-  console.log(`  Total photos: ${photos.length}`);
+  console.log(`  Total unique photos: ${totalPhotos}, Total DOM elements: ${photos.length}`);
   
   let currentIndex = 0;
   let startX = 0;
   let isDragging = false;
   
-  // Update carousel positions
+  // Update carousel positions WITH support for 2-photo duplication
   function updateCarousel() {
-    console.log('📸 Updating carousel, current index:', currentIndex);
+    console.log('📸 Updating carousel, current index:', currentIndex, 'Total photos:', totalPhotos);
     
-    photos.forEach((photo, index) => {
+    // Calculate previous and next indices with wrapping
+    const prevIndex = (currentIndex - 1 + totalPhotos) % totalPhotos;
+    const nextIndex = (currentIndex + 1) % totalPhotos;
+    
+    console.log(`  Indices: prev=${prevIndex}, current=${currentIndex}, next=${nextIndex}`);
+    
+    // Clear all classes
+    photos.forEach(photo => {
       photo.classList.remove('left', 'center', 'right', 'hidden');
-      
-      const totalPhotos = photos.length;
-      
-      // Calculate previous and next indices with wrapping
-      const prevIndex = (currentIndex - 1 + totalPhotos) % totalPhotos;
-      const nextIndex = (currentIndex + 1) % totalPhotos;
-      
-      if (index === currentIndex) {
-        photo.classList.add('center');
-        console.log(`  Photo ${index}: CENTER`);
-      } else if (index === prevIndex) {
-        photo.classList.add('left');
-        console.log(`  Photo ${index}: LEFT`);
-      } else if (index === nextIndex) {
-        photo.classList.add('right');
-        console.log(`  Photo ${index}: RIGHT`);
-      } else {
-        photo.classList.add('hidden');
-        console.log(`  Photo ${index}: HIDDEN`);
-      }
     });
+    
+    if (totalPhotos === 2) {
+      // Special handling for 2-photo carousel with duplicates
+      photos.forEach((photo) => {
+        const photoIndex = parseInt(photo.getAttribute('data-index'));
+        const isDuplicate = photo.hasAttribute('data-duplicate');
+        
+        if (photoIndex === currentIndex && !isDuplicate) {
+          photo.classList.add('center');
+          console.log(`  Photo ${photoIndex} (original): CENTER`);
+        } else if (photoIndex === prevIndex && !isDuplicate) {
+          photo.classList.add('left');
+          console.log(`  Photo ${photoIndex} (original): LEFT`);
+        } else if (photoIndex === nextIndex && isDuplicate) {
+          photo.classList.add('right');
+          console.log(`  Photo ${photoIndex} (duplicate): RIGHT`);
+        } else {
+          photo.classList.add('hidden');
+        }
+      });
+    } else {
+      // Normal 3+ photo carousel
+      photos.forEach((photo) => {
+        const photoIndex = parseInt(photo.getAttribute('data-index'));
+        
+        if (photoIndex === currentIndex) {
+          photo.classList.add('center');
+          console.log(`  Photo ${photoIndex}: CENTER`);
+        } else if (photoIndex === prevIndex) {
+          photo.classList.add('left');
+          console.log(`  Photo ${photoIndex}: LEFT`);
+        } else if (photoIndex === nextIndex) {
+          photo.classList.add('right');
+          console.log(`  Photo ${photoIndex}: RIGHT`);
+        } else {
+          photo.classList.add('hidden');
+          console.log(`  Photo ${photoIndex}: HIDDEN`);
+        }
+      });
+    }
     
     // Update dots
     dots.forEach((dot, index) => {
@@ -340,13 +388,13 @@ function initializeCarousel(mosqueId) {
   
   // Next photo
   function nextPhoto() {
-    currentIndex = (currentIndex + 1) % photos.length;
+    currentIndex = (currentIndex + 1) % totalPhotos;
     updateCarousel();
   }
   
   // Previous photo
   function prevPhoto() {
-    currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+    currentIndex = (currentIndex - 1 + totalPhotos) % totalPhotos;
     updateCarousel();
   }
   

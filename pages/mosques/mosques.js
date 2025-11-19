@@ -24,7 +24,7 @@ try {
   console.log('⚠️ BackButton not supported');
 }
 
-// Dummy mosque data with star ratings
+// Dummy mosque data with star ratings and multiple photos
 const DUMMY_MOSQUES = [
   {
     id: 1,
@@ -34,10 +34,14 @@ const DUMMY_MOSQUES = [
     address: "39-1 Hannam-dong, Yongsan-gu, Seoul",
     addressKo: "서울특별시 용산구 우사단로 10길 39-1",
     distance: 1.2,
-    photo: "../../assets/mosque.png",
+    photos: [
+      "../../assets/mosque.png",
+      "../../assets/mosque.png",
+      "../../assets/mosque.png"
+    ], // Multiple photos
     lat: 37.5347,
     lng: 126.9996,
-    rating: 4.5 // Star rating added
+    rating: 4.5
   },
   {
     id: 2,
@@ -47,10 +51,10 @@ const DUMMY_MOSQUES = [
     address: "15 Jungang-daero 691, Busanjin-gu, Busan",
     addressKo: "부산광역시 부산진구 중앙대로 691번길 15",
     distance: 2.5,
-    photo: "../../assets/mosque.png",
+    photo: "../../assets/mosque.png", // Single photo
     lat: 35.1543,
     lng: 129.0598,
-    rating: 3 // Star rating added
+    rating: 3
   },
   {
     id: 3,
@@ -60,10 +64,13 @@ const DUMMY_MOSQUES = [
     address: "123 Wonkok-dong, Danwon-gu, Ansan",
     addressKo: "경기도 안산시 단원구 원곡동 123",
     distance: 3.8,
-    photo: "../../assets/mosque.png",
+    photos: [
+      "../../assets/mosque.png",
+      "../../assets/mosque.png"
+    ], // Multiple photos
     lat: 37.3236,
     lng: 126.8216,
-    rating: 5 // Star rating added
+    rating: 5
   },
   {
     id: 4,
@@ -73,10 +80,10 @@ const DUMMY_MOSQUES = [
     address: "78 Dongseong-ro, Jung-gu, Daegu",
     addressKo: "대구광역시 중구 동성로 78",
     distance: 5.1,
-    photo: "../../assets/mosque.png",
+    photo: "../../assets/mosque.png", // Single photo
     lat: 35.8686,
     lng: 128.5936,
-    rating: null // No rating - will show "Baholanmagan"
+    rating: null
   },
   {
     id: 5,
@@ -86,10 +93,15 @@ const DUMMY_MOSQUES = [
     address: "456 Geumnam-ro, Dong-gu, Gwangju",
     addressKo: "광주광역시 동구 금남로 456",
     distance: 6.3,
-    photo: "../../assets/mosque.png",
+    photos: [
+      "../../assets/mosque.png",
+      "../../assets/mosque.png",
+      "../../assets/mosque.png",
+      "../../assets/mosque.png"
+    ], // Multiple photos
     lat: 35.1468,
     lng: 126.9213,
-    rating: 2 // Star rating added
+    rating: 2
   }
 ];
 
@@ -163,7 +175,7 @@ function generateStarRating(rating) {
   `;
 }
 
-// Render mosque cards
+// Render mosque cards with photo carousel
 function renderMosqueCards(mosques) {
   mosqueCardsContainer.innerHTML = '';
   
@@ -188,9 +200,12 @@ function renderMosqueCards(mosques) {
       window.location.href = `mosques-detail.html?id=${mosque.id}`;
     };
     
+    // Generate photo carousel HTML
+    const photosHTML = generatePhotoCarousel(mosque.photos || [mosque.photo], mosque.id);
+    
     card.innerHTML = `
       <div class="mosque-card-image">
-        <img src="${mosque.photo}" alt="${mosque.name}" />
+        ${photosHTML}
         <div class="card-top-badges">
           ${generateStarRating(mosque.rating)}
           <div class="mosque-distance-badge">
@@ -216,7 +231,141 @@ function renderMosqueCards(mosques) {
     `;
     
     mosqueCardsContainer.appendChild(card);
+    
+    // Initialize carousel for this mosque if it has multiple photos
+    if (mosque.photos && mosque.photos.length > 1) {
+      initializeCarousel(mosque.id);
+    }
   });
+}
+
+// Generate photo carousel HTML
+function generatePhotoCarousel(photos, mosqueId) {
+  if (!Array.isArray(photos) || photos.length === 0) {
+    photos = ['../../assets/mosque.png'];
+  }
+  
+  if (photos.length === 1) {
+    // Single photo - simple display
+    return `<img src="${photos[0]}" alt="Mosque" class="mosque-photo-single" />`;
+  }
+  
+  // Multiple photos - carousel
+  let carouselHTML = `<div class="photo-carousel" data-mosque-id="${mosqueId}">`;
+  carouselHTML += `<div class="carousel-track" data-current="0">`;
+  
+  photos.forEach((photo, index) => {
+    const position = index === 0 ? 'center' : (index === 1 ? 'right' : 'hidden');
+    carouselHTML += `
+      <div class="carousel-photo ${position}" data-index="${index}">
+        <img src="${photo}" alt="Mosque photo ${index + 1}" />
+      </div>
+    `;
+  });
+  
+  carouselHTML += `</div>`;
+  
+  // Add navigation dots
+  if (photos.length > 1) {
+    carouselHTML += `<div class="carousel-dots">`;
+    photos.forEach((_, index) => {
+      carouselHTML += `<span class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></span>`;
+    });
+    carouselHTML += `</div>`;
+  }
+  
+  carouselHTML += `</div>`;
+  
+  return carouselHTML;
+}
+
+// Initialize carousel with swipe functionality
+function initializeCarousel(mosqueId) {
+  const carousel = document.querySelector(`[data-mosque-id="${mosqueId}"]`);
+  if (!carousel) return;
+  
+  const track = carousel.querySelector('.carousel-track');
+  const photos = Array.from(track.querySelectorAll('.carousel-photo'));
+  const dots = Array.from(carousel.querySelectorAll('.dot'));
+  
+  let currentIndex = 0;
+  let startX = 0;
+  let isDragging = false;
+  
+  // Update carousel positions
+  function updateCarousel() {
+    photos.forEach((photo, index) => {
+      photo.classList.remove('left', 'center', 'right', 'hidden');
+      
+      if (index === currentIndex) {
+        photo.classList.add('center');
+      } else if (index === currentIndex - 1 || (currentIndex === 0 && index === photos.length - 1)) {
+        photo.classList.add('left');
+      } else if (index === currentIndex + 1 || (currentIndex === photos.length - 1 && index === 0)) {
+        photo.classList.add('right');
+      } else {
+        photo.classList.add('hidden');
+      }
+    });
+    
+    // Update dots
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === currentIndex);
+    });
+    
+    track.setAttribute('data-current', currentIndex);
+  }
+  
+  // Next photo
+  function nextPhoto() {
+    currentIndex = (currentIndex + 1) % photos.length;
+    updateCarousel();
+  }
+  
+  // Previous photo
+  function prevPhoto() {
+    currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+    updateCarousel();
+  }
+  
+  // Touch events
+  carousel.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  });
+  
+  carousel.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+  });
+  
+  carousel.addEventListener('touchend', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    
+    const endX = e.changedTouches[0].clientX;
+    const diff = startX - endX;
+    
+    if (Math.abs(diff) > 50) { // Minimum swipe distance
+      if (diff > 0) {
+        nextPhoto();
+      } else {
+        prevPhoto();
+      }
+    }
+  });
+  
+  // Dot click navigation
+  dots.forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent card click
+      currentIndex = parseInt(dot.getAttribute('data-index'));
+      updateCarousel();
+    });
+  });
+  
+  // Initialize
+  updateCarousel();
 }
 
 // Handle search bar input

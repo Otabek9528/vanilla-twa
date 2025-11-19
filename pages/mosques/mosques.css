@@ -329,22 +329,140 @@ body {
   background: linear-gradient(135deg, #e8f5f0 0%, #f0f9f5 100%);
 }
 
-.mosque-card-image img {
+/* Single Photo Display */
+.mosque-photo-single {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Card Top Badges Container */
+/* Photo Carousel Container */
+.photo-carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Carousel Photos */
+.carousel-photo {
+  position: absolute;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.carousel-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Center photo - largest and prominent */
+.carousel-photo.center {
+  width: 85%;
+  height: 90%;
+  left: 7.5%;
+  top: 5%;
+  z-index: 3;
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Left photo - smaller, partially visible */
+.carousel-photo.left {
+  width: 50%;
+  height: 70%;
+  left: -15%;
+  top: 15%;
+  z-index: 2;
+  opacity: 0.6;
+  transform: scale(0.85);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Right photo - smaller, partially visible */
+.carousel-photo.right {
+  width: 50%;
+  height: 70%;
+  right: -15%;
+  top: 15%;
+  z-index: 2;
+  opacity: 0.6;
+  transform: scale(0.85);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Hidden photos */
+.carousel-photo.hidden {
+  opacity: 0;
+  transform: scale(0.5);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Carousel Navigation Dots */
+.carousel-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 6px 10px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background: white;
+  width: 20px;
+  border-radius: 4px;
+}
+
+.dot:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Card Top Badges Container - FIXED POSITIONS */
 .card-top-badges {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  padding: 12px;
   gap: 8px;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.card-top-badges > * {
+  pointer-events: auto;
 }
 
 /* Star Rating Badge (Left Top) */
@@ -353,7 +471,7 @@ body {
   backdrop-filter: blur(8px);
   padding: 8px 12px;
   border-radius: 20px;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -388,7 +506,7 @@ body {
   white-space: nowrap;
 }
 
-/* Distance Badge (Right Top) */
+/* Distance Badge (Right Top) - FIXED POSITION */
 .mosque-distance-badge {
   background: linear-gradient(135deg, #00a884 0%, #007b5e 100%);
   color: white;
@@ -396,7 +514,7 @@ body {
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 700;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
   gap: 4px;

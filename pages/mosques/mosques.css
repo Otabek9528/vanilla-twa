@@ -33,18 +33,91 @@ body {
 }
 
 /* ======================================
-   SEARCH SECTION (Moved to Top - Simplified)
+   COLLAPSIBLE SEARCH SECTION
    ====================================== */
-.search-section {
-  background: #ffffff;
-  border: 2px solid #e0e0e0;
-  border-radius: 16px;
-  padding: 16px;
+.search-section-wrapper {
   margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-.search-bar-container {
+/* Toggle Button */
+.search-toggle-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(74, 144, 226, 0.3);
+}
+
+.search-toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(74, 144, 226, 0.4);
+  background: linear-gradient(135deg, #5a9fe8 0%, #4585c4 100%);
+}
+
+.search-toggle-btn:active {
+  transform: translateY(0);
+}
+
+.search-toggle-btn.active {
+  background: linear-gradient(135deg, #357abd 0%, #2a5f99 100%);
+  border-radius: 12px 12px 0 0;
+}
+
+.toggle-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.toggle-text {
+  flex: 1;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.toggle-arrow {
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.toggle-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+/* Collapsible Content */
+.search-section-collapsible {
+  background: #ffffff;
+  border: 2px solid #4a90e2;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 16px;
+  box-shadow: 0 3px 8px rgba(74, 144, 226, 0.15);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Search Bar Inside Collapsible */
   position: relative;
   margin-bottom: 10px;
 }
@@ -147,116 +220,15 @@ body {
 }
 
 /* ======================================
-   CURRENT LOCATION INFO (New)
+   PAGE TITLE
    ====================================== */
-.current-location-info {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background: linear-gradient(135deg, #e8f5f0 0%, #f0f9f5 100%);
-  border-radius: 12px;
-  margin-bottom: 16px;
-  border: 1px solid rgba(0, 168, 132, 0.2);
-}
-
-.current-location-info .location-info-icon {
-  font-size: 1.2rem;
-  line-height: 1;
-}
-
-.current-location-info .location-info-text {
-  font-size: 0.9rem;
+.mosques-page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
   color: #2c5e2e;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-/* ======================================
-   LOCATION UPDATE SECTION
-   ====================================== */
-.location-update-section {
-  background: linear-gradient(135deg, #e8f5f0 0%, #f0f9f5 100%);
-  border: 2px solid rgba(0, 168, 132, 0.2);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 20px;
-  box-shadow: 0 3px 10px rgba(0, 123, 94, 0.1);
-}
-
-.location-info-box {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.location-info-icon {
-  font-size: 1.8rem;
-  margin: 0;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.location-info-text {
-  font-size: 0.9rem;
-  color: #2c5e2e;
-  margin: 0;
-  line-height: 1.5;
-  flex: 1;
-}
-
-.location-update-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: linear-gradient(135deg, #00a884 0%, #007b5e 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 12px 20px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 8px rgba(0, 168, 132, 0.3);
-}
-
-.location-update-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 12px rgba(0, 168, 132, 0.4);
-}
-
-.location-update-btn:active {
-  transform: translateY(0);
-}
-
-.location-update-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.update-btn-icon {
-  font-size: 1.2rem;
-  line-height: 1;
-  transition: transform 0.3s ease;
-}
-
-.location-update-btn.updating .update-btn-icon {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.update-btn-text {
-  font-size: 1rem;
-  font-weight: 600;
+  margin: 0 0 20px 0;
+  text-align: center;
+  line-height: 1.3;
 }
 
 /* ======================================

@@ -99,13 +99,33 @@ let currentSearchAddress = '';
 
 // DOM Elements
 const mosqueCardsContainer = document.getElementById('mosqueCards');
+const searchToggleBtn = document.getElementById('searchToggleBtn');
+const searchCollapsible = document.getElementById('searchCollapsible');
+const toggleArrow = document.getElementById('toggleArrow');
 const searchBar = document.getElementById('addressSearchBar');
 const clearSearchBtn = document.getElementById('clearSearchBtn');
 const searchBtn = document.getElementById('searchBtn');
-const updateLocationBtn = document.getElementById('updateLocationBtn');
-const updateBtnIcon = document.getElementById('updateBtnIcon');
 const loadingIndicator = document.getElementById('loadingIndicator');
 const noResults = document.getElementById('noResults');
+
+// Handle search toggle button
+searchToggleBtn.addEventListener('click', () => {
+  const isCollapsed = searchCollapsible.style.display === 'none';
+  
+  if (isCollapsed) {
+    // Expand
+    searchCollapsible.style.display = 'block';
+    toggleArrow.classList.add('rotated');
+    searchToggleBtn.classList.add('active');
+    console.log('🔽 Search expanded');
+  } else {
+    // Collapse
+    searchCollapsible.style.display = 'none';
+    toggleArrow.classList.remove('rotated');
+    searchToggleBtn.classList.remove('active');
+    console.log('🔼 Search collapsed');
+  }
+});
 
 // Generate star rating HTML
 function generateStarRating(rating) {
@@ -198,48 +218,6 @@ function renderMosqueCards(mosques) {
     mosqueCardsContainer.appendChild(card);
   });
 }
-
-// Handle location update button
-updateLocationBtn.addEventListener('click', async () => {
-  console.log('🔄 Location update button clicked');
-  
-  // Add updating state
-  updateLocationBtn.classList.add('updating');
-  updateLocationBtn.disabled = true;
-  updateBtnIcon.textContent = '🔄';
-  
-  // Show loading
-  loadingIndicator.style.display = 'flex';
-  mosqueCardsContainer.style.display = 'none';
-  noResults.style.display = 'none';
-  
-  // Simulate location update (2 seconds)
-  setTimeout(() => {
-    // Remove updating state
-    updateLocationBtn.classList.remove('updating');
-    updateLocationBtn.disabled = false;
-    updateBtnIcon.textContent = '✅';
-    
-    // Hide loading
-    loadingIndicator.style.display = 'none';
-    
-    // Reset mode to location
-    currentMode = 'location';
-    currentSearchAddress = '';
-    searchBar.value = '';
-    clearSearchBtn.style.display = 'none';
-    
-    // Render mosques based on location
-    renderMosqueCards(DUMMY_MOSQUES);
-    
-    // Reset icon after 2 seconds
-    setTimeout(() => {
-      updateBtnIcon.textContent = '🔄';
-    }, 2000);
-    
-    console.log('✅ Location updated');
-  }, 2000);
-});
 
 // Handle search bar input
 searchBar.addEventListener('input', (e) => {

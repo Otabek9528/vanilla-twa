@@ -37,6 +37,7 @@ const DUMMY_MOSQUES = [
     photos: [
       "../../assets/mosque.png",
       "../../assets/mosque.png",
+      "../../assets/mosque.png",
       "../../assets/mosque.png"
     ], // Multiple photos
     lat: 37.5347,

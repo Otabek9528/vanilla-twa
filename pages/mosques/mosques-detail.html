@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mosque Details</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="mosques.css" />
   <style>
     /* Page-specific overrides */
     html, body {
@@ -31,6 +32,127 @@
       -webkit-overflow-scrolling: touch;
       padding: 20px 16px 40px 16px;
     }
+
+    /* Loading state */
+    .detail-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      gap: 16px;
+    }
+
+    .detail-loading .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e0e0e0;
+      border-top-color: #00a884;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .detail-loading p {
+      font-size: 1rem;
+      color: #666;
+      margin: 0;
+    }
+
+    /* Error state */
+    .detail-error {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .detail-error-icon {
+      font-size: 3rem;
+      margin: 0 0 16px 0;
+    }
+
+    .detail-error-text {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #d32f2f;
+      margin: 0 0 8px 0;
+    }
+
+    .detail-error-hint {
+      font-size: 0.9rem;
+      color: #666;
+      margin: 0 0 20px 0;
+    }
+
+    .retry-button {
+      background: linear-gradient(135deg, #00a884 0%, #007b5e 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .retry-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 168, 132, 0.3);
+    }
+
+    /* Reviews section styling */
+    .reviews-section {
+      margin-top: 20px;
+    }
+
+    .review-card {
+      background: #f9f9f9;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-left: 3px solid #00a884;
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .review-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .review-stars {
+      color: #ffc107;
+      font-size: 1rem;
+    }
+
+    .review-date {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .review-text {
+      font-size: 0.95rem;
+      color: #444;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .no-reviews {
+      text-align: center;
+      padding: 30px 20px;
+      color: #888;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
@@ -38,17 +160,33 @@
   <!-- HEADER -->
   <header class="app__header">
     <div class="header-content">
-      <img src="../assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
+      <img src="../../assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
       <h1>Muslim Vegukin Bot</h1>
     </div>
   </header>
 
   <!-- MOSQUE DETAIL -->
   <div class="mosque-detail-container" id="mosqueDetail">
+    <!-- Loading state -->
+    <div class="detail-loading" id="detailLoading">
+      <div class="spinner"></div>
+      <p>Yuklanmoqda...</p>
+    </div>
+
+    <!-- Error state -->
+    <div class="detail-error" id="detailError" style="display: none;">
+      <p class="detail-error-icon">❌</p>
+      <p class="detail-error-text">Xatolik yuz berdi</p>
+      <p class="detail-error-hint" id="errorMessage">Ma'lumotlarni yuklashda muammo. Iltimos, qaytadan urinib ko'ring.</p>
+      <button class="retry-button" onclick="loadMosqueDetail()">Qaytadan urinish</button>
+    </div>
+
     <!-- Content will be dynamically inserted here -->
+    <div id="mosqueContent" style="display: none;"></div>
   </div>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="../../js/apiConfig.js"></script>
   <script>
     // Initialize Telegram WebApp
     const tg = window.Telegram.WebApp;
@@ -72,112 +210,63 @@
       console.log('BackButton not supported');
     }
 
-    // Dummy mosque data (same as mosques.html)
-    const mosques = [
-      {
-        id: 1,
-        name: "Seoul Central Mosque",
-        nameKo: "서울중앙성원",
-        phone: "+82-2-793-6908",
-        address: "39-1 Hannam-dong, Yongsan-gu, Seoul",
-        addressKo: "서울특별시 용산구 우사단로 10길 39-1",
-        distance: 1.2,
-        photo: "../assets/mosque.png",
-        lat: 37.5347,
-        lng: 126.9996,
-        rating: 4.5,
-        reviews: "Beautiful mosque with traditional architecture. Very welcoming community.",
-        kakaoMapUrl: "https://map.kakao.com/link/map/Seoul-Central-Mosque,37.5347,126.9996",
-        naverMapUrl: "https://map.naver.com/v5/entry/place/11862651"
-      },
-      {
-        id: 2,
-        name: "Busan Mosque",
-        nameKo: "부산 성원",
-        phone: "+82-51-631-2308",
-        address: "15 Jungang-daero 691, Busanjin-gu, Busan",
-        addressKo: "부산광역시 부산진구 중앙대로 691번길 15",
-        distance: 2.5,
-        photo: "../assets/mosque.png",
-        lat: 35.1543,
-        lng: 129.0598,
-        rating: 4.3,
-        reviews: "Clean and peaceful. Good location near the city center.",
-        kakaoMapUrl: "https://map.kakao.com/link/map/Busan-Mosque,35.1543,129.0598",
-        naverMapUrl: "https://map.naver.com/v5/entry/place/example2"
-      },
-      {
-        id: 3,
-        name: "Ansan Mosque",
-        nameKo: "안산 성원",
-        phone: "+82-31-491-5943",
-        address: "123 Wonkok-dong, Danwon-gu, Ansan",
-        addressKo: "경기도 안산시 단원구 원곡동 123",
-        distance: 3.8,
-        photo: "../assets/mosque.png",
-        lat: 37.3236,
-        lng: 126.8216,
-        rating: 4.7,
-        reviews: "Very active community. Great facilities for families.",
-        kakaoMapUrl: "https://map.kakao.com/link/map/Ansan-Mosque,37.3236,126.8216",
-        naverMapUrl: "https://map.naver.com/v5/entry/place/example3"
-      },
-      {
-        id: 4,
-        name: "Daegu Mosque",
-        nameKo: "대구 성원",
-        phone: "+82-53-743-9875",
-        address: "78 Dongseong-ro, Jung-gu, Daegu",
-        addressKo: "대구광역시 중구 동성로 78",
-        distance: 5.1,
-        photo: "../assets/mosque.png",
-        lat: 35.8686,
-        lng: 128.5936,
-        rating: 4.2,
-        reviews: "Nice mosque with friendly imam. Friday prayers are well organized.",
-        kakaoMapUrl: "https://map.kakao.com/link/map/Daegu-Mosque,35.8686,128.5936",
-        naverMapUrl: "https://map.naver.com/v5/entry/place/example4"
-      },
-      {
-        id: 5,
-        name: "Gwangju Mosque",
-        nameKo: "광주 성원",
-        phone: "+82-62-222-1234",
-        address: "456 Geumnam-ro, Dong-gu, Gwangju",
-        addressKo: "광주광역시 동구 금남로 456",
-        distance: 6.3,
-        photo: "../assets/mosque.png",
-        lat: 35.1468,
-        lng: 126.9213,
-        rating: 4.4,
-        reviews: "Small but comfortable mosque. Good for daily prayers.",
-        kakaoMapUrl: "https://map.kakao.com/link/map/Gwangju-Mosque,35.1468,126.9213",
-        naverMapUrl: "https://map.naver.com/v5/entry/place/example5"
-      }
-    ];
+    // DOM Elements
+    const detailLoading = document.getElementById('detailLoading');
+    const detailError = document.getElementById('detailError');
+    const mosqueContent = document.getElementById('mosqueContent');
+    const errorMessage = document.getElementById('errorMessage');
 
-    // Get mosque ID from URL
+    /**
+     * Get mosque ID from URL
+     */
     function getMosqueId() {
       const urlParams = new URLSearchParams(window.location.search);
-      return parseInt(urlParams.get('id')) || 1;
+      return urlParams.get('id');
     }
 
-    // Render mosque detail
-    function renderMosqueDetail() {
-      const mosqueId = getMosqueId();
-      const mosque = mosques.find(m => m.id === mosqueId);
+    /**
+     * Fetch mosque details from API
+     */
+    async function fetchMosqueDetail(id) {
+      const url = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.MOSQUE_DETAIL}/${id}`;
       
-      if (!mosque) {
-        document.getElementById('mosqueDetail').innerHTML = '<p>Mosque not found</p>';
-        return;
+      console.log('🔍 Fetching mosque detail:', url);
+      
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          signal: AbortSignal.timeout(API_CONFIG.DEFAULTS.TIMEOUT)
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        console.log('✅ API Response:', data);
+        
+        if (data.success && data.mosque) {
+          return data.mosque;
+        } else {
+          throw new Error('Invalid API response format');
+        }
+      } catch (error) {
+        console.error('❌ Error fetching mosque detail:', error);
+        throw error;
       }
+    }
 
-      const container = document.getElementById('mosqueDetail');
-      
-      // Generate star rating
-      const fullStars = Math.floor(mosque.rating);
-      const hasHalfStar = mosque.rating % 1 >= 0.5;
+    /**
+     * Generate star rating HTML
+     */
+    function generateStars(rating) {
+      const fullStars = Math.floor(rating);
+      const hasHalfStar = rating % 1 >= 0.5;
       let starsHTML = '';
+      
       for (let i = 0; i < fullStars; i++) {
         starsHTML += '⭐';
       }
@@ -185,22 +274,99 @@
         starsHTML += '✨';
       }
       
-      container.innerHTML = `
+      return starsHTML;
+    }
+
+    /**
+     * Calculate average rating from reviews
+     */
+    function calculateAverageRating(reviews) {
+      if (!reviews || reviews.length === 0) return 0;
+      
+      const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+      return (sum / reviews.length).toFixed(1);
+    }
+
+    /**
+     * Format date string
+     */
+    function formatDate(dateString) {
+      try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('uz-UZ', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+      } catch (e) {
+        return dateString;
+      }
+    }
+
+    /**
+     * Render reviews section
+     */
+    function renderReviews(reviews) {
+      if (!reviews || reviews.length === 0) {
+        return '<div class="no-reviews">Hali sharhlar yo\'q</div>';
+      }
+
+      let reviewsHTML = '';
+      reviews.forEach(review => {
+        const stars = '⭐'.repeat(review.rating);
+        const date = formatDate(review.timestamp);
+        
+        reviewsHTML += `
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-rating">
+                <span class="review-stars">${stars}</span>
+              </div>
+              <span class="review-date">${date}</span>
+            </div>
+            <p class="review-text">${review.text || 'No review text'}</p>
+          </div>
+        `;
+      });
+
+      return reviewsHTML;
+    }
+
+    /**
+     * Render mosque detail
+     */
+    function renderMosqueDetail(mosque) {
+      // Use placeholder image
+      const photoUrl = '../../assets/mosque.png';
+      
+      // Calculate average rating
+      const avgRating = calculateAverageRating(mosque.reviews);
+      const starsHTML = generateStars(parseFloat(avgRating));
+      
+      // Format phone
+      const phoneDisplay = mosque.phone || 'Ma\'lumot yo\'q';
+      
+      // Render reviews
+      const reviewsHTML = renderReviews(mosque.reviews);
+      const reviewCount = mosque.reviews ? mosque.reviews.length : 0;
+      
+      mosqueContent.innerHTML = `
         <div class="mosque-detail-card">
           <!-- Photo -->
-          <div class="mosque-detail-photo">
-            <img src="${mosque.photo}" alt="${mosque.name}" />
-            <div class="mosque-distance-badge-large">${mosque.distance} km</div>
+          <div class="mosque-card-image">
+            <img src="${photoUrl}" alt="${mosque.name}" />
           </div>
           
           <!-- Name & Rating -->
           <div class="mosque-detail-header">
-            <h2 class="mosque-detail-name">${mosque.name}</h2>
-            <p class="mosque-detail-name-ko">${mosque.nameKo}</p>
-            <div class="mosque-rating">
-              <span class="rating-stars">${starsHTML}</span>
-              <span class="rating-number">${mosque.rating}/5</span>
-            </div>
+            <h2 class="mosque-name">${mosque.name}</h2>
+            <p class="mosque-name-ko">${mosque.city || 'Unknown City'}</p>
+            ${avgRating > 0 ? `
+              <div class="mosque-rating">
+                <span class="rating-stars">${starsHTML}</span>
+                <span class="rating-number">${avgRating}/5 (${reviewCount} sharh)</span>
+              </div>
+            ` : ''}
           </div>
           
           <!-- Contact Info -->
@@ -208,7 +374,7 @@
             <h3 class="section-title">📞 Kontakt</h3>
             <div class="detail-info-item">
               <span class="detail-icon">📱</span>
-              <a href="tel:${mosque.phone}" class="detail-link">${mosque.phone}</a>
+              ${mosque.phone ? `<a href="tel:${mosque.phone}" class="detail-link">${phoneDisplay}</a>` : `<span class="detail-text">${phoneDisplay}</span>`}
             </div>
           </div>
           
@@ -216,43 +382,107 @@
           <div class="mosque-detail-section">
             <h3 class="section-title">📍 Manzil</h3>
             <div class="detail-info-item">
-              <span class="detail-icon">🇰🇷</span>
-              <span class="detail-text">${mosque.addressKo}</span>
-            </div>
-            <div class="detail-info-item">
               <span class="detail-icon">🌐</span>
-              <span class="detail-text">${mosque.address}</span>
+              <span class="detail-text">${mosque.address || 'Manzil ma\'lumoti yo\'q'}</span>
             </div>
+            ${mosque.lat && mosque.lon ? `
+              <div class="detail-info-item">
+                <span class="detail-icon">🗺️</span>
+                <span class="detail-text">Koordinatalar: ${mosque.lat.toFixed(4)}, ${mosque.lon.toFixed(4)}</span>
+              </div>
+            ` : ''}
           </div>
           
           <!-- Reviews -->
-          <div class="mosque-detail-section">
-            <h3 class="section-title">💬 Sharhlar</h3>
-            <div class="review-box">
-              <p class="review-text">${mosque.reviews}</p>
+          ${reviewCount > 0 ? `
+            <div class="mosque-detail-section reviews-section">
+              <h3 class="section-title">💬 Sharhlar (${reviewCount})</h3>
+              ${reviewsHTML}
             </div>
-          </div>
+          ` : ''}
           
           <!-- Navigation Buttons -->
           <div class="mosque-detail-section">
             <h3 class="section-title">🗺️ Navigatsiya</h3>
             <div class="nav-buttons">
-              <a href="${mosque.kakaoMapUrl}" target="_blank" class="nav-button kakao-button">
-                <span class="nav-icon">🟡</span>
-                <span class="nav-text">KakaoMap</span>
-              </a>
-              <a href="${mosque.naverMapUrl}" target="_blank" class="nav-button naver-button">
-                <span class="nav-icon">🟢</span>
-                <span class="nav-text">NaverMap</span>
-              </a>
+              ${mosque.kakaoMapUrl ? `
+                <a href="${mosque.kakaoMapUrl}" target="_blank" class="nav-button kakao-button">
+                  <span class="nav-icon">🟡</span>
+                  <span class="nav-text">KakaoMap</span>
+                </a>
+              ` : ''}
+              ${mosque.naverMapUrl ? `
+                <a href="${mosque.naverMapUrl}" target="_blank" class="nav-button naver-button">
+                  <span class="nav-icon">🟢</span>
+                  <span class="nav-text">NaverMap</span>
+                </a>
+              ` : ''}
             </div>
           </div>
         </div>
       `;
     }
 
-    // Render detail when page loads
-    document.addEventListener('DOMContentLoaded', renderMosqueDetail);
+    /**
+     * Show error state
+     */
+    function showError(message) {
+      detailLoading.style.display = 'none';
+      mosqueContent.style.display = 'none';
+      detailError.style.display = 'block';
+      errorMessage.textContent = message;
+    }
+
+    /**
+     * Load and display mosque detail
+     */
+    async function loadMosqueDetail() {
+      const mosqueId = getMosqueId();
+      
+      if (!mosqueId) {
+        showError('Masjid ID topilmadi. Iltimos, orqaga qaytib, qaytadan tanlang.');
+        return;
+      }
+
+      console.log('📱 Loading mosque detail for ID:', mosqueId);
+      
+      // Show loading state
+      detailLoading.style.display = 'flex';
+      detailError.style.display = 'none';
+      mosqueContent.style.display = 'none';
+      
+      try {
+        // Fetch mosque from API
+        const mosque = await fetchMosqueDetail(mosqueId);
+        
+        // Hide loading
+        detailLoading.style.display = 'none';
+        
+        // Show content
+        mosqueContent.style.display = 'block';
+        
+        // Render mosque
+        renderMosqueDetail(mosque);
+        
+        console.log('✅ Mosque detail loaded successfully');
+        
+      } catch (error) {
+        console.error('❌ Error loading mosque detail:', error);
+        
+        let errorMsg = 'Ma\'lumotlarni yuklashda xatolik yuz berdi. Iltimos, internetni tekshirib, qaytadan urinib ko\'ring.';
+        
+        if (error.name === 'TimeoutError') {
+          errorMsg = 'Server javob bermadi (30 soniya). Server uyg\'onayotgan bo\'lishi mumkin, iltimos 1 daqiqa kuting va qaytadan urinib ko\'ring.';
+        } else if (error.message.includes('404')) {
+          errorMsg = 'Masjid topilmadi. Bu masjid bazadan o\'chirilgan bo\'lishi mumkin.';
+        }
+        
+        showError(errorMsg);
+      }
+    }
+
+    // Load detail when page loads
+    document.addEventListener('DOMContentLoaded', loadMosqueDetail);
   </script>
 
 </body>

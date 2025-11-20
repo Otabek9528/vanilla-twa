@@ -1,0 +1,2 @@
+build = "pip install -r requirements.txt"
+start = "gunicorn mosque_api_protected:app"

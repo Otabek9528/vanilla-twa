@@ -1,52 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mosque Details</title>
+  <title>Masjid Ma'lumotlari</title>
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="stylesheet" href="mosques.css" />
   <style>
-    /* Page-specific overrides */
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      overflow: visible !important;
-    }
-    
-    body {
-      display: flex;
-      flex-direction: column;
-      background: var(--light-bg);
-    }
-    
-    .app__header {
-      flex-shrink: 0;
-    }
-    
-    .mosque-detail-container {
+    /* Detail Page Specific Styles */
+    .detail-container {
       flex: 1;
       overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
       padding: 20px 16px 40px 16px;
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
     }
 
-    /* Loading state */
+    /* Loading State */
     .detail-loading {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 60px 20px;
-      gap: 16px;
+      padding: 80px 20px;
+      gap: 20px;
     }
 
-    .detail-loading .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #e0e0e0;
+    .detail-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #e0e0e0;
       border-top-color: #00a884;
       border-radius: 50%;
       animation: spin 1s linear infinite;
@@ -58,33 +45,34 @@
     }
 
     .detail-loading p {
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: #666;
       margin: 0;
     }
 
-    /* Error state */
+    /* Error State */
     .detail-error {
       text-align: center;
-      padding: 60px 20px;
+      padding: 80px 20px;
     }
 
     .detail-error-icon {
-      font-size: 3rem;
-      margin: 0 0 16px 0;
+      font-size: 4rem;
+      margin: 0 0 20px 0;
     }
 
     .detail-error-text {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: 600;
       color: #d32f2f;
-      margin: 0 0 8px 0;
+      margin: 0 0 12px 0;
     }
 
     .detail-error-hint {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: #666;
-      margin: 0 0 20px 0;
+      margin: 0 0 24px 0;
+      line-height: 1.5;
     }
 
     .retry-button {
@@ -92,21 +80,151 @@
       color: white;
       border: none;
       border-radius: 12px;
-      padding: 12px 24px;
+      padding: 14px 28px;
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
+      box-shadow: 0 3px 8px rgba(0, 168, 132, 0.3);
     }
 
     .retry-button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 168, 132, 0.3);
+      box-shadow: 0 5px 12px rgba(0, 168, 132, 0.4);
     }
 
-    /* Reviews section styling */
+    .retry-button:active {
+      transform: translateY(0);
+    }
+
+    /* Detail Card */
+    .detail-card {
+      background: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+    }
+
+    /* Photo Section with Carousel */
+    .detail-photo-section {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      background: linear-gradient(135deg, #e8f5f0 0%, #f0f9f5 100%);
+    }
+
+    /* Rating & Distance Badges on Photo */
+    .detail-badges {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 10;
+    }
+
+    .detail-rating-badge {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      padding: 12px 16px;
+      border-radius: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 2px solid rgba(255, 215, 0, 0.2);
+    }
+
+    .detail-distance-badge {
+      background: linear-gradient(135deg, #00a884 0%, #007b5e 100%);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 24px;
+      font-size: 1rem;
+      font-weight: 700;
+      box-shadow: 0 4px 16px rgba(0, 168, 132, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Content Section */
+    .detail-content {
+      padding: 24px;
+    }
+
+    .detail-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #2c5e2e;
+      margin: 0 0 8px 0;
+      line-height: 1.3;
+    }
+
+    .detail-subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      margin: 0 0 24px 0;
+      font-weight: 500;
+    }
+
+    /* Info Section */
+    .detail-section {
+      margin-bottom: 28px;
+    }
+
+    .detail-section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #2c5e2e;
+      margin: 0 0 14px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .detail-info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: #f9f9f9;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .detail-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .detail-text {
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .detail-link {
+      color: #00a884;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .detail-link:hover {
+      color: #007b5e;
+      text-decoration: underline;
+    }
+
+    /* Reviews Section */
     .reviews-section {
-      margin-top: 20px;
+      margin-top: 28px;
     }
 
     .review-card {
@@ -114,14 +232,14 @@
       border-radius: 12px;
       padding: 16px;
       margin-bottom: 12px;
-      border-left: 3px solid #00a884;
+      border-left: 4px solid #00a884;
     }
 
     .review-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .review-rating {
@@ -131,27 +249,95 @@
     }
 
     .review-stars {
-      color: #ffc107;
+      color: #ffd700;
       font-size: 1rem;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
 
     .review-date {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: #888;
     }
 
     .review-text {
-      font-size: 0.95rem;
+      font-size: 1rem;
       color: #444;
-      line-height: 1.5;
+      line-height: 1.6;
       margin: 0;
     }
 
     .no-reviews {
       text-align: center;
-      padding: 30px 20px;
+      padding: 40px 20px;
       color: #888;
       font-style: italic;
+      font-size: 1rem;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .nav-button {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .kakao-button {
+      background: linear-gradient(135deg, #ffe812 0%, #ffd000 100%);
+      color: #3c1e1e;
+    }
+
+    .kakao-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 12px rgba(255, 232, 18, 0.4);
+    }
+
+    .naver-button {
+      background: linear-gradient(135deg, #03c75a 0%, #00b050 100%);
+      color: white;
+    }
+
+    .naver-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 12px rgba(3, 199, 90, 0.4);
+    }
+
+    .nav-icon {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 420px) {
+      .detail-photo-section {
+        height: 320px;
+      }
+
+      .detail-title {
+        font-size: 1.4rem;
+      }
+
+      .detail-content {
+        padding: 20px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
@@ -165,15 +351,16 @@
     </div>
   </header>
 
-  <!-- MOSQUE DETAIL -->
-  <div class="mosque-detail-container" id="mosqueDetail">
-    <!-- Loading state -->
+  <!-- DETAIL CONTAINER -->
+  <div class="detail-container">
+    
+    <!-- Loading State -->
     <div class="detail-loading" id="detailLoading">
-      <div class="spinner"></div>
+      <div class="detail-spinner"></div>
       <p>Yuklanmoqda...</p>
     </div>
 
-    <!-- Error state -->
+    <!-- Error State -->
     <div class="detail-error" id="detailError" style="display: none;">
       <p class="detail-error-icon">❌</p>
       <p class="detail-error-text">Xatolik yuz berdi</p>
@@ -181,8 +368,9 @@
       <button class="retry-button" onclick="loadMosqueDetail()">Qaytadan urinish</button>
     </div>
 
-    <!-- Content will be dynamically inserted here -->
-    <div id="mosqueContent" style="display: none;"></div>
+    <!-- Content (Hidden until loaded) -->
+    <div id="detailContent" style="display: none;"></div>
+
   </div>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -213,8 +401,11 @@
     // DOM Elements
     const detailLoading = document.getElementById('detailLoading');
     const detailError = document.getElementById('detailError');
-    const mosqueContent = document.getElementById('mosqueContent');
+    const detailContent = document.getElementById('detailContent');
     const errorMessage = document.getElementById('errorMessage');
+
+    // Carousel state
+    let carouselInterval = null;
 
     /**
      * Get mosque ID from URL
@@ -260,31 +451,191 @@
     }
 
     /**
-     * Generate star rating HTML
+     * Check if an image URL exists
      */
-    function generateStars(rating) {
-      const fullStars = Math.floor(rating);
-      const hasHalfStar = rating % 1 >= 0.5;
-      let starsHTML = '';
-      
-      for (let i = 0; i < fullStars; i++) {
-        starsHTML += '⭐';
-      }
-      if (hasHalfStar) {
-        starsHTML += '✨';
-      }
-      
-      return starsHTML;
+    function checkImageExists(url) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+      });
     }
 
     /**
-     * Calculate average rating from reviews
+     * Discover available photos in a folder
      */
-    function calculateAverageRating(reviews) {
-      if (!reviews || reviews.length === 0) return 0;
+    async function discoverPhotos(photoPath, maxPhotos = 10) {
+      const photos = [];
+      const extensions = ['jpg', 'jpeg', 'png'];
+      const basePath = `../../${photoPath}`;
       
-      const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-      return (sum / reviews.length).toFixed(1);
+      for (let i = 1; i <= maxPhotos; i++) {
+        let photoFound = false;
+        
+        for (const ext of extensions) {
+          const photoUrl = `${basePath}/${i}.${ext}`;
+          
+          try {
+            const exists = await checkImageExists(photoUrl);
+            if (exists) {
+              photos.push(photoUrl);
+              photoFound = true;
+              break;
+            }
+          } catch (e) {
+            continue;
+          }
+        }
+        
+        if (!photoFound) {
+          break;
+        }
+      }
+      
+      return photos;
+    }
+
+    /**
+     * Create photo carousel HTML for detail page
+     */
+    function createDetailPhotoCarousel(photos) {
+      if (!photos || photos.length === 0) {
+        return `
+          <img src="../../assets/mosque.png" alt="Mosque photo" style="width: 100%; height: 100%; object-fit: cover;" />
+        `;
+      }
+      
+      if (photos.length === 1) {
+        return `
+          <img src="${photos[0]}" alt="Mosque photo" style="width: 100%; height: 100%; object-fit: cover;" />
+        `;
+      }
+      
+      // Multiple photos - create carousel
+      let photosHTML = '';
+      let dotsHTML = '';
+      
+      photos.forEach((photo, index) => {
+        const positionClass = index === 0 ? 'center' : 
+                             index === 1 ? 'right' : 'hidden';
+        
+        photosHTML += `
+          <div class="carousel-photo ${positionClass}" data-index="${index}">
+            <img src="${photo}" alt="Mosque photo ${index + 1}" />
+          </div>
+        `;
+        
+        dotsHTML += `
+          <span class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></span>
+        `;
+      });
+      
+      return `
+        <div class="photo-carousel" id="detailCarousel">
+          <div class="carousel-track">
+            ${photosHTML}
+          </div>
+          <div class="carousel-dots">
+            ${dotsHTML}
+          </div>
+        </div>
+      `;
+    }
+
+    /**
+     * Initialize carousel for detail page
+     */
+    function initDetailCarousel(photoCount) {
+      const carousel = document.getElementById('detailCarousel');
+      if (!carousel || photoCount <= 1) return;
+      
+      const photos = carousel.querySelectorAll('.carousel-photo');
+      const dots = carousel.querySelectorAll('.dot');
+      let currentIndex = 0;
+      
+      function updateCarousel(newIndex) {
+        const totalPhotos = photos.length;
+        
+        photos.forEach((photo, index) => {
+          let relativePos = (index - newIndex + totalPhotos) % totalPhotos;
+          
+          photo.classList.remove('center', 'left', 'right', 'hidden');
+          
+          if (relativePos === 0) {
+            photo.classList.add('center');
+          } else if (relativePos === 1) {
+            photo.classList.add('right');
+          } else if (relativePos === totalPhotos - 1) {
+            photo.classList.add('left');
+          } else {
+            photo.classList.add('hidden');
+          }
+        });
+        
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === newIndex);
+        });
+        
+        currentIndex = newIndex;
+      }
+      
+      // Dot click handlers
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          updateCarousel(index);
+          
+          if (carouselInterval) {
+            clearInterval(carouselInterval);
+          }
+          startAutoRotation();
+        });
+      });
+      
+      // Auto-rotation
+      function startAutoRotation() {
+        carouselInterval = setInterval(() => {
+          const nextIndex = (currentIndex + 1) % photos.length;
+          updateCarousel(nextIndex);
+        }, 3000);
+      }
+      
+      startAutoRotation();
+      
+      // Pause on hover
+      carousel.addEventListener('mouseenter', () => {
+        if (carouselInterval) {
+          clearInterval(carouselInterval);
+        }
+      });
+      
+      carousel.addEventListener('mouseleave', () => {
+        startAutoRotation();
+      });
+    }
+
+    /**
+     * Generate star rating HTML
+     */
+    function generateStarRating(reviews) {
+      if (!reviews || reviews.length === 0) {
+        return `<span class="no-rating-text">Sharhlar yo'q</span>`;
+      }
+      
+      const avgRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+      const roundedRating = Math.round(avgRating);
+      
+      let starsHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        if (i <= roundedRating) {
+          starsHTML += `<span class="star gold">⭐</span>`;
+        } else {
+          starsHTML += `<span class="star grey">⭐</span>`;
+        }
+      }
+      
+      return `<div class="star-container">${starsHTML}</div>`;
     }
 
     /**
@@ -324,7 +675,7 @@
               </div>
               <span class="review-date">${date}</span>
             </div>
-            <p class="review-text">${review.text || 'No review text'}</p>
+            <p class="review-text">${review.text || 'Sharh matni yo\'q'}</p>
           </div>
         `;
       });
@@ -335,13 +686,16 @@
     /**
      * Render mosque detail
      */
-    function renderMosqueDetail(mosque) {
-      // Use placeholder image
-      const photoUrl = '../../assets/mosque.png';
+    async function renderMosqueDetail(mosque) {
+      // Discover photos
+      const photos = await discoverPhotos(mosque.photo, 10);
+      console.log('📸 Found photos:', photos.length);
       
-      // Calculate average rating
-      const avgRating = calculateAverageRating(mosque.reviews);
-      const starsHTML = generateStars(parseFloat(avgRating));
+      // Create photo carousel HTML
+      const photoHTML = createDetailPhotoCarousel(photos);
+      
+      // Generate star rating
+      const starRatingHTML = generateStarRating(mosque.reviews);
       
       // Format phone
       const phoneDisplay = mosque.phone || 'Ma\'lumot yo\'q';
@@ -350,77 +704,92 @@
       const reviewsHTML = renderReviews(mosque.reviews);
       const reviewCount = mosque.reviews ? mosque.reviews.length : 0;
       
-      mosqueContent.innerHTML = `
-        <div class="mosque-detail-card">
-          <!-- Photo -->
-          <div class="mosque-card-image">
-            <img src="${photoUrl}" alt="${mosque.name}" />
-          </div>
-          
-          <!-- Name & Rating -->
-          <div class="mosque-detail-header">
-            <h2 class="mosque-name">${mosque.name}</h2>
-            <p class="mosque-name-ko">${mosque.city || 'Unknown City'}</p>
-            ${avgRating > 0 ? `
-              <div class="mosque-rating">
-                <span class="rating-stars">${starsHTML}</span>
-                <span class="rating-number">${avgRating}/5 (${reviewCount} sharh)</span>
+      // Format distance
+      const distanceDisplay = mosque.distance ? mosque.distance.toFixed(1) : 'N/A';
+      
+      detailContent.innerHTML = `
+        <div class="detail-card">
+          <!-- Photo Section with Carousel -->
+          <div class="detail-photo-section">
+            <!-- Badges on Photo -->
+            <div class="detail-badges">
+              <div class="detail-rating-badge">
+                ${starRatingHTML}
               </div>
-            ` : ''}
+              ${mosque.distance ? `
+                <div class="detail-distance-badge">
+                  <span>📍</span>
+                  <span>${distanceDisplay} km</span>
+                </div>
+              ` : ''}
+            </div>
+            
+            ${photoHTML}
           </div>
           
-          <!-- Contact Info -->
-          <div class="mosque-detail-section">
-            <h3 class="section-title">📞 Kontakt</h3>
-            <div class="detail-info-item">
-              <span class="detail-icon">📱</span>
-              ${mosque.phone ? `<a href="tel:${mosque.phone}" class="detail-link">${phoneDisplay}</a>` : `<span class="detail-text">${phoneDisplay}</span>`}
-            </div>
-          </div>
-          
-          <!-- Address -->
-          <div class="mosque-detail-section">
-            <h3 class="section-title">📍 Manzil</h3>
-            <div class="detail-info-item">
-              <span class="detail-icon">🌐</span>
-              <span class="detail-text">${mosque.address || 'Manzil ma\'lumoti yo\'q'}</span>
-            </div>
-            ${mosque.lat && mosque.lon ? `
+          <!-- Content Section -->
+          <div class="detail-content">
+            <h1 class="detail-title">${mosque.name}</h1>
+            <p class="detail-subtitle">${mosque.city || 'Unknown City'}</p>
+            
+            <!-- Contact Info -->
+            <div class="detail-section">
+              <h3 class="detail-section-title">📞 Kontakt</h3>
               <div class="detail-info-item">
-                <span class="detail-icon">🗺️</span>
-                <span class="detail-text">Koordinatalar: ${mosque.lat.toFixed(4)}, ${mosque.lon.toFixed(4)}</span>
+                <span class="detail-icon">📱</span>
+                ${mosque.phone ? `<a href="tel:${mosque.phone}" class="detail-link">${phoneDisplay}</a>` : `<span class="detail-text">${phoneDisplay}</span>`}
+              </div>
+            </div>
+            
+            <!-- Address -->
+            <div class="detail-section">
+              <h3 class="detail-section-title">📍 Manzil</h3>
+              <div class="detail-info-item">
+                <span class="detail-icon">🌐</span>
+                <span class="detail-text">${mosque.address || 'Manzil ma\'lumoti yo\'q'}</span>
+              </div>
+              ${mosque.lat && mosque.lon ? `
+                <div class="detail-info-item">
+                  <span class="detail-icon">🗺️</span>
+                  <span class="detail-text">Koordinatalar: ${mosque.lat.toFixed(4)}, ${mosque.lon.toFixed(4)}</span>
+                </div>
+              ` : ''}
+            </div>
+            
+            <!-- Reviews -->
+            ${reviewCount > 0 ? `
+              <div class="detail-section reviews-section">
+                <h3 class="detail-section-title">💬 Sharhlar (${reviewCount})</h3>
+                ${reviewsHTML}
               </div>
             ` : ''}
-          </div>
-          
-          <!-- Reviews -->
-          ${reviewCount > 0 ? `
-            <div class="mosque-detail-section reviews-section">
-              <h3 class="section-title">💬 Sharhlar (${reviewCount})</h3>
-              ${reviewsHTML}
-            </div>
-          ` : ''}
-          
-          <!-- Navigation Buttons -->
-          <div class="mosque-detail-section">
-            <h3 class="section-title">🗺️ Navigatsiya</h3>
-            <div class="nav-buttons">
-              ${mosque.kakaoMapUrl ? `
-                <a href="${mosque.kakaoMapUrl}" target="_blank" class="nav-button kakao-button">
-                  <span class="nav-icon">🟡</span>
-                  <span class="nav-text">KakaoMap</span>
-                </a>
-              ` : ''}
-              ${mosque.naverMapUrl ? `
-                <a href="${mosque.naverMapUrl}" target="_blank" class="nav-button naver-button">
-                  <span class="nav-icon">🟢</span>
-                  <span class="nav-text">NaverMap</span>
-                </a>
-              ` : ''}
+            
+            <!-- Navigation Buttons -->
+            <div class="detail-section">
+              <h3 class="detail-section-title">🗺️ Navigatsiya</h3>
+              <div class="nav-buttons">
+                ${mosque.kakaoMapUrl ? `
+                  <a href="${mosque.kakaoMapUrl}" target="_blank" class="nav-button kakao-button">
+                    <span class="nav-icon">🟡</span>
+                    <span>KakaoMap</span>
+                  </a>
+                ` : ''}
+                ${mosque.naverMapUrl ? `
+                  <a href="${mosque.naverMapUrl}" target="_blank" class="nav-button naver-button">
+                    <span class="nav-icon">🟢</span>
+                    <span>NaverMap</span>
+                  </a>
+                ` : ''}
+              </div>
             </div>
           </div>
         </div>
       `;
+      
+      // Initialize carousel if multiple photos
+      if (photos.length > 1) {
+        initDetailCarousel(photos.length);
+      }
     }
 
     /**
@@ -428,7 +797,7 @@
      */
     function showError(message) {
       detailLoading.style.display = 'none';
-      mosqueContent.style.display = 'none';
+      detailContent.style.display = 'none';
       detailError.style.display = 'block';
       errorMessage.textContent = message;
     }
@@ -449,7 +818,7 @@
       // Show loading state
       detailLoading.style.display = 'flex';
       detailError.style.display = 'none';
-      mosqueContent.style.display = 'none';
+      detailContent.style.display = 'none';
       
       try {
         // Fetch mosque from API
@@ -459,10 +828,10 @@
         detailLoading.style.display = 'none';
         
         // Show content
-        mosqueContent.style.display = 'block';
+        detailContent.style.display = 'block';
         
         // Render mosque
-        renderMosqueDetail(mosque);
+        await renderMosqueDetail(mosque);
         
         console.log('✅ Mosque detail loaded successfully');
         

@@ -64,10 +64,19 @@ const searchCollapsible = document.getElementById('searchCollapsible');
 const toggleArrow = document.getElementById('toggleArrow');
 const loadingIndicator = document.getElementById('loadingIndicator');
 const noResults = document.getElementById('noResults');
+const mosquesPageTitle = document.querySelector('.mosques-page-title');
 
 let imageModal = null;
 let currentModalPhotos = [];
 let currentModalIndex = 0;
+
+function updatePageTitle() {
+  if (currentMode === 'address' && currentSearchAddress) {
+    mosquesPageTitle.textContent = `🕌 Izlangan manzilga eng yaqinlari`;
+  } else {
+    mosquesPageTitle.textContent = '🕌 Sizga eng yaqin 5 masjid';
+  }
+}
 
 function createImageModal() {
   if (imageModal) return;
@@ -517,6 +526,7 @@ async function renderMosqueCards(mosques) {
   }
   
   currentMosques = mosques;
+  updatePageTitle(); 
 }
 
 function showError(message) {
@@ -569,6 +579,7 @@ clearSearchBtn.addEventListener('click', async () => {
   
   currentMode = 'location';
   currentSearchAddress = '';
+  updatePageTitle();
   clearSearchState();
   
   searchCollapsible.style.display = 'none';
@@ -597,6 +608,7 @@ clearSearchBtn.addEventListener('click', async () => {
 async function performAddressSearch(address) {
   currentMode = 'address';
   currentSearchAddress = address;
+  updatePageTitle();
   
   loadingIndicator.style.display = 'flex';
   mosqueCardsContainer.style.display = 'none';
@@ -635,6 +647,7 @@ async function initializeMosquesPage() {
   if (savedState && savedState.mosques && savedState.mosques.length > 0) {
     currentMode = savedState.mode;
     currentSearchAddress = savedState.address;
+    updatePageTitle();
     currentMosques = savedState.mosques;
     
     if (currentMode === 'address' && currentSearchAddress) {

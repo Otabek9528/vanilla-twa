@@ -417,6 +417,12 @@ body {
   height: 100%;
   object-fit: cover;
   border-radius: 16px 16px 0 0;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.mosque-photo-single:hover {
+  transform: scale(1.05);
 }
 
 /* Photo Carousel Container */
@@ -445,6 +451,7 @@ body {
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   will-change: transform, opacity, left, right, width, height; /* Performance optimization */
+  cursor: pointer; /* Show it's clickable */
 }
 
 .carousel-photo img {
@@ -452,6 +459,12 @@ body {
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.3s ease;
+}
+
+/* Hover effect for clickable images */
+.carousel-photo.center img:hover {
+  transform: scale(1.05);
 }
 
 /* Center photo - largest, prominent, crisp */
@@ -483,6 +496,7 @@ body {
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   filter: brightness(0.85) blur(1px);
+  cursor: default; /* Not clickable when not center */
 }
 
 /* Right photo - smaller, slightly blurred, on RIGHT side */
@@ -498,6 +512,7 @@ body {
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   filter: brightness(0.85) blur(1px);
+  cursor: default; /* Not clickable when not center */
 }
 
 /* Hidden photos - off screen completely */
@@ -545,6 +560,92 @@ body {
 .dot:hover {
   background: rgba(255, 255, 255, 0.8);
   transform: scale(1.2);
+}
+
+/* ======================================
+   IMAGE MODAL (Click to View Full Size)
+   ====================================== */
+.image-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 10000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.image-modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.modal-close {
+  position: absolute;
+  top: -50px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.1);
+}
+
+.modal-close:active {
+  transform: scale(0.95);
+}
+
+.modal-hint {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  text-align: center;
+  white-space: nowrap;
 }
 
 /* Card Content */
@@ -646,5 +747,17 @@ body {
 
   .no-rating-text {
     font-size: 0.75rem;
+  }
+
+  .modal-close {
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .modal-hint {
+    bottom: 10px;
+    font-size: 0.8rem;
   }
 }

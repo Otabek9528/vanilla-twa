@@ -1,5 +1,4 @@
-// mosques.js - Updated with real API integration
-// Maintains all design features: collapsible search, carousel, star ratings
+// mosques.js - Updated with image modal and search state preservation
 
 // Initialize Telegram WebApp
 const tg = window.Telegram.WebApp;
@@ -25,11 +24,59 @@ try {
   console.log('⚠️ BackButton not supported');
 }
 
+// ============================================
+// STATE MANAGEMENT WITH LOCALSTORAGE
+// ============================================
+
+const STATE_KEY = 'mosques_search_state';
+
 // State management
 let currentMode = 'location'; // 'location' or 'address'
 let currentSearchAddress = '';
 let currentMosques = []; // Store fetched mosques
 let carouselIntervals = {}; // Store carousel intervals for each mosque
+
+// Save search state to localStorage
+function saveSearchState() {
+  const state = {
+    mode: currentMode,
+    address: currentSearchAddress,
+    mosques: currentMosques,
+    timestamp: Date.now()
+  };
+  localStorage.setItem(STATE_KEY, JSON.stringify(state));
+  console.log('💾 Saved search state:', currentMode, currentSearchAddress);
+}
+
+// Load search state from localStorage
+function loadSearchState() {
+  const saved = localStorage.getItem(STATE_KEY);
+  if (!saved) return null;
+  
+  try {
+    const state = JSON.parse(saved);
+    
+    // Check if state is still fresh (within 30 minutes)
+    const age = Date.now() - state.timestamp;
+    if (age > 30 * 60 * 1000) {
+      console.log('⏰ Search state expired (>30 min)');
+      clearSearchState();
+      return null;
+    }
+    
+    console.log('📥 Loaded search state:', state.mode, state.address);
+    return state;
+  } catch (e) {
+    console.error('❌ Error loading search state:', e);
+    return null;
+  }
+}
+
+// Clear search state
+function clearSearchState() {
+  localStorage.removeItem(STATE_KEY);
+  console.log('🗑️ Cleared search state');
+}
 
 // DOM Elements
 const mosqueCardsContainer = document.getElementById('mosqueCards');
@@ -41,6 +88,64 @@ const searchCollapsible = document.getElementById('searchCollapsible');
 const toggleArrow = document.getElementById('toggleArrow');
 const loadingIndicator = document.getElementById('loadingIndicator');
 const noResults = document.getElementById('noResults');
+
+// ============================================
+// IMAGE MODAL FOR CLICK-TO-ZOOM
+// ============================================
+
+// Create modal on page load
+let imageModal = null;
+
+function createImageModal() {
+  if (imageModal) return; // Already created
+  
+  imageModal = document.createElement('div');
+  imageModal.className = 'image-modal';
+  imageModal.innerHTML = `
+    <div class="modal-content">
+      <img src="" alt="Full size image" class="modal-image" id="modalImage" />
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-hint">Click anywhere to close</div>
+    </div>
+  `;
+  
+  document.body.appendChild(imageModal);
+  
+  // Close modal on click anywhere
+  imageModal.addEventListener('click', closeImageModal);
+  
+  // Close button
+  document.getElementById('modalClose').addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeImageModal();
+  });
+  
+  console.log('✅ Image modal created');
+}
+
+function openImageModal(imageSrc) {
+  if (!imageModal) createImageModal();
+  
+  const modalImage = document.getElementById('modalImage');
+  modalImage.src = imageSrc;
+  imageModal.classList.add('active');
+  
+  // Prevent body scroll
+  document.body.style.overflow = 'hidden';
+  
+  console.log('🖼️ Opened modal for:', imageSrc);
+}
+
+function closeImageModal() {
+  if (!imageModal) return;
+  
+  imageModal.classList.remove('active');
+  
+  // Restore body scroll
+  document.body.style.overflow = '';
+  
+  console.log('✕ Closed modal');
+}
 
 // ============================================
 // API FUNCTIONS
@@ -209,9 +314,9 @@ function createPhotoCarousel(mosqueId, photos) {
   }
   
   if (photos.length === 1) {
-    // Single photo display
+    // Single photo display - clickable
     return `
-      <div class="mosque-photo-single">
+      <div class="mosque-photo-single" onclick="event.stopPropagation(); openImageModal('${photos[0]}')">
         <img src="${photos[0]}" alt="Mosque photo" />
       </div>
     `;
@@ -226,7 +331,7 @@ function createPhotoCarousel(mosqueId, photos) {
                          index === 1 ? 'right' : 'hidden';
     
     photosHTML += `
-      <div class="carousel-photo ${positionClass}" data-index="${index}">
+      <div class="carousel-photo ${positionClass}" data-index="${index}" data-photo="${photo}">
         <img src="${photo}" alt="Mosque photo ${index + 1}" />
       </div>
     `;
@@ -292,6 +397,19 @@ function initCarousel(mosqueId, photoCount) {
     
     currentIndex = newIndex;
   }
+  
+  // Photo click handlers - open modal for center photo only
+  photos.forEach((photo) => {
+    photo.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent card click
+      
+      // Only open modal if this is the center photo
+      if (photo.classList.contains('center')) {
+        const photoUrl = photo.getAttribute('data-photo');
+        openImageModal(photoUrl);
+      }
+    });
+  });
   
   // Dot click handlers
   dots.forEach((dot, index) => {
@@ -361,6 +479,9 @@ async function renderMosqueCards(mosques) {
     const card = document.createElement('div');
     card.className = 'mosque-card';
     card.onclick = () => {
+      // Save current state before navigating
+      saveSearchState();
+      
       // Navigate to detail page with mosque ID
       console.log('Clicked mosque:', mosque.id);
       window.location.href = `mosques-detail.html?id=${mosque.id}`;
@@ -520,6 +641,9 @@ clearSearchBtn.addEventListener('click', async () => {
   currentMode = 'location';
   currentSearchAddress = '';
   
+  // Clear saved state
+  clearSearchState();
+  
   // Collapse search section
   searchCollapsible.style.display = 'none';
   toggleArrow.classList.remove('rotated');
@@ -580,6 +704,9 @@ async function performAddressSearch(address) {
     // Render results
     await renderMosqueCards(mosques);
     
+    // Save state after successful search
+    saveSearchState();
+    
     console.log('✅ Search completed');
     
   } catch (error) {
@@ -601,12 +728,36 @@ async function performAddressSearch(address) {
 // ============================================
 
 /**
- * Initialize page - load mosques based on current location
+ * Initialize page - load mosques based on current location OR restore saved state
  */
 async function initializeMosquesPage() {
   console.log('📱 Mosques page initialized');
   
-  // Show loading
+  // Check if we have saved search state
+  const savedState = loadSearchState();
+  
+  if (savedState && savedState.mosques && savedState.mosques.length > 0) {
+    // Restore saved state
+    console.log('🔄 Restoring saved state:', savedState.mode, savedState.address);
+    
+    currentMode = savedState.mode;
+    currentSearchAddress = savedState.address;
+    currentMosques = savedState.mosques;
+    
+    // Update search bar if it was an address search
+    if (currentMode === 'address' && currentSearchAddress) {
+      searchBar.value = currentSearchAddress;
+      clearSearchBtn.style.display = 'flex';
+    }
+    
+    // Render saved results
+    loadingIndicator.style.display = 'none';
+    await renderMosqueCards(savedState.mosques);
+    
+    return; // Done - don't fetch new data
+  }
+  
+  // No saved state - load based on location
   loadingIndicator.style.display = 'flex';
   mosqueCardsContainer.style.display = 'none';
   noResults.style.display = 'none';
@@ -645,6 +796,9 @@ async function initializeMosquesPage() {
     showError('Joylashuv ma\'lumotlari topilmadi. Iltimos, brauzerda joylashuvni yoqing va sahifani yangilang.');
   }
 }
+
+// Create image modal on page load
+createImageModal();
 
 // Start initialization when page loads
 document.addEventListener('DOMContentLoaded', initializeMosquesPage);

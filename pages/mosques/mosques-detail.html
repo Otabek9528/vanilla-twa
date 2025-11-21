@@ -749,15 +749,60 @@
       return reviewsHTML;
     }
 
+    
+
+
+    function copyAddress(address, event) {
+      if (!address || address === 'Manzil ma\'lumoti yo\'q') return;
+      
+      event.stopPropagation();
+      
+      navigator.clipboard.writeText(address).then(() => {
+        const item = event.currentTarget;
+        const originalBg = item.style.background;
+        item.style.background = '#d4edda';
+        
+        setTimeout(() => {
+          item.style.background = originalBg;
+        }, 300);
+        
+        // Optional: show toast notification
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert('Manzil nusxalandi! ✅');
+        }
+      }).catch(err => {
+        console.error('Copy failed:', err);
+      });
+    }
+
+
+
+
     async function renderMosqueDetail(mosque) {
       const photos = await discoverPhotos(mosque.photo, 10);
       
       const photoHTML = createDetailPhotoCarousel(photos);
       const starRatingHTML = generateStarRating(mosque.reviews);
-      const phoneDisplay = mosque.phone || 'Ma\'lumot yo\'q';
       const reviewsHTML = renderReviews(mosque.reviews);
       const reviewCount = mosque.reviews ? mosque.reviews.length : 0;
       const distanceDisplay = mosque.distance ? mosque.distance.toFixed(1) : 'N/A';
+      
+      // Process phone numbers - split if multiple
+      function renderPhoneNumbers(phoneString) {
+        if (!phoneString) {
+          return '<span class="detail-text">Ma\'lumot yo\'q</span>';
+        }
+        
+        const phones = phoneString.split(',').map(p => p.trim()).filter(p => p);
+        
+        if (phones.length === 1) {
+          return `<a href="tel:${phones[0]}" class="detail-link">${phones[0]}</a>`;
+        }
+        
+        return phones.map(phone => 
+          `<a href="tel:${phone}" class="detail-link" style="display: block; margin-bottom: 4px;">${phone}</a>`
+        ).join('');
+      }
       
       detailContent.innerHTML = `
         <div class="detail-card">
@@ -787,15 +832,18 @@
               <h3 class="detail-section-title">📞 Kontakt</h3>
               <div class="detail-info-item">
                 <span class="detail-icon">📱</span>
-                ${mosque.phone ? `<a href="tel:${mosque.phone}" class="detail-link">${phoneDisplay}</a>` : `<span class="detail-text">${phoneDisplay}</span>`}
+                <div style="flex: 1;">
+                  ${renderPhoneNumbers(mosque.phone)}
+                </div>
               </div>
             </div>
             
             <div class="detail-section">
               <h3 class="detail-section-title">📍 Manzil</h3>
-              <div class="detail-info-item">
+              <div class="detail-info-item" style="cursor: pointer;" onclick="copyAddress('${(mosque.address || '').replace(/'/g, "\\'")}', event)">
                 <span class="detail-icon">🌐</span>
                 <span class="detail-text">${mosque.address || 'Manzil ma\'lumoti yo\'q'}</span>
+                <span style="margin-left: auto; opacity: 0.5; font-size: 0.9rem;">📋</span>
               </div>
             </div>
             

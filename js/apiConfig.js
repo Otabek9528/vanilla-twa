@@ -11,6 +11,16 @@ const API_CONFIG = {
     MOSQUES_NEARBY: '/api/mosques/nearby',
     MOSQUES_BY_ADDRESS: '/api/mosques/by-address',
     MOSQUE_DETAIL: '/api/mosque',
+
+    //Restaurants
+    RESTAURANTS_NEARBY: '/api/restaurants/nearby',
+    RESTAURANTS_BY_ADDRESS: '/api/restaurants/by-address',
+    RESTAURANTS_DETAIL: '/api/restaurant',
+
+    //Shops
+    SHOPS_NEARBY: '/api/shops/nearby',
+    SHOPS_BY_ADDRESS: '/api/shops/by-address',
+    SHOPS_DETAIL: '/api/shop',
     
     // Health & Stats
     HEALTH: '/api/health',

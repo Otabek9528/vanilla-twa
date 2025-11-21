@@ -1,42 +1,29 @@
-// mosques.js - Updated with image modal and search state preservation
+// mosques.js - Updated with state clearing and modal navigation
 
-// Initialize Telegram WebApp
 const tg = window.Telegram.WebApp;
 tg.ready();
 
 try {
   tg.expand();
-  console.log('✅ WebApp expanded');
-} catch (e) {
-  console.log('⚠️ Expand not supported');
-}
+} catch (e) {}
 
-// Show back button
 try {
   if (tg.BackButton) {
     tg.BackButton.show();
     tg.onEvent('backButtonClicked', () => {
+      clearSearchState();
       window.location.href = "../../index.html";
     });
-    console.log('✅ BackButton configured');
   }
-} catch (e) {
-  console.log('⚠️ BackButton not supported');
-}
-
-// ============================================
-// STATE MANAGEMENT WITH LOCALSTORAGE
-// ============================================
+} catch (e) {}
 
 const STATE_KEY = 'mosques_search_state';
 
-// State management
-let currentMode = 'location'; // 'location' or 'address'
+let currentMode = 'location';
 let currentSearchAddress = '';
-let currentMosques = []; // Store fetched mosques
-let carouselIntervals = {}; // Store carousel intervals for each mosque
+let currentMosques = [];
+let carouselIntervals = {};
 
-// Save search state to localStorage
 function saveSearchState() {
   const state = {
     mode: currentMode,
@@ -45,40 +32,29 @@ function saveSearchState() {
     timestamp: Date.now()
   };
   localStorage.setItem(STATE_KEY, JSON.stringify(state));
-  console.log('💾 Saved search state:', currentMode, currentSearchAddress);
 }
 
-// Load search state from localStorage
 function loadSearchState() {
   const saved = localStorage.getItem(STATE_KEY);
   if (!saved) return null;
   
   try {
     const state = JSON.parse(saved);
-    
-    // Check if state is still fresh (within 30 minutes)
     const age = Date.now() - state.timestamp;
     if (age > 30 * 60 * 1000) {
-      console.log('⏰ Search state expired (>30 min)');
       clearSearchState();
       return null;
     }
-    
-    console.log('📥 Loaded search state:', state.mode, state.address);
     return state;
   } catch (e) {
-    console.error('❌ Error loading search state:', e);
     return null;
   }
 }
 
-// Clear search state
 function clearSearchState() {
   localStorage.removeItem(STATE_KEY);
-  console.log('🗑️ Cleared search state');
 }
 
-// DOM Elements
 const mosqueCardsContainer = document.getElementById('mosqueCards');
 const searchBar = document.getElementById('addressSearchBar');
 const clearSearchBtn = document.getElementById('clearSearchBtn');
@@ -89,151 +65,192 @@ const toggleArrow = document.getElementById('toggleArrow');
 const loadingIndicator = document.getElementById('loadingIndicator');
 const noResults = document.getElementById('noResults');
 
-// ============================================
-// IMAGE MODAL FOR CLICK-TO-ZOOM
-// ============================================
-
-// Create modal on page load
 let imageModal = null;
+let currentModalPhotos = [];
+let currentModalIndex = 0;
 
 function createImageModal() {
-  if (imageModal) return; // Already created
+  if (imageModal) return;
   
   imageModal = document.createElement('div');
   imageModal.className = 'image-modal';
   imageModal.innerHTML = `
     <div class="modal-content">
+      <button class="modal-nav modal-nav-prev" id="modalPrev">‹</button>
       <img src="" alt="Full size image" class="modal-image" id="modalImage" />
+      <button class="modal-nav modal-nav-next" id="modalNext">›</button>
       <button class="modal-close" id="modalClose">✕</button>
-      <div class="modal-hint">Click anywhere to close</div>
+      <div class="modal-counter" id="modalCounter">1 / 1</div>
+      <div class="modal-hint">← → yoki suring</div>
     </div>
   `;
   
   document.body.appendChild(imageModal);
   
-  // Close modal on click anywhere
-  imageModal.addEventListener('click', closeImageModal);
+  imageModal.addEventListener('click', (e) => {
+    if (e.target === imageModal) closeImageModal();
+  });
   
-  // Close button
   document.getElementById('modalClose').addEventListener('click', (e) => {
     e.stopPropagation();
     closeImageModal();
   });
   
-  console.log('✅ Image modal created');
+  document.getElementById('modalPrev').addEventListener('click', (e) => {
+    e.stopPropagation();
+    navigateModal(-1);
+  });
+  
+  document.getElementById('modalNext').addEventListener('click', (e) => {
+    e.stopPropagation();
+    navigateModal(1);
+  });
+  
+  document.addEventListener('keydown', handleModalKeyboard);
+  
+  let touchStartX = 0;
+  let touchEndX = 0;
+  
+  const modalContent = imageModal.querySelector('.modal-content');
+  modalContent.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+  
+  modalContent.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    const swipeThreshold = 50;
+    if (touchStartX - touchEndX > swipeThreshold) {
+      navigateModal(1);
+    } else if (touchEndX - touchStartX > swipeThreshold) {
+      navigateModal(-1);
+    }
+  });
 }
 
-function openImageModal(imageSrc) {
+function handleModalKeyboard(e) {
+  if (!imageModal || !imageModal.classList.contains('active')) return;
+  
+  if (e.key === 'Escape') {
+    closeImageModal();
+  } else if (e.key === 'ArrowLeft') {
+    navigateModal(-1);
+  } else if (e.key === 'ArrowRight') {
+    navigateModal(1);
+  }
+}
+
+function openImageModal(photos, startIndex = 0) {
   if (!imageModal) createImageModal();
   
-  const modalImage = document.getElementById('modalImage');
-  modalImage.src = imageSrc;
+  currentModalPhotos = Array.isArray(photos) ? photos : [photos];
+  currentModalIndex = startIndex;
+  
+  updateModalImage();
   imageModal.classList.add('active');
-  
-  // Prevent body scroll
   document.body.style.overflow = 'hidden';
-  
-  console.log('🖼️ Opened modal for:', imageSrc);
 }
 
 function closeImageModal() {
   if (!imageModal) return;
   
   imageModal.classList.remove('active');
-  
-  // Restore body scroll
   document.body.style.overflow = '';
-  
-  console.log('✕ Closed modal');
+  currentModalPhotos = [];
+  currentModalIndex = 0;
 }
 
-// ============================================
-// API FUNCTIONS
-// ============================================
+function navigateModal(direction) {
+  if (currentModalPhotos.length <= 1) return;
+  
+  currentModalIndex += direction;
+  
+  if (currentModalIndex < 0) {
+    currentModalIndex = currentModalPhotos.length - 1;
+  } else if (currentModalIndex >= currentModalPhotos.length) {
+    currentModalIndex = 0;
+  }
+  
+  updateModalImage();
+}
 
-/**
- * Fetch nearby mosques based on coordinates
- */
+function updateModalImage() {
+  const modalImage = document.getElementById('modalImage');
+  const modalCounter = document.getElementById('modalCounter');
+  const modalPrev = document.getElementById('modalPrev');
+  const modalNext = document.getElementById('modalNext');
+  
+  if (modalImage && currentModalPhotos.length > 0) {
+    modalImage.src = currentModalPhotos[currentModalIndex];
+  }
+  
+  if (modalCounter) {
+    modalCounter.textContent = `${currentModalIndex + 1} / ${currentModalPhotos.length}`;
+  }
+  
+  if (modalPrev && modalNext) {
+    const display = currentModalPhotos.length > 1 ? 'flex' : 'none';
+    modalPrev.style.display = display;
+    modalNext.style.display = display;
+  }
+}
+
 async function fetchNearbyMosques(lat, lon, limit = 5) {
   const url = getApiUrl(API_CONFIG.ENDPOINTS.MOSQUES_NEARBY, { lat, lon, limit });
   
-  console.log('🔍 Fetching nearby mosques:', url);
-  
   try {
     const response = await fetch(url, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       signal: AbortSignal.timeout(API_CONFIG.DEFAULTS.TIMEOUT)
     });
     
     if (!response.ok) {
-      throw new Error(`API error: ${response.status} ${response.statusText}`);
+      throw new Error(`API error: ${response.status}`);
     }
     
     const data = await response.json();
-    console.log('✅ API Response:', data);
     
     if (data.success && data.mosques) {
       return data.mosques;
     } else {
-      throw new Error('Invalid API response format');
+      throw new Error('Invalid API response');
     }
   } catch (error) {
-    console.error('❌ Error fetching nearby mosques:', error);
     throw error;
   }
 }
 
-/**
- * Fetch mosques by address search
- */
 async function fetchMosquesByAddress(address, limit = 5) {
   const url = getApiUrl(API_CONFIG.ENDPOINTS.MOSQUES_BY_ADDRESS, { address, limit });
   
-  console.log('🔍 Fetching mosques by address:', url);
-  
   try {
     const response = await fetch(url, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       signal: AbortSignal.timeout(API_CONFIG.DEFAULTS.TIMEOUT)
     });
     
     if (!response.ok) {
-      throw new Error(`API error: ${response.status} ${response.statusText}`);
+      throw new Error(`API error: ${response.status}`);
     }
     
     const data = await response.json();
-    console.log('✅ API Response:', data);
     
     if (data.success && data.mosques) {
       return data.mosques;
     } else {
-      throw new Error('Invalid API response format');
+      throw new Error('Invalid API response');
     }
   } catch (error) {
-    console.error('❌ Error fetching mosques by address:', error);
     throw error;
   }
 }
 
-// ============================================
-// UI HELPER FUNCTIONS
-// ============================================
-
-/**
- * Generate star rating HTML
- */
 function generateStarRating(reviews) {
   if (!reviews || reviews.length === 0) {
     return `<span class="no-rating-text">Sharhlar yo'q</span>`;
   }
   
-  // Calculate average rating
   const avgRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
   const roundedRating = Math.round(avgRating);
   
@@ -249,10 +266,6 @@ function generateStarRating(reviews) {
   return `<div class="star-container">${starsHTML}</div>`;
 }
 
-/**
- * Discover available photos in a folder
- * Tries loading 1.jpg/jpeg/png, 2.jpg/jpeg/png, etc. up to maxPhotos
- */
 async function discoverPhotos(photoPath, maxPhotos = 10) {
   const photos = [];
   const extensions = ['jpg', 'jpeg', 'png'];
@@ -261,36 +274,27 @@ async function discoverPhotos(photoPath, maxPhotos = 10) {
   for (let i = 1; i <= maxPhotos; i++) {
     let photoFound = false;
     
-    // Try each extension
     for (const ext of extensions) {
       const photoUrl = `${basePath}/${i}.${ext}`;
       
       try {
-        // Try to load the image
         const exists = await checkImageExists(photoUrl);
         if (exists) {
           photos.push(photoUrl);
           photoFound = true;
-          break; // Found this number, move to next
+          break;
         }
       } catch (e) {
-        // Image doesn't exist, try next extension
         continue;
       }
     }
     
-    // If no photo found with this number, assume no more photos
-    if (!photoFound) {
-      break;
-    }
+    if (!photoFound) break;
   }
   
   return photos;
 }
 
-/**
- * Check if an image URL exists and is loadable
- */
 function checkImageExists(url) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -300,29 +304,23 @@ function checkImageExists(url) {
   });
 }
 
-/**
- * Create photo carousel HTML
- */
 function createPhotoCarousel(mosqueId, photos) {
   if (!photos || photos.length === 0) {
-    // Fallback to placeholder
     return `
-      <div class="mosque-photo-single">
+      <div class="mosque-photo-single" data-photos='["../../assets/mosque.png"]' data-index="0">
         <img src="../../assets/mosque.png" alt="Mosque photo" />
       </div>
     `;
   }
   
   if (photos.length === 1) {
-    // Single photo display - clickable
     return `
-      <div class="mosque-photo-single" onclick="event.stopPropagation(); openImageModal('${photos[0]}')">
+      <div class="mosque-photo-single" data-photos='${JSON.stringify(photos)}' data-index="0">
         <img src="${photos[0]}" alt="Mosque photo" />
       </div>
     `;
   }
   
-  // Multiple photos - create carousel
   let photosHTML = '';
   let dotsHTML = '';
   
@@ -342,7 +340,7 @@ function createPhotoCarousel(mosqueId, photos) {
   });
   
   return `
-    <div class="photo-carousel" data-mosque-id="${mosqueId}">
+    <div class="photo-carousel" data-mosque-id="${mosqueId}" data-photos='${JSON.stringify(photos)}'>
       <div class="carousel-track">
         ${photosHTML}
       </div>
@@ -353,32 +351,33 @@ function createPhotoCarousel(mosqueId, photos) {
   `;
 }
 
-/**
- * Initialize carousel for a mosque card
- */
 function initCarousel(mosqueId, photoCount) {
   const carousel = document.querySelector(`.photo-carousel[data-mosque-id="${mosqueId}"]`);
-  if (!carousel || photoCount <= 1) return;
+  if (!carousel || photoCount <= 1) {
+    const singlePhoto = document.querySelector(`.mosque-photo-single`);
+    if (singlePhoto) {
+      singlePhoto.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const photos = JSON.parse(singlePhoto.getAttribute('data-photos'));
+        openImageModal(photos, 0);
+      });
+    }
+    return;
+  }
   
   const photos = carousel.querySelectorAll('.carousel-photo');
   const dots = carousel.querySelectorAll('.dot');
+  const allPhotos = JSON.parse(carousel.getAttribute('data-photos'));
   let currentIndex = 0;
-  
-  // Position classes for smooth bidirectional animation
-  const positions = ['center', 'right', 'hidden', 'hidden', 'hidden', 'hidden', 'hidden', 'hidden', 'hidden', 'left'];
   
   function updateCarousel(newIndex) {
     const totalPhotos = photos.length;
     
-    // Update photo positions
     photos.forEach((photo, index) => {
-      // Calculate relative position
       let relativePos = (index - newIndex + totalPhotos) % totalPhotos;
       
-      // Remove all position classes
       photo.classList.remove('center', 'left', 'right', 'hidden');
       
-      // Assign new position
       if (relativePos === 0) {
         photo.classList.add('center');
       } else if (relativePos === 1) {
@@ -390,7 +389,6 @@ function initCarousel(mosqueId, photoCount) {
       }
     });
     
-    // Update dots
     dots.forEach((dot, index) => {
       dot.classList.toggle('active', index === newIndex);
     });
@@ -398,26 +396,22 @@ function initCarousel(mosqueId, photoCount) {
     currentIndex = newIndex;
   }
   
-  // Photo click handlers - open modal for center photo only
   photos.forEach((photo) => {
     photo.addEventListener('click', (e) => {
-      e.stopPropagation(); // Prevent card click
+      e.stopPropagation();
       
-      // Only open modal if this is the center photo
       if (photo.classList.contains('center')) {
-        const photoUrl = photo.getAttribute('data-photo');
-        openImageModal(photoUrl);
+        const photoIndex = parseInt(photo.getAttribute('data-index'));
+        openImageModal(allPhotos, photoIndex);
       }
     });
   });
   
-  // Dot click handlers
   dots.forEach((dot, index) => {
     dot.addEventListener('click', (e) => {
-      e.stopPropagation(); // Prevent card click
+      e.stopPropagation();
       updateCarousel(index);
       
-      // Reset auto-rotation
       if (carouselIntervals[mosqueId]) {
         clearInterval(carouselIntervals[mosqueId]);
       }
@@ -425,7 +419,6 @@ function initCarousel(mosqueId, photoCount) {
     });
   });
   
-  // Auto-rotation (every 3 seconds)
   function startAutoRotation() {
     carouselIntervals[mosqueId] = setInterval(() => {
       const nextIndex = (currentIndex + 1) % photos.length;
@@ -433,93 +426,65 @@ function initCarousel(mosqueId, photoCount) {
     }, 3000);
   }
   
-  // Start auto-rotation
   startAutoRotation();
   
-  // Pause on hover
   carousel.addEventListener('mouseenter', () => {
     if (carouselIntervals[mosqueId]) {
       clearInterval(carouselIntervals[mosqueId]);
     }
   });
   
-  // Resume on leave
   carousel.addEventListener('mouseleave', () => {
     startAutoRotation();
   });
 }
 
-/**
- * Render mosque cards from API data
- */
 async function renderMosqueCards(mosques) {
-  // Clear any existing carousel intervals
   Object.values(carouselIntervals).forEach(interval => clearInterval(interval));
   carouselIntervals = {};
   
   mosqueCardsContainer.innerHTML = '';
   
   if (!mosques || mosques.length === 0) {
-    // Show no results message
     loadingIndicator.style.display = 'none';
     noResults.style.display = 'block';
     mosqueCardsContainer.style.display = 'none';
     return;
   }
   
-  // Hide no results, show cards
   noResults.style.display = 'none';
   mosqueCardsContainer.style.display = 'flex';
   
-  // Process each mosque and discover photos
   for (const mosque of mosques) {
-    // Discover available photos for this mosque
     const photos = await discoverPhotos(mosque.photo, 10);
     
     const card = document.createElement('div');
     card.className = 'mosque-card';
     card.onclick = () => {
-      // Save current state before navigating
       saveSearchState();
-      
-      // Navigate to detail page with mosque ID
-      console.log('Clicked mosque:', mosque.id);
       window.location.href = `mosques-detail.html?id=${mosque.id}`;
     };
     
-    // Generate star rating
     const starRatingHTML = generateStarRating(mosque.reviews);
-    
-    // Format distance to 1 decimal place
     const distanceDisplay = mosque.distance ? mosque.distance.toFixed(1) : 'N/A';
-    
-    // Create photo HTML
     const photoHTML = createPhotoCarousel(mosque.id, photos);
-    
-    // Format phone number (handle missing phones)
     const phoneDisplay = mosque.phone || 'Ma\'lumot yo\'q';
     
     card.innerHTML = `
-      <!-- Card Top Badges (Above card) -->
       <div class="card-top-badges">
-        <!-- Star Rating Badge (Left) -->
         <div class="mosque-rating-badge">
           ${starRatingHTML}
         </div>
-        
-        <!-- Distance Badge (Right) -->
         <div class="mosque-distance-badge">
           <span>📍</span>
           <span>${distanceDisplay} km</span>
         </div>
       </div>
       
-      <!-- Card Image -->
       <div class="mosque-card-image">
         ${photoHTML}
       </div>
       
-      <!-- Card Content -->
       <div class="mosque-card-content">
         <h3 class="mosque-name">${mosque.name}</h3>
         <p class="mosque-name-ko">${mosque.city || 'Unknown City'}</p>
@@ -538,122 +503,81 @@ async function renderMosqueCards(mosques) {
     
     mosqueCardsContainer.appendChild(card);
     
-    // Initialize carousel if multiple photos
     if (photos.length > 1) {
       initCarousel(mosque.id, photos.length);
+    } else if (photos.length === 1) {
+      const singlePhoto = card.querySelector('.mosque-photo-single');
+      if (singlePhoto) {
+        singlePhoto.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openImageModal(photos, 0);
+        });
+      }
     }
   }
   
-  // Store mosques for later use
   currentMosques = mosques;
 }
 
-/**
- * Show error message to user
- */
 function showError(message) {
   loadingIndicator.style.display = 'none';
   noResults.style.display = 'block';
   mosqueCardsContainer.style.display = 'none';
   
-  // Update error message
   const noResultsText = document.querySelector('.no-results-text');
   const noResultsHint = document.querySelector('.no-results-hint');
   
-  if (noResultsText) {
-    noResultsText.textContent = 'Xatolik yuz berdi';
-  }
-  if (noResultsHint) {
-    noResultsHint.textContent = message;
-  }
+  if (noResultsText) noResultsText.textContent = 'Xatolik yuz berdi';
+  if (noResultsHint) noResultsHint.textContent = message;
 }
 
-// ============================================
-// SEARCH SECTION HANDLERS
-// ============================================
-
-/**
- * Toggle collapsible search section
- */
 searchToggleBtn.addEventListener('click', () => {
   const isVisible = searchCollapsible.style.display !== 'none';
   
   if (isVisible) {
-    // Hide search section
     searchCollapsible.style.display = 'none';
     toggleArrow.classList.remove('rotated');
     searchToggleBtn.classList.remove('active');
   } else {
-    // Show search section
     searchCollapsible.style.display = 'block';
     toggleArrow.classList.add('rotated');
     searchToggleBtn.classList.add('active');
   }
 });
 
-/**
- * Handle search bar input
- */
 searchBar.addEventListener('input', (e) => {
   const value = e.target.value.trim();
-  
-  // Show/hide clear button
-  if (value) {
-    clearSearchBtn.style.display = 'flex';
-  } else {
-    clearSearchBtn.style.display = 'none';
-  }
+  clearSearchBtn.style.display = value ? 'flex' : 'none';
 });
 
-/**
- * Handle search bar Enter key
- */
 searchBar.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
     const address = searchBar.value.trim();
-    
-    if (address) {
-      performAddressSearch(address);
-    }
+    if (address) performAddressSearch(address);
   }
 });
 
-/**
- * Handle search button click
- */
 searchBtn.addEventListener('click', () => {
   const address = searchBar.value.trim();
-  
-  if (address) {
-    performAddressSearch(address);
-  }
+  if (address) performAddressSearch(address);
 });
 
-/**
- * Handle clear search button
- */
 clearSearchBtn.addEventListener('click', async () => {
   searchBar.value = '';
   clearSearchBtn.style.display = 'none';
   searchBar.focus();
   
-  // Reset to location mode
   currentMode = 'location';
   currentSearchAddress = '';
-  
-  // Clear saved state
   clearSearchState();
   
-  // Collapse search section
   searchCollapsible.style.display = 'none';
   toggleArrow.classList.remove('rotated');
   searchToggleBtn.classList.remove('active');
   
-  // Show loading
   loadingIndicator.style.display = 'flex';
   mosqueCardsContainer.style.display = 'none';
   
-  // Get current location and fetch nearby mosques
   const location = LocationManager.getCurrentLocation();
   
   if (location && location.lat && location.lon) {
@@ -662,7 +586,6 @@ clearSearchBtn.addEventListener('click', async () => {
       loadingIndicator.style.display = 'none';
       await renderMosqueCards(mosques);
     } catch (error) {
-      console.error('❌ Error fetching mosques:', error);
       showError('Masjidlarni yuklashda xatolik yuz berdi');
     }
   } else {
@@ -671,48 +594,26 @@ clearSearchBtn.addEventListener('click', async () => {
   }
 });
 
-/**
- * Perform address search
- */
 async function performAddressSearch(address) {
-  console.log('🔍 Searching for address:', address);
-  
-  // Update mode
   currentMode = 'address';
   currentSearchAddress = address;
   
-  // Show loading
   loadingIndicator.style.display = 'flex';
   mosqueCardsContainer.style.display = 'none';
   noResults.style.display = 'none';
   
-  // Blur search bar
   searchBar.blur();
   
-  // Collapse search section
   searchCollapsible.style.display = 'none';
   toggleArrow.classList.remove('rotated');
   searchToggleBtn.classList.remove('active');
   
   try {
-    // Fetch mosques by address from API
     const mosques = await fetchMosquesByAddress(address, 5);
-    
-    // Hide loading
     loadingIndicator.style.display = 'none';
-    
-    // Render results
     await renderMosqueCards(mosques);
-    
-    // Save state after successful search
     saveSearchState();
-    
-    console.log('✅ Search completed');
-    
   } catch (error) {
-    console.error('❌ Error searching by address:', error);
-    
-    // Show error
     let errorMessage = 'Manzil bo\'yicha qidirishda xatolik. Iltimos, boshqa manzilni sinab ko\'ring.';
     
     if (error.name === 'TimeoutError') {
@@ -723,64 +624,41 @@ async function performAddressSearch(address) {
   }
 }
 
-// ============================================
-// INITIALIZATION
-// ============================================
-
-/**
- * Initialize page - load mosques based on current location OR restore saved state
- */
 async function initializeMosquesPage() {
-  console.log('📱 Mosques page initialized');
+  const referrer = document.referrer;
+  if (referrer.includes('index.html') || referrer.endsWith('/')) {
+    clearSearchState();
+  }
   
-  // Check if we have saved search state
   const savedState = loadSearchState();
   
   if (savedState && savedState.mosques && savedState.mosques.length > 0) {
-    // Restore saved state
-    console.log('🔄 Restoring saved state:', savedState.mode, savedState.address);
-    
     currentMode = savedState.mode;
     currentSearchAddress = savedState.address;
     currentMosques = savedState.mosques;
     
-    // Update search bar if it was an address search
     if (currentMode === 'address' && currentSearchAddress) {
       searchBar.value = currentSearchAddress;
       clearSearchBtn.style.display = 'flex';
     }
     
-    // Render saved results
     loadingIndicator.style.display = 'none';
     await renderMosqueCards(savedState.mosques);
-    
-    return; // Done - don't fetch new data
+    return;
   }
   
-  // No saved state - load based on location
   loadingIndicator.style.display = 'flex';
   mosqueCardsContainer.style.display = 'none';
   noResults.style.display = 'none';
   
-  // Get user location from LocationManager
   const location = LocationManager.getCurrentLocation();
   
   if (location && location.lat && location.lon) {
-    console.log('📍 User location:', location.city, location.lat, location.lon);
-    
     try {
-      // Fetch nearby mosques
       const mosques = await fetchNearbyMosques(location.lat, location.lon, 5);
-      
-      // Hide loading
       loadingIndicator.style.display = 'none';
-      
-      // Render mosques
       await renderMosqueCards(mosques);
-      
     } catch (error) {
-      console.error('❌ Error loading initial mosques:', error);
-      
       let errorMessage = 'Masjidlarni yuklashda xatolik yuz berdi. Iltimos, sahifani yangilang.';
       
       if (error.name === 'TimeoutError') {
@@ -790,15 +668,10 @@ async function initializeMosquesPage() {
       showError(errorMessage);
     }
   } else {
-    // No location available
-    console.warn('⚠️ No location available yet');
     loadingIndicator.style.display = 'none';
     showError('Joylashuv ma\'lumotlari topilmadi. Iltimos, brauzerda joylashuvni yoqing va sahifani yangilang.');
   }
 }
 
-// Create image modal on page load
 createImageModal();
-
-// Start initialization when page loads
 document.addEventListener('DOMContentLoaded', initializeMosquesPage);

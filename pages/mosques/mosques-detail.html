@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="stylesheet" href="mosques.css" />
   <style>
-    /* Detail Page Specific Styles */
     .detail-container {
       flex: 1;
       overflow-y: auto;
@@ -20,7 +19,6 @@
       box-sizing: border-box;
     }
 
-    /* Loading State */
     .detail-loading {
       display: flex;
       flex-direction: column;
@@ -50,7 +48,6 @@
       margin: 0;
     }
 
-    /* Error State */
     .detail-error {
       text-align: center;
       padding: 80px 20px;
@@ -97,7 +94,6 @@
       transform: translateY(0);
     }
 
-    /* Detail Card */
     .detail-card {
       background: #ffffff;
       border-radius: 20px;
@@ -106,7 +102,6 @@
       margin-bottom: 24px;
     }
 
-    /* Photo Section with Carousel */
     .detail-photo-section {
       position: relative;
       width: 100%;
@@ -114,7 +109,6 @@
       background: linear-gradient(135deg, #e8f5f0 0%, #f0f9f5 100%);
     }
 
-    /* Combined Badge on Photo - Single Eye */
     .detail-badges {
       position: absolute;
       top: 16px;
@@ -155,7 +149,6 @@
       font-size: 1rem;
     }
 
-    /* Content Section */
     .detail-content {
       padding: 24px;
     }
@@ -175,7 +168,6 @@
       font-weight: 500;
     }
 
-    /* Info Section */
     .detail-section {
       margin-bottom: 28px;
     }
@@ -225,7 +217,6 @@
       text-decoration: underline;
     }
 
-    /* Reviews Section */
     .reviews-section {
       margin-top: 28px;
     }
@@ -277,7 +268,6 @@
       font-size: 1rem;
     }
 
-    /* Navigation Buttons */
     .nav-buttons {
       display: flex;
       gap: 12px;
@@ -324,7 +314,6 @@
       line-height: 1;
     }
 
-    /* Responsive */
     @media (max-width: 420px) {
       .detail-photo-section {
         height: 320px;
@@ -346,7 +335,6 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="app__header">
     <div class="header-content">
       <img src="../../assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
@@ -354,16 +342,13 @@
     </div>
   </header>
 
-  <!-- DETAIL CONTAINER -->
   <div class="detail-container">
     
-    <!-- Loading State -->
     <div class="detail-loading" id="detailLoading">
       <div class="detail-spinner"></div>
       <p>Yuklanmoqda...</p>
     </div>
 
-    <!-- Error State -->
     <div class="detail-error" id="detailError" style="display: none;">
       <p class="detail-error-icon">❌</p>
       <p class="detail-error-text">Xatolik yuz berdi</p>
@@ -371,34 +356,31 @@
       <button class="retry-button" onclick="loadMosqueDetail()">Qaytadan urinish</button>
     </div>
 
-    <!-- Content (Hidden until loaded) -->
     <div id="detailContent" style="display: none;"></div>
 
   </div>
 
-  <!-- IMAGE MODAL -->
   <div class="image-modal" id="imageModal">
     <div class="modal-content">
+      <button class="modal-nav modal-nav-prev" id="modalPrev">‹</button>
       <img src="" alt="Full size image" class="modal-image" id="modalImage" />
+      <button class="modal-nav modal-nav-next" id="modalNext">›</button>
       <button class="modal-close" id="modalClose">✕</button>
-      <div class="modal-hint">Yopish uchun bosing</div>
+      <div class="modal-counter" id="modalCounter">1 / 1</div>
+      <div class="modal-hint">← → yoki suring</div>
     </div>
   </div>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="../../js/apiConfig.js"></script>
   <script>
-    // Initialize Telegram WebApp
     const tg = window.Telegram.WebApp;
     tg.ready();
     
     try {
       tg.expand();
-    } catch (e) {
-      console.log('Expand not supported');
-    }
+    } catch (e) {}
     
-    // Show back button
     try {
       if (tg.BackButton) {
         tg.BackButton.show();
@@ -406,78 +388,130 @@
           window.location.href = "mosques.html";
         });
       }
-    } catch (e) {
-      console.log('BackButton not supported');
-    }
+    } catch (e) {}
 
-    // DOM Elements
     const detailLoading = document.getElementById('detailLoading');
     const detailError = document.getElementById('detailError');
     const detailContent = document.getElementById('detailContent');
     const errorMessage = document.getElementById('errorMessage');
 
-    // Carousel state
     let carouselInterval = null;
+    let currentModalPhotos = [];
+    let currentModalIndex = 0;
 
-    // ============================================
-    // IMAGE MODAL FUNCTIONALITY
-    // ============================================
-    
     const imageModal = document.getElementById('imageModal');
     const modalImage = document.getElementById('modalImage');
     const modalClose = document.getElementById('modalClose');
+    const modalPrev = document.getElementById('modalPrev');
+    const modalNext = document.getElementById('modalNext');
 
-    function openImageModal(imageSrc) {
-      modalImage.src = imageSrc;
+    function openImageModal(photos, startIndex = 0) {
+      currentModalPhotos = Array.isArray(photos) ? photos : [photos];
+      currentModalIndex = startIndex;
+      
+      updateModalImage();
       imageModal.classList.add('active');
       document.body.style.overflow = 'hidden';
-      console.log('🖼️ Opened modal for:', imageSrc);
     }
 
     function closeImageModal() {
       imageModal.classList.remove('active');
       document.body.style.overflow = '';
-      console.log('✕ Closed modal');
+      currentModalPhotos = [];
+      currentModalIndex = 0;
     }
 
-    // Close modal on click anywhere
-    imageModal.addEventListener('click', closeImageModal);
+    function navigateModal(direction) {
+      if (currentModalPhotos.length <= 1) return;
+      
+      currentModalIndex += direction;
+      
+      if (currentModalIndex < 0) {
+        currentModalIndex = currentModalPhotos.length - 1;
+      } else if (currentModalIndex >= currentModalPhotos.length) {
+        currentModalIndex = 0;
+      }
+      
+      updateModalImage();
+    }
+
+    function updateModalImage() {
+      const modalCounter = document.getElementById('modalCounter');
+      
+      if (modalImage && currentModalPhotos.length > 0) {
+        modalImage.src = currentModalPhotos[currentModalIndex];
+      }
+      
+      if (modalCounter) {
+        modalCounter.textContent = `${currentModalIndex + 1} / ${currentModalPhotos.length}`;
+      }
+      
+      const display = currentModalPhotos.length > 1 ? 'flex' : 'none';
+      modalPrev.style.display = display;
+      modalNext.style.display = display;
+    }
+
+    imageModal.addEventListener('click', (e) => {
+      if (e.target === imageModal) closeImageModal();
+    });
     
-    // Close button
     modalClose.addEventListener('click', (e) => {
       e.stopPropagation();
       closeImageModal();
     });
 
-    // Escape key to close
+    modalPrev.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigateModal(-1);
+    });
+
+    modalNext.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigateModal(1);
+    });
+
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && imageModal.classList.contains('active')) {
+      if (!imageModal.classList.contains('active')) return;
+      
+      if (e.key === 'Escape') {
         closeImageModal();
+      } else if (e.key === 'ArrowLeft') {
+        navigateModal(-1);
+      } else if (e.key === 'ArrowRight') {
+        navigateModal(1);
       }
     });
 
-    /**
-     * Get mosque ID from URL
-     */
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    const modalContent = imageModal.querySelector('.modal-content');
+    modalContent.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    modalContent.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const swipeThreshold = 50;
+      if (touchStartX - touchEndX > swipeThreshold) {
+        navigateModal(1);
+      } else if (touchEndX - touchStartX > swipeThreshold) {
+        navigateModal(-1);
+      }
+    });
+
     function getMosqueId() {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get('id');
     }
 
-    /**
-     * Fetch mosque details from API
-     */
     async function fetchMosqueDetail(id) {
       const url = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.MOSQUE_DETAIL}/${id}`;
-      
-      console.log('🔍 Fetching mosque detail:', url);
       
       try {
         const response = await fetch(url, {
           method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           signal: AbortSignal.timeout(API_CONFIG.DEFAULTS.TIMEOUT)
         });
         
@@ -486,7 +520,6 @@
         }
         
         const data = await response.json();
-        console.log('✅ API Response:', data);
         
         if (data.success && data.mosque) {
           return data.mosque;
@@ -494,14 +527,10 @@
           throw new Error('Invalid API response format');
         }
       } catch (error) {
-        console.error('❌ Error fetching mosque detail:', error);
         throw error;
       }
     }
 
-    /**
-     * Check if an image URL exists
-     */
     function checkImageExists(url) {
       return new Promise((resolve) => {
         const img = new Image();
@@ -511,9 +540,6 @@
       });
     }
 
-    /**
-     * Discover available photos in a folder
-     */
     async function discoverPhotos(photoPath, maxPhotos = 10) {
       const photos = [];
       const extensions = ['jpg', 'jpeg', 'png'];
@@ -537,31 +563,25 @@
           }
         }
         
-        if (!photoFound) {
-          break;
-        }
+        if (!photoFound) break;
       }
       
       return photos;
     }
 
-    /**
-     * Create photo carousel HTML for detail page
-     */
     function createDetailPhotoCarousel(photos) {
       if (!photos || photos.length === 0) {
         return `
-          <img src="../../assets/mosque.png" alt="Mosque photo" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="openImageModal(this.src)" />
+          <img src="../../assets/mosque.png" alt="Mosque photo" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="openImageModal(['../../assets/mosque.png'], 0)" />
         `;
       }
       
       if (photos.length === 1) {
         return `
-          <img src="${photos[0]}" alt="Mosque photo" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="openImageModal(this.src)" />
+          <img src="${photos[0]}" alt="Mosque photo" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="openImageModal(['${photos[0]}'], 0)" />
         `;
       }
       
-      // Multiple photos - create carousel
       let photosHTML = '';
       let dotsHTML = '';
       
@@ -581,7 +601,7 @@
       });
       
       return `
-        <div class="photo-carousel" id="detailCarousel">
+        <div class="photo-carousel" id="detailCarousel" data-photos='${JSON.stringify(photos)}'>
           <div class="carousel-track">
             ${photosHTML}
           </div>
@@ -592,15 +612,13 @@
       `;
     }
 
-    /**
-     * Initialize carousel for detail page
-     */
     function initDetailCarousel(photoCount) {
       const carousel = document.getElementById('detailCarousel');
       if (!carousel || photoCount <= 1) return;
       
       const photos = carousel.querySelectorAll('.carousel-photo');
       const dots = carousel.querySelectorAll('.dot');
+      const allPhotos = JSON.parse(carousel.getAttribute('data-photos'));
       let currentIndex = 0;
       
       function updateCarousel(newIndex) {
@@ -629,19 +647,17 @@
         currentIndex = newIndex;
       }
       
-      // Photo click handlers - open modal for center photo only
       photos.forEach((photo) => {
         photo.addEventListener('click', (e) => {
           e.stopPropagation();
           
           if (photo.classList.contains('center')) {
-            const photoUrl = photo.getAttribute('data-photo');
-            openImageModal(photoUrl);
+            const photoIndex = parseInt(photo.getAttribute('data-index'));
+            openImageModal(allPhotos, photoIndex);
           }
         });
       });
       
-      // Dot click handlers
       dots.forEach((dot, index) => {
         dot.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -654,7 +670,6 @@
         });
       });
       
-      // Auto-rotation
       function startAutoRotation() {
         carouselInterval = setInterval(() => {
           const nextIndex = (currentIndex + 1) % photos.length;
@@ -664,7 +679,6 @@
       
       startAutoRotation();
       
-      // Pause on hover
       carousel.addEventListener('mouseenter', () => {
         if (carouselInterval) {
           clearInterval(carouselInterval);
@@ -676,9 +690,6 @@
       });
     }
 
-    /**
-     * Generate star rating HTML
-     */
     function generateStarRating(reviews) {
       if (!reviews || reviews.length === 0) {
         return `<span class="no-rating-text">Sharhlar yo'q</span>`;
@@ -699,9 +710,6 @@
       return `<div class="star-container">${starsHTML}</div>`;
     }
 
-    /**
-     * Format date string
-     */
     function formatDate(dateString) {
       try {
         const date = new Date(dateString);
@@ -715,9 +723,6 @@
       }
     }
 
-    /**
-     * Render reviews section
-     */
     function renderReviews(reviews) {
       if (!reviews || reviews.length === 0) {
         return '<div class="no-reviews">Hali sharhlar yo\'q</div>';
@@ -744,35 +749,19 @@
       return reviewsHTML;
     }
 
-    /**
-     * Render mosque detail
-     */
     async function renderMosqueDetail(mosque) {
-      // Discover photos
       const photos = await discoverPhotos(mosque.photo, 10);
-      console.log('📸 Found photos:', photos.length);
       
-      // Create photo carousel HTML
       const photoHTML = createDetailPhotoCarousel(photos);
-      
-      // Generate star rating
       const starRatingHTML = generateStarRating(mosque.reviews);
-      
-      // Format phone
       const phoneDisplay = mosque.phone || 'Ma\'lumot yo\'q';
-      
-      // Render reviews
       const reviewsHTML = renderReviews(mosque.reviews);
       const reviewCount = mosque.reviews ? mosque.reviews.length : 0;
-      
-      // Format distance
       const distanceDisplay = mosque.distance ? mosque.distance.toFixed(1) : 'N/A';
       
       detailContent.innerHTML = `
         <div class="detail-card">
-          <!-- Photo Section with Carousel -->
           <div class="detail-photo-section">
-            <!-- Combined Badge on Photo (Single Eye) -->
             <div class="detail-badges">
               <div class="detail-combined-badge">
                 <div class="badge-stars">
@@ -790,12 +779,10 @@
             ${photoHTML}
           </div>
           
-          <!-- Content Section -->
           <div class="detail-content">
             <h1 class="detail-title">${mosque.name}</h1>
             <p class="detail-subtitle">${mosque.city || 'Unknown City'}</p>
             
-            <!-- Contact Info -->
             <div class="detail-section">
               <h3 class="detail-section-title">📞 Kontakt</h3>
               <div class="detail-info-item">
@@ -804,7 +791,6 @@
               </div>
             </div>
             
-            <!-- Address -->
             <div class="detail-section">
               <h3 class="detail-section-title">📍 Manzil</h3>
               <div class="detail-info-item">
@@ -813,7 +799,6 @@
               </div>
             </div>
             
-            <!-- Reviews -->
             ${reviewCount > 0 ? `
               <div class="detail-section reviews-section">
                 <h3 class="detail-section-title">💬 Sharhlar (${reviewCount})</h3>
@@ -821,7 +806,6 @@
               </div>
             ` : ''}
             
-            <!-- Navigation Buttons -->
             <div class="detail-section">
               <h3 class="detail-section-title">🗺️ Navigatsiya</h3>
               <div class="nav-buttons">
@@ -843,15 +827,11 @@
         </div>
       `;
       
-      // Initialize carousel if multiple photos
       if (photos.length > 1) {
         initDetailCarousel(photos.length);
       }
     }
 
-    /**
-     * Show error state
-     */
     function showError(message) {
       detailLoading.style.display = 'none';
       detailContent.style.display = 'none';
@@ -859,9 +839,6 @@
       errorMessage.textContent = message;
     }
 
-    /**
-     * Load and display mosque detail
-     */
     async function loadMosqueDetail() {
       const mosqueId = getMosqueId();
       
@@ -870,31 +847,19 @@
         return;
       }
 
-      console.log('📱 Loading mosque detail for ID:', mosqueId);
-      
-      // Show loading state
       detailLoading.style.display = 'flex';
       detailError.style.display = 'none';
       detailContent.style.display = 'none';
       
       try {
-        // Fetch mosque from API
         const mosque = await fetchMosqueDetail(mosqueId);
         
-        // Hide loading
         detailLoading.style.display = 'none';
-        
-        // Show content
         detailContent.style.display = 'block';
         
-        // Render mosque
         await renderMosqueDetail(mosque);
         
-        console.log('✅ Mosque detail loaded successfully');
-        
       } catch (error) {
-        console.error('❌ Error loading mosque detail:', error);
-        
         let errorMsg = 'Ma\'lumotlarni yuklashda xatolik yuz berdi. Iltimos, internetni tekshirib, qaytadan urinib ko\'ring.';
         
         if (error.name === 'TimeoutError') {
@@ -907,7 +872,6 @@
       }
     }
 
-    // Load detail when page loads
     document.addEventListener('DOMContentLoaded', loadMosqueDetail);
   </script>
 

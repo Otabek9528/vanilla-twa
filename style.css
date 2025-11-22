@@ -1,0 +1,193 @@
+/* ===== BASE ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: #2f3e46;
+}
+
+/* ===== 1️⃣ HEADER SECTION ===== */
+.header {
+  background: linear-gradient(135deg, #007b5e, #00a884);
+  color: #fff;
+  text-align: center;
+  padding: 25px 15px;
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  background: url('assets/main_bg.jpg') no-repeat center center/contain;
+  opacity: 0.15;
+}
+
+.header h1 {
+  font-size: 1.6rem;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.header p {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* ===== WRAPPER (for smooth blending) ===== */
+.content-bg {
+  background: url('assets/main_bg.jpg') no-repeat bottom center/cover;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== 2️⃣ PRAYER SECTION ===== */
+.prayer-section {
+  background: url('assets/prayer_bg.png') no-repeat center center/cover;
+  margin: 20px 20px 0 20px;
+  border-radius: 20px;
+  text-align: center;
+  padding: 25px 20px 40px 20px;
+  color: white;
+  position: relative;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+/* Smooth gradient fade at bottom */
+.prayer-section::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #f9fafb 90%);
+  z-index: 2;
+}
+
+.prayer-content {
+  position: relative;
+  z-index: 3;
+}
+
+.prayer-section h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.prayer-section .time {
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.prayer-section p {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* ===== 3️⃣ MAIN SECTION ===== */
+.main {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  padding: 50px 25px 40px 25px;
+  justify-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 170px;
+  text-align: center;
+  padding: 25px 10px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card img {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+}
+
+.card p {
+  color: #007b5e;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* ===== 4️⃣ LANGUAGE SECTION ===== */
+.language-switch {
+  background: #f1f7f4;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1.5px solid #007b5e;
+  color: #007b5e;
+  border-radius: 25px;
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lang-btn:hover {
+  background: #007b5e;
+  color: #fff;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .main {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 40px 20px;
+  }
+
+  .card {
+    max-width: 150px;
+  }
+
+  .header h1 {
+    font-size: 1.4rem;
+  }
+}

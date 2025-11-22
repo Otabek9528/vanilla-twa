@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yaqin Masjidlar</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="mosques.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app__header">
+    <div class="header-content">
+      <img src="../../assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
+      <h1>Muslim Vegukin Bot</h1>
+    </div>
+  </header>
+
+  <!-- MOSQUES CONTAINER -->
+  <div class="mosques-container">
+    
+    <!-- Collapsible Search Section -->
+    <div class="search-section-wrapper">
+      <!-- Collapse Toggle Button -->
+      <button class="search-toggle-btn" id="searchToggleBtn">
+        <span class="toggle-icon">🔍</span>
+        <span class="toggle-text">Boshqa manzilda qidirish</span>
+        <span class="toggle-arrow" id="toggleArrow">▼</span>
+      </button>
+      
+      <!-- Collapsible Search Content (Hidden by default) -->
+      <div class="search-section-collapsible" id="searchCollapsible" style="display: none;">
+        <div class="search-bar-container">
+          <input 
+            type="text" 
+            class="search-bar" 
+            id="addressSearchBar" 
+            placeholder="서울 강동구 구천면로 271"
+          />
+          <button class="search-clear-btn" id="clearSearchBtn" style="display: none;">
+            <span>✕</span>
+          </button>
+        </div>
+        
+        <p class="search-hint">
+          💡 Biror manzilni KOREYS tilida kiritish orqali o'sha hudud atrofidagi masjidlarni qidirish mumkin
+        </p>
+        
+        <button class="search-action-btn" id="searchBtn">
+          <span class="btn-icon">🔍</span>
+          <span class="btn-text">Qidirish</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Page Title -->
+    <h2 class="mosques-page-title">🕌 Sizga eng yaqin 5 masjid</h2>
+
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" id="loadingIndicator" style="display: none;">
+      <div class="spinner"></div>
+      <p>Masjidlar izlanmoqda...</p>
+    </div>
+
+    <!-- Mosque Cards Container -->
+    <div class="mosque-cards" id="mosqueCards">
+      <!-- Cards will be dynamically inserted here by JS -->
+    </div>
+
+    <!-- Info Footer -->
+    <div class="info-footer">
+      <div class="info-footer-icon">💡</div>
+      <p class="info-footer-text">
+        Yangi joy haqida xabar berish uchun <a href="https://t.me/MuslimVegukin" target="_blank">guruhimizga</a> o'tishingizni so'raymiz.
+      </p>
+    </div>
+
+    </div>
+
+
+    <!-- No Results Message -->
+    <div class="no-results" id="noResults" style="display: none;">
+      <p class="no-results-icon">🔍</p>
+      <p class="no-results-text">Hech qanday masjid topilmadi</p>
+      <p class="no-results-hint">Iltimos, boshqa manzilni sinab ko'ring</p>
+    </div>
+
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="../../js/locationManager.js"></script>
+  <script src="../../js/apiConfig.js"></script>
+  <script src="mosques.js"></script>
+
+</body>
+</html>

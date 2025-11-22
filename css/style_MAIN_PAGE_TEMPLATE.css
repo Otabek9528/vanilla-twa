@@ -1,0 +1,292 @@
+/* =========================
+   0) Namespaced baseline
+   ========================= */
+:root {
+  --green-1: #007b5e;
+  --green-2: #00a884;
+  --text: #2f3e46;
+  --bg: #f9fafb;
+  --card-text: #007b5e;
+  --radius-lg: 20px;
+  --shadow-1: 0 4px 12px rgba(0,0,0,.15);
+  --shadow-2: 0 3px 10px rgba(0,0,0,.15);
+}
+
+.app, .app * {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;               /* neutralize host styles */
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* A centered, max-width container prevents weird stretching inside Telegram */
+.app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 640px;        /* safe, readable width */
+  background: var(--bg);
+}
+
+/* =========================
+/* 1)=====HEADER (compact version) ===== */
+.app__header {
+  background: linear-gradient(135deg, var(--green-1), var(--green-2));
+  color: #fff;
+  padding: 10px 16px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: var(--shadow-1);
+  position: relative;
+  overflow: hidden;
+}
+
+.app__header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -30px;
+  width: 100px;
+  height: 100px;
+  background: url('../images/mosque_pattern.png') no-repeat center/contain;
+  opacity: 0.15;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.bot-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+}
+
+.header-content h1 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+
+
+/* =========================
+   2) Background wrapper for sections 2–3
+   ========================= */
+.app__content-bg {
+  background: url('../assets/main_bg.jpg') no-repeat bottom center/cover;
+  flex: 1;
+  position: relative;
+  padding-bottom: 16px;
+}
+
+/* =========================
+/* ===== 2️⃣ PRAYER PANEL (Optimized version) ===== */
+.prayer {
+  background: #f6f3eb; /* same tone as your lower section background */
+  padding: 16px 20px;
+  border-radius: 18px;
+  font-family: 'Poppins', sans-serif;
+  color: #1f3d33;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  max-width: 95%;
+  margin: 0 auto 18px;
+}
+
+/* ---- TOP ROW ---- */
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.left-side {
+  text-align: left;
+}
+
+.weekday {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0;
+  color: #0b3c33;
+}
+
+.hijri {
+  font-size: 0.9rem;
+  color: #49645b;
+  margin-top: 3px;
+}
+
+.right-side {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  color: #2e5147;
+}
+
+.location-icon {
+  font-size: 1.1rem;
+}
+
+/* ---- MIDDLE ROW ---- */
+.middle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.prayer-current,
+.prayer-next {
+  flex: 1;
+}
+
+.prayer-name,
+.next-name {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #004d40;
+}
+
+.prayer-time,
+.countdown {
+  font-size: 1.2rem;
+  color: #2f4f4f;
+}
+
+.arrow {
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  color: #007d5e;
+  margin: 0 18px;
+}
+
+
+
+
+
+/* =========================
+   4) Main – cards grid
+   ========================= */
+.main {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  padding: 48px 20px 28px;    /* top padding leaves room after prayer blend */
+  justify-items: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 170px;
+  background: rgba(255,255,255,.92);
+  border: 0;
+  border-radius: 18px;
+  padding: 22px 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,.1);
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+  backdrop-filter: blur(6px);
+}
+
+.card:active,
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0,0,0,.18);
+}
+
+.card img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  display: block;
+}
+
+.card p {
+  margin: 0;
+  color: var(--card-text);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* =========================
+   5) Language
+   ========================= */
+.lang {
+  background: #f1f7f4;
+  padding: 14px 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  border-top: 1px solid #e0e0e0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  z-index: 1000;
+}
+
+.lang__btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--green-1);
+  background: #fff;
+  color: var(--green-1);
+  font-size: .95rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.lang__btn:hover {
+  background: var(--green-1);
+  color: #fff;
+  border-color: var(--green-1);
+  transform: scale(1.05);
+}
+
+.lang__btn:active {
+  transform: scale(0.95);
+}
+
+/* =========================
+   6) Responsive tweaks
+   ========================= */
+@media (max-width: 420px) {
+  .app { max-width: 100%; }
+  .main { gap: 14px; padding: 40px 14px 24px; }
+  .card { max-width: 150px; padding: 18px 10px; }
+  .app__header h1 { font-size: 1.35rem; }
+  .app__content-bg {padding-bottom: 70px;} /* ensures last row of content isn’t hidden */
+
+
+}

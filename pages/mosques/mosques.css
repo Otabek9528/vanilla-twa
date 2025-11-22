@@ -1,0 +1,848 @@
+/* =========================
+   MOSQUES PAGE STYLES - REDESIGNED
+   ========================= */
+
+/* Page Layout */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: visible !important;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  background: var(--light-bg, #faf7f0);
+}
+
+.app__header {
+  flex-shrink: 0;
+}
+
+.mosques-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 16px 40px 16px;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ======================================
+   COLLAPSIBLE SEARCH SECTION
+   ====================================== */
+.search-section-wrapper {
+  margin: 16px 0;
+}
+
+.search-toggle-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(74, 144, 226, 0.3);
+}
+
+.search-toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(74, 144, 226, 0.4);
+  background: linear-gradient(135deg, #5a9fe8 0%, #4585c4 100%);
+}
+
+.search-toggle-btn:active {
+  transform: translateY(0);
+}
+
+.search-toggle-btn.active {
+  background: linear-gradient(135deg, #357abd 0%, #2a5f99 100%);
+  border-radius: 12px 12px 0 0;
+}
+
+.toggle-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.toggle-text {
+  flex: 1;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.toggle-arrow {
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.toggle-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+.search-section-collapsible {
+  background: #ffffff;
+  border: 2px solid #4a90e2;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 16px;
+  box-shadow: 0 3px 8px rgba(74, 144, 226, 0.15);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-bar-container {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 16px 50px 16px 20px;
+  border: 2px solid #d0d0d0;
+  border-radius: 14px;
+  font-size: 1.05rem;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  background: #f9f9f9;
+  color: #333;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: #4a90e2;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.search-bar::placeholder {
+  color: #999;
+  font-size: 1rem;
+  opacity: 0.75;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #d0d0d0;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.search-clear-btn:hover {
+  background: #b0b0b0;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.search-clear-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.search-hint {
+  font-size: 0.88rem;
+  color: #666;
+  margin: 0 0 14px 0;
+  text-align: left;
+  line-height: 1.5;
+  padding: 0 4px;
+}
+
+.search-action-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #00a884 0%, #007b5e 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 168, 132, 0.3);
+}
+
+.search-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 168, 132, 0.4);
+}
+
+.search-action-btn:active {
+  transform: translateY(0);
+}
+
+.btn-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.btn-text {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ======================================
+   PAGE TITLE
+   ====================================== */
+.mosques-page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c5e2e;
+  margin: 0 0 20px 0;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* ======================================
+   LOADING INDICATOR
+   ====================================== */
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 16px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e0e0e0;
+  border-top-color: #00a884;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-indicator p {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+/* ======================================
+   NO RESULTS
+   ====================================== */
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.no-results-icon {
+  font-size: 3rem;
+  margin: 0 0 16px 0;
+  opacity: 0.5;
+}
+
+.no-results-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #666;
+  margin: 0 0 8px 0;
+}
+
+.no-results-hint {
+  font-size: 0.9rem;
+  color: #999;
+  margin: 0;
+}
+
+/* ======================================
+   MOSQUE CARDS WITH STAR RATINGS
+   ====================================== */
+.mosque-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  padding-top: 48px;
+}
+
+.mosque-card {
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: visible;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.mosque-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 123, 94, 0.15);
+  border-color: rgba(0, 168, 132, 0.3);
+}
+
+.mosque-card:active {
+  transform: translateY(-1px);
+}
+
+.card-top-badges {
+  position: absolute;
+  top: -38px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.card-top-badges > * {
+  pointer-events: auto;
+}
+
+.mosque-rating-badge {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  padding: 10px 14px;
+  border-radius: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 1;
+  min-width: 0;
+  border: 2px solid rgba(255, 215, 0, 0.2);
+}
+
+.star-container {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.star {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.star.gold {
+  color: #ffd700;
+  text-shadow: 0 2px 4px rgba(255, 215, 0, 0.4);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.star.grey {
+  color: #d0d0d0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.no-rating-text {
+  font-size: 0.82rem;
+  color: #888;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.mosque-distance-badge {
+  background: linear-gradient(135deg, #00a884 0%, #007b5e 100%);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(0, 168, 132, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.mosque-card-image {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e8f5f0 0%, #f0f9f5 100%);
+  border-radius: 16px 16px 0 0;
+}
+
+.mosque-photo-single {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px 16px 0 0;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.mosque-photo-single:hover {
+  transform: scale(1.05);
+}
+
+.photo-carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+}
+
+.carousel-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-photo {
+  position: absolute;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  will-change: transform, opacity, left, right, width, height;
+  cursor: pointer;
+}
+
+.carousel-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.carousel-photo.center img:hover {
+  transform: scale(1.05);
+}
+
+.carousel-photo.center {
+  width: 88%;
+  height: 92%;
+  left: 6%;
+  top: 4%;
+  z-index: 10;
+  opacity: 1;
+  transform: scale(1) translateX(0);
+  border-radius: 16px;
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.25),
+    0 0 0 3px rgba(255, 255, 255, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  filter: brightness(1) blur(0px);
+}
+
+.carousel-photo.left {
+  width: 55%;
+  height: 72%;
+  left: -25%;
+  top: 14%;
+  z-index: 5;
+  opacity: 0.5;
+  transform: scale(0.88) translateX(0);
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  filter: brightness(0.85) blur(1px);
+  cursor: default;
+}
+
+.carousel-photo.right {
+  width: 55%;
+  height: 72%;
+  left: auto;
+  right: -25%;
+  top: 14%;
+  z-index: 5;
+  opacity: 0.5;
+  transform: scale(0.88) translateX(0);
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  filter: brightness(0.85) blur(1px);
+  cursor: default;
+}
+
+.carousel-photo.hidden {
+  opacity: 0;
+  transform: scale(0.6) translateX(0);
+  z-index: 1;
+  pointer-events: none;
+  filter: blur(2px);
+}
+
+.carousel-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 7px;
+  z-index: 15;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 8px 12px;
+  border-radius: 24px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dot.active {
+  background: white;
+  width: 24px;
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.dot:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.2);
+}
+
+/* ======================================
+   IMAGE MODAL WITH NAVIGATION
+   ====================================== */
+.image-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 10000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.image-modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  user-select: none;
+}
+
+.modal-close {
+  position: absolute;
+  top: -50px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.1);
+}
+
+.modal-close:active {
+  transform: scale(0.95);
+}
+
+.modal-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.modal-nav:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.modal-nav:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.modal-nav-prev {
+  left: -70px;
+}
+
+.modal-nav-next {
+  right: -70px;
+}
+
+.modal-counter {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.modal-hint {
+  position: absolute;
+  bottom: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Card Content */
+.mosque-card-content {
+  padding: 18px;
+}
+
+.mosque-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2c5e2e;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+}
+
+.mosque-name-ko {
+  font-size: 1rem;
+  color: #666;
+  margin: 0 0 16px 0;
+  font-weight: 500;
+}
+
+.mosque-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mosque-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.info-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.info-text {
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.5;
+  flex: 1;
+}
+
+/* ======================================
+   RESPONSIVE DESIGN
+   ====================================== */
+@media (max-width: 420px) {
+  .mosques-container {
+    padding: 0 12px 40px 12px;
+  }
+
+  .search-section-wrapper {
+    margin: 12px 0;
+  }
+
+  .mosque-cards {
+    gap: 46px;
+    padding-top: 46px;
+  }
+
+  .card-top-badges {
+    top: -36px;
+    left: 12px;
+    right: 12px;
+  }
+
+  .mosque-card-image {
+    height: 200px;
+  }
+
+  .mosque-name {
+    font-size: 1.2rem;
+  }
+
+  .search-bar {
+    font-size: 0.95rem;
+    padding: 12px 36px 12px 14px;
+  }
+
+  .mosque-rating-badge {
+    padding: 8px 10px;
+  }
+
+  .star {
+    font-size: 0.9rem;
+  }
+
+  .mosque-distance-badge {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .no-rating-text {
+    font-size: 0.75rem;
+  }
+
+  .modal-close {
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .modal-nav {
+    width: 44px;
+    height: 44px;
+    font-size: 1.6rem;
+  }
+
+  .modal-nav-prev {
+    left: 10px;
+  }
+
+  .modal-nav-next {
+    right: 10px;
+  }
+
+  .modal-counter {
+    bottom: 10px;
+    font-size: 0.85rem;
+  }
+
+  .modal-hint {
+    bottom: 40px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Info footer */
+.info-footer {
+  background: linear-gradient(135deg, #f0f9f5 0%, #e8f5f0 100%);
+  border: 2px solid rgba(0, 168, 132, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 32px;
+  text-align: center;
+}
+
+.info-footer-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.info-footer-text {
+  font-size: 1rem;
+  color: #2c5e2e;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.info-footer-text a {
+  color: #00a884;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.info-footer-text a:hover {
+  border-bottom-color: #00a884;
+}

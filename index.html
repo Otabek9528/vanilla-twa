@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Halal Compass</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- HEADER (Panel 1) -->
+  <header class="app__header">
+    <div class="header-content">
+      <img src="assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
+      <h1>Muslim Vegukin Bot</h1>
+      <!-- Language flags in header -->
+      <div class="lang-flags">
+        <button class="flag-btn" id="flagRu" title="Русский">🇷🇺</button>
+        <button class="flag-btn" id="flagEn" title="English">🇬🇧</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MERGED PANEL (Panels 2 & 3 Combined) -->
+  <div class="merged-content-panel">
+    <!-- PRAYER SECTION (Fixed at top when scrolling) -->
+    <section class="prayer-section-fixed">
+      <button class="prayer-card-timeline" id="prayerCardBtn">
+        <!-- Top Row: Date/Hijri on left, Location on right (same line) -->
+        <div class="top-row">
+          <div class="left-side">
+            <p class="weekday" id="weekday">Yuklanmoqda...</p>
+            <p class="hijri" id="hijri">Yuklanmoqda...</p>
+          </div>
+          <div class="right-side">
+            <span class="location-icon">📍</span>
+            <span class="city-name" id="cityName">Yuklanmoqda...</span>
+          </div>
+        </div>
+
+        <!-- Timeline: Current → Next -->
+        <div class="timeline-prayer">
+          <div class="timeline-start">
+            <span class="timeline-emoji" id="currentEmoji">🌅</span>
+            <h3 class="timeline-name" id="currentPrayer">--</h3>
+            <p class="timeline-time" id="prayerTime">--:--</p>
+          </div>
+
+          <div class="timeline-progress">
+            <div class="progress-line"></div>
+            <div class="countdown-badge">
+              <span id="countdown">--:--:--</span>
+            </div>
+          </div>
+
+          <div class="timeline-end">
+            <span class="timeline-emoji" id="nextEmoji">☀️</span>
+            <h3 class="timeline-name" id="nextPrayer">--</h3>
+            <p class="timeline-time" id="nextPrayerTime">--:--</p>
+          </div>
+        </div>
+      </button>
+    </section>
+
+    <!-- SCROLLABLE FEATURES SECTION -->
+    <div class="scrollable-features">
+      <main class="main">
+        <button class="card" onclick="window.location.href='pages/mosques/mosques.html'">
+          <img src="assets/mosque.png" alt="Masjidlar" />
+          <p>Masjidlar</p>
+        </button>
+
+        <button class="card">
+          <img src="assets/restaurant.jpg" alt="Yangiliklar" />
+          <p>Yangiliklar</p>
+        </button>
+
+        <button class="card">
+          <img src="assets/store.jpg" alt="Kafe" />
+          <p>Kafe</p>
+        </button>
+
+        <button class="card">
+          <img src="assets/store.jpg" alt="Do'kon" />
+          <p>Do'kon</p>
+        </button>
+
+        <button class="card">
+          <img src="assets/store.jpg" alt="Kafe" />
+          <p>Kafe</p>
+        </button>
+
+        <button class="card">
+          <img src="assets/store.jpg" alt="Do'kon" />
+          <p>Do'kon</p>
+        </button>
+
+        <button class="card">
+          <img src="assets/store.jpg" alt="Kafe" />
+          <p>Kafe</p>
+        </button>
+
+        <button class="card">
+          <img src="assets/store.jpg" alt="Do'kon" />
+          <p>Do'kon</p>
+        </button>
+      </main>
+    </div>
+  </div>
+
+  <!-- JS Scripts -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="js/locationManager.js"></script>
+  <script src="js/prayerTimes.js"></script>
+  <script>
+    // Initialize Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    
+    console.log('🚀 Main page script loading...');
+    
+    // Notify Telegram that the web app is ready
+    tg.ready();
+    console.log('✅ WebApp.ready() called');
+    
+    // Expand the WebApp to full height
+    try {
+      tg.expand();
+      console.log('✅ WebApp.expand() called');
+    } catch (e) {
+      console.log('⚠️ Expand not supported:', e);
+    }
+    
+    // Hide Telegram's BackButton on main page
+    try {
+      if (tg.BackButton) {
+        tg.BackButton.hide();
+        console.log('✅ Telegram BackButton hidden on main page');
+      }
+    } catch (e) {
+      console.log('⚠️ BackButton not available:', e);
+    }
+
+    // Handle prayer card click with proper navigation
+    const prayerCardBtn = document.getElementById('prayerCardBtn');
+    if (prayerCardBtn) {
+      prayerCardBtn.addEventListener('click', () => {
+        // Navigate to prayers page
+        window.location.href = 'pages/prayers.html';
+      });
+    }
+
+    // Language flag buttons
+    document.getElementById('flagRu').addEventListener('click', () => {
+      console.log('Russian selected');
+      // TODO: Implement language switching
+    });
+
+    document.getElementById('flagEn').addEventListener('click', () => {
+      console.log('English selected');
+      // TODO: Implement language switching
+    });
+
+    // Update timestamp display when location updates
+    window.addEventListener('locationUpdated', (event) => {
+      console.log('✅ Location updated:', event.detail.city);
+    });
+  </script>
+</body>
+</html>

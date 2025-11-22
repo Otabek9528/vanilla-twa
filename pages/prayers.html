@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bugungi Namoz Vaqtlari</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    /* Page-specific overrides for prayers page */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: visible !important; /* Override the hidden from main CSS */
+    }
+    
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Make header stay at top */
+    .app__header {
+      flex-shrink: 0;
+    }
+    
+    /* Make prayers section scrollable */
+    .prayers-detailed {
+      flex: 1;
+      overflow-y: auto !important;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 40px; /* Extra padding at bottom */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app__header">
+    <div class="header-content">
+      <img src="../assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
+      <h1>Muslim Vegukin Bot</h1>
+    </div>
+  </header>
+
+  <!-- PRAYER DETAILS -->
+  <section class="prayers-detailed">
+    <h2 id="cityName">Yuklanmoqda...</h2>
+    <p id="coords">Koordinatalar: -- , --</p>
+    <p id="todayDate">Sana yuklanmoqda...</p>
+    
+    <!-- Location timestamp with inline refresh button -->
+    <div class="location-update-row">
+      <p id="locationTimestamp">Yuklanmoqda...</p>
+      <button class="inline-refresh-btn" id="refreshLocationBtn" title="Joylashuvni yangilash">
+        <span id="refreshIcon">📍</span>
+      </button>
+    </div>
+
+    <!-- Countdown -->
+    <div class="next-prayer-countdown">
+      <p>Keyingi namoz: <span id="nextPrayerName">Yuklanmoqda...</span></p>
+      <p class="countdown-text">⏳ <span id="countdown">--:--:--</span></p>
+    </div>
+
+    <!-- List -->
+    <div class="prayer-list" id="prayerList"></div>
+
+    <!-- Informative Note -->
+    <div class="prayer-info-note">
+      <p class="info-header">ℹ️ Ma'lumot</p>
+      <p class="info-method">
+        Namoz vaqtlari <strong>Muslim World League</strong> usuli bilan <strong>Hanafiy mazhabi</strong> uchun hisoblab chiqildi.
+      </p>
+      
+      <div class="info-divider"></div>
+      
+      <p class="info-advice-title">Ehtiyot chorasi sifatida:</p>
+      <div class="info-advice">
+        <div class="advice-item">
+          <span class="advice-emoji">🌙</span>
+          <span class="advice-text">Saharlik: Bomdoddan <strong>5 daqiqa oldin</strong></span>
+        </div>
+        <div class="advice-item">
+          <span class="advice-emoji">🌅</span>
+          <span class="advice-text">Iftorlik: Shomdan <strong>5 daqiqa keyin</strong></span>
+        </div>
+        <div class="advice-item">
+          <span class="advice-emoji">🕌</span>
+          <span class="advice-text">Namozlar: Vaqt kirganidan <strong>10 daqiqa keyin</strong></span>
+        </div>
+      </div>
+      <p class='info-method'>
+        qilib vaqt belgilashlikni maslahat beramiz.
+      </p>
+    </div>
+  </section>  
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="../js/locationManager.js"></script>
+  <script src="../js/prayerTimes.js"></script>
+  <script src="../js/prayersPage.js"></script>
+  <script>
+    // Initialize Telegram WebApp on prayers page
+    const tg = window.Telegram.WebApp;
+    
+    console.log('🚀 Prayers page script loading...');
+    console.log('📱 Telegram.WebApp:', tg);
+    
+    // Notify Telegram that the web app is ready
+    tg.ready();
+    console.log('✅ WebApp.ready() called');
+    
+    // Expand the WebApp to full height
+    try {
+      tg.expand();
+      console.log('✅ WebApp.expand() called');
+    } catch (e) {
+      console.log('⚠️ Expand not supported:', e);
+    }
+  </script>
+
+</body>
+</html>

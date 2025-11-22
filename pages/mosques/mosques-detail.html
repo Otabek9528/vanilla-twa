@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Masjid Ma'lumotlari</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="mosques.css" />
+  <style>
+    .detail-container {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 20px 16px 40px 16px;
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .detail-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      gap: 20px;
+    }
+
+    .detail-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #e0e0e0;
+      border-top-color: #00a884;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .detail-loading p {
+      font-size: 1.1rem;
+      color: #666;
+      margin: 0;
+    }
+
+    .detail-error {
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .detail-error-icon {
+      font-size: 4rem;
+      margin: 0 0 20px 0;
+    }
+
+    .detail-error-text {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #d32f2f;
+      margin: 0 0 12px 0;
+    }
+
+    .detail-error-hint {
+      font-size: 1rem;
+      color: #666;
+      margin: 0 0 24px 0;
+      line-height: 1.5;
+    }
+
+    .retry-button {
+      background: linear-gradient(135deg, #00a884 0%, #007b5e 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 8px rgba(0, 168, 132, 0.3);
+    }
+
+    .retry-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 12px rgba(0, 168, 132, 0.4);
+    }
+
+    .retry-button:active {
+      transform: translateY(0);
+    }
+
+    .detail-card {
+      background: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .detail-photo-section {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      background: linear-gradient(135deg, #e8f5f0 0%, #f0f9f5 100%);
+    }
+
+    .detail-badges {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .detail-combined-badge {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      padding: 12px 18px;
+      border-radius: 28px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .badge-stars {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding-right: 12px;
+      border-right: 2px solid rgba(0, 168, 132, 0.2);
+    }
+
+    .badge-distance {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #00a884;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .detail-content {
+      padding: 24px;
+    }
+
+    .detail-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #2c5e2e;
+      margin: 0 0 8px 0;
+      line-height: 1.3;
+    }
+
+    .detail-subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      margin: 0 0 24px 0;
+      font-weight: 500;
+    }
+
+    .detail-section {
+      margin-bottom: 28px;
+    }
+
+    .detail-section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #2c5e2e;
+      margin: 0 0 14px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .detail-info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: #f9f9f9;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .detail-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .detail-text {
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .detail-link {
+      color: #00a884;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .detail-link:hover {
+      color: #007b5e;
+      text-decoration: underline;
+    }
+
+    .reviews-section {
+      margin-top: 28px;
+    }
+
+    .review-card {
+      background: #f9f9f9;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-left: 4px solid #00a884;
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .review-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .review-stars {
+      color: #ffd700;
+      font-size: 1rem;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .review-date {
+      font-size: 0.85rem;
+      color: #888;
+    }
+
+    .review-text {
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .no-reviews {
+      text-align: center;
+      padding: 40px 20px;
+      color: #888;
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .nav-button {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .kakao-button {
+      background: linear-gradient(135deg, #ffe812 0%, #ffd000 100%);
+      color: #3c1e1e;
+    }
+
+    .kakao-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 12px rgba(255, 232, 18, 0.4);
+    }
+
+    .naver-button {
+      background: linear-gradient(135deg, #03c75a 0%, #00b050 100%);
+      color: white;
+    }
+
+    .naver-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 12px rgba(3, 199, 90, 0.4);
+    }
+
+    .nav-icon {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    @media (max-width: 420px) {
+      .detail-photo-section {
+        height: 320px;
+      }
+
+      .detail-title {
+        font-size: 1.4rem;
+      }
+
+      .detail-content {
+        padding: 20px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  
+  /* Review submission section */
+  .review-submit-wrapper {
+    margin-top: 32px;
+  }
+
+  .review-toggle-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: linear-gradient(135deg, #00a884 0%, #007b5e 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 168, 132, 0.3);
+  }
+
+  .review-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0, 168, 132, 0.4);
+  }
+
+  .review-toggle-btn.active {
+    border-radius: 12px 12px 0 0;
+  }
+
+  .review-collapsible {
+    background: #ffffff;
+    border: 2px solid #00a884;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 20px;
+    box-shadow: 0 3px 8px rgba(0, 168, 132, 0.15);
+  }
+
+  .star-rating-input {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 16px 0;
+  }
+
+  .star-input {
+    font-size: 2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    filter: grayscale(100%);
+    opacity: 0.4;
+  }
+
+  .star-input.selected,
+  .star-input:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.2);
+  }
+
+  .review-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 2px solid #d0d0d0;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    margin-top: 12px;
+  }
+
+  .review-textarea:focus {
+    outline: none;
+    border-color: #00a884;
+  }
+
+  .review-submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #00a884 0%, #007b5e 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .review-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 168, 132, 0.3);
+  }
+
+  .review-submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  </style>
+</head>
+<body>
+
+  <header class="app__header">
+    <div class="header-content">
+      <img src="../../assets/emblem.jpg" alt="Bot Emblem" class="bot-logo" />
+      <h1>Muslim Vegukin Bot</h1>
+    </div>
+  </header>
+
+  <div class="detail-container">
+    
+    <div class="detail-loading" id="detailLoading">
+      <div class="detail-spinner"></div>
+      <p>Yuklanmoqda...</p>
+    </div>
+
+    <div class="detail-error" id="detailError" style="display: none;">
+      <p class="detail-error-icon">❌</p>
+      <p class="detail-error-text">Xatolik yuz berdi</p>
+      <p class="detail-error-hint" id="errorMessage">Ma'lumotlarni yuklashda muammo. Iltimos, qaytadan urinib ko'ring.</p>
+      <button class="retry-button" onclick="loadMosqueDetail()">Qaytadan urinish</button>
+    </div>
+
+    <div id="detailContent" style="display: none;"></div>
+
+  </div>
+
+  <div class="image-modal" id="imageModal">
+    <div class="modal-content">
+      <button class="modal-nav modal-nav-prev" id="modalPrev">‹</button>
+      <img src="" alt="Full size image" class="modal-image" id="modalImage" />
+      <button class="modal-nav modal-nav-next" id="modalNext">›</button>
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-counter" id="modalCounter">1 / 1</div>
+      <div class="modal-hint">← → yoki suring</div>
+    </div>
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="../../js/apiConfig.js"></script>
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    
+    try {
+      tg.expand();
+    } catch (e) {}
+    
+    try {
+      if (tg.BackButton) {
+        tg.BackButton.show();
+        tg.onEvent('backButtonClicked', () => {
+          window.location.href = "mosques.html";
+        });
+      }
+    } catch (e) {}
+
+    const detailLoading = document.getElementById('detailLoading');
+    const detailError = document.getElementById('detailError');
+    const detailContent = document.getElementById('detailContent');
+    const errorMessage = document.getElementById('errorMessage');
+
+    let carouselInterval = null;
+    let currentModalPhotos = [];
+    let currentModalIndex = 0;
+
+    const imageModal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalClose = document.getElementById('modalClose');
+    const modalPrev = document.getElementById('modalPrev');
+    const modalNext = document.getElementById('modalNext');
+
+    function openImageModal(photos, startIndex = 0) {
+      currentModalPhotos = Array.isArray(photos) ? photos : [photos];
+      currentModalIndex = startIndex;
+      
+      updateModalImage();
+      imageModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeImageModal() {
+      imageModal.classList.remove('active');
+      document.body.style.overflow = '';
+      currentModalPhotos = [];
+      currentModalIndex = 0;
+    }
+
+    function navigateModal(direction) {
+      if (currentModalPhotos.length <= 1) return;
+      
+      currentModalIndex += direction;
+      
+      if (currentModalIndex < 0) {
+        currentModalIndex = currentModalPhotos.length - 1;
+      } else if (currentModalIndex >= currentModalPhotos.length) {
+        currentModalIndex = 0;
+      }
+      
+      updateModalImage();
+    }
+
+    function updateModalImage() {
+      const modalCounter = document.getElementById('modalCounter');
+      
+      if (modalImage && currentModalPhotos.length > 0) {
+        modalImage.src = currentModalPhotos[currentModalIndex];
+      }
+      
+      if (modalCounter) {
+        modalCounter.textContent = `${currentModalIndex + 1} / ${currentModalPhotos.length}`;
+      }
+      
+      const display = currentModalPhotos.length > 1 ? 'flex' : 'none';
+      modalPrev.style.display = display;
+      modalNext.style.display = display;
+    }
+
+    imageModal.addEventListener('click', (e) => {
+      if (e.target === imageModal) closeImageModal();
+    });
+    
+    modalClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeImageModal();
+    });
+
+    modalPrev.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigateModal(-1);
+    });
+
+    modalNext.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigateModal(1);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!imageModal.classList.contains('active')) return;
+      
+      if (e.key === 'Escape') {
+        closeImageModal();
+      } else if (e.key === 'ArrowLeft') {
+        navigateModal(-1);
+      } else if (e.key === 'ArrowRight') {
+        navigateModal(1);
+      }
+    });
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    const modalContent = imageModal.querySelector('.modal-content');
+    modalContent.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    modalContent.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const swipeThreshold = 50;
+      if (touchStartX - touchEndX > swipeThreshold) {
+        navigateModal(1);
+      } else if (touchEndX - touchStartX > swipeThreshold) {
+        navigateModal(-1);
+      }
+    });
+
+    function getMosqueId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('id');
+    }
+
+    async function fetchMosqueDetail(id) {
+      const url = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.MOSQUE_DETAIL}/${id}`;
+      
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          signal: AbortSignal.timeout(API_CONFIG.DEFAULTS.TIMEOUT)
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.mosque) {
+          return data.mosque;
+        } else {
+          throw new Error('Invalid API response format');
+        }
+      } catch (error) {
+        throw error;
+      }
+    }
+
+    function checkImageExists(url) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+      });
+    }
+
+    async function discoverPhotos(photoPath, maxPhotos = 10) {
+      const photos = [];
+      const extensions = ['jpg', 'jpeg', 'png'];
+      const basePath = `../../${photoPath}`;
+      
+      for (let i = 1; i <= maxPhotos; i++) {
+        let photoFound = false;
+        
+        for (const ext of extensions) {
+          const photoUrl = `${basePath}/${i}.${ext}`;
+          
+          try {
+            const exists = await checkImageExists(photoUrl);
+            if (exists) {
+              photos.push(photoUrl);
+              photoFound = true;
+              break;
+            }
+          } catch (e) {
+            continue;
+          }
+        }
+        
+        if (!photoFound) break;
+      }
+      
+      return photos;
+    }
+
+    function createDetailPhotoCarousel(photos) {
+      if (!photos || photos.length === 0) {
+        return `
+          <img src="../../assets/mosque.png" alt="Mosque photo" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="openImageModal(['../../assets/mosque.png'], 0)" />
+        `;
+      }
+      
+      if (photos.length === 1) {
+        return `
+          <img src="${photos[0]}" alt="Mosque photo" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="openImageModal(['${photos[0]}'], 0)" />
+        `;
+      }
+      
+      let photosHTML = '';
+      let dotsHTML = '';
+      
+      photos.forEach((photo, index) => {
+        const positionClass = index === 0 ? 'center' : 
+                             index === 1 ? 'right' : 'hidden';
+        
+        photosHTML += `
+          <div class="carousel-photo ${positionClass}" data-index="${index}" data-photo="${photo}">
+            <img src="${photo}" alt="Mosque photo ${index + 1}" />
+          </div>
+        `;
+        
+        dotsHTML += `
+          <span class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></span>
+        `;
+      });
+      
+      return `
+        <div class="photo-carousel" id="detailCarousel" data-photos='${JSON.stringify(photos)}'>
+          <div class="carousel-track">
+            ${photosHTML}
+          </div>
+          <div class="carousel-dots">
+            ${dotsHTML}
+          </div>
+        </div>
+      `;
+    }
+
+    function initDetailCarousel(photoCount) {
+      const carousel = document.getElementById('detailCarousel');
+      if (!carousel || photoCount <= 1) return;
+      
+      const photos = carousel.querySelectorAll('.carousel-photo');
+      const dots = carousel.querySelectorAll('.dot');
+      const allPhotos = JSON.parse(carousel.getAttribute('data-photos'));
+      let currentIndex = 0;
+      
+      function updateCarousel(newIndex) {
+        const totalPhotos = photos.length;
+        
+        photos.forEach((photo, index) => {
+          let relativePos = (index - newIndex + totalPhotos) % totalPhotos;
+          
+          photo.classList.remove('center', 'left', 'right', 'hidden');
+          
+          if (relativePos === 0) {
+            photo.classList.add('center');
+          } else if (relativePos === 1) {
+            photo.classList.add('right');
+          } else if (relativePos === totalPhotos - 1) {
+            photo.classList.add('left');
+          } else {
+            photo.classList.add('hidden');
+          }
+        });
+        
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === newIndex);
+        });
+        
+        currentIndex = newIndex;
+      }
+      
+      photos.forEach((photo) => {
+        photo.addEventListener('click', (e) => {
+          e.stopPropagation();
+          
+          if (photo.classList.contains('center')) {
+            const photoIndex = parseInt(photo.getAttribute('data-index'));
+            openImageModal(allPhotos, photoIndex);
+          }
+        });
+      });
+      
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          updateCarousel(index);
+          
+          if (carouselInterval) {
+            clearInterval(carouselInterval);
+          }
+          startAutoRotation();
+        });
+      });
+      
+      function startAutoRotation() {
+        carouselInterval = setInterval(() => {
+          const nextIndex = (currentIndex + 1) % photos.length;
+          updateCarousel(nextIndex);
+        }, 3000);
+      }
+      
+      startAutoRotation();
+      
+      carousel.addEventListener('mouseenter', () => {
+        if (carouselInterval) {
+          clearInterval(carouselInterval);
+        }
+      });
+      
+      carousel.addEventListener('mouseleave', () => {
+        startAutoRotation();
+      });
+    }
+
+    function generateStarRating(reviews) {
+      if (!reviews || reviews.length === 0) {
+        return `<span class="no-rating-text">Izohlar yo'q</span>`;
+      }
+      
+      const avgRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+      const roundedRating = Math.round(avgRating);
+      
+      let starsHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        if (i <= roundedRating) {
+          starsHTML += `<span class="star gold">⭐</span>`;
+        } else {
+          starsHTML += `<span class="star grey">⭐</span>`;
+        }
+      }
+      
+      return `<div class="star-container">${starsHTML}</div>`;
+    }
+
+    function formatDate(dateString) {
+      try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('uz-UZ', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+      } catch (e) {
+        return dateString;
+      }
+    }
+
+    function renderReviews(reviews) {
+      if (!reviews || reviews.length === 0) {
+        return '<div class="no-reviews">Hali Izohlar yo\'q</div>';
+      }
+
+      let reviewsHTML = '';
+      reviews.forEach(review => {
+        const stars = '⭐'.repeat(review.rating);
+        const date = formatDate(review.timestamp);
+        
+        reviewsHTML += `
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-rating">
+                <span class="review-stars">${stars}</span>
+              </div>
+              <span class="review-date">${date}</span>
+            </div>
+            <p class="review-text">${review.text || 'Izoh matni yo\'q'}</p>
+          </div>
+        `;
+      });
+
+      return reviewsHTML;
+    }
+
+    
+
+
+    function copyAddress(address, event) {
+      if (!address || address === 'Manzil ma\'lumoti yo\'q') return;
+      
+      event.stopPropagation();
+      
+      navigator.clipboard.writeText(address).then(() => {
+        const item = event.currentTarget;
+        const originalBg = item.style.background;
+        item.style.background = '#d4edda';
+        
+        setTimeout(() => {
+          item.style.background = originalBg;
+        }, 300);
+        
+        // Optional: show toast notification
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert('Manzil nusxalandi! ✅');
+        }
+      }).catch(err => {
+        console.error('Copy failed:', err);
+      });
+    }
+
+
+
+
+    async function renderMosqueDetail(mosque) {
+      const photos = await discoverPhotos(mosque.photo, 10);
+      
+      const photoHTML = createDetailPhotoCarousel(photos);
+      const starRatingHTML = generateStarRating(mosque.reviews);
+      const reviewsHTML = renderReviews(mosque.reviews);
+      const reviewCount = mosque.reviews ? mosque.reviews.length : 0;
+      const distanceDisplay = mosque.distance ? mosque.distance.toFixed(1) : 'N/A';
+      
+      // Process phone numbers - split if multiple
+      function renderPhoneNumbers(phoneString) {
+        if (!phoneString) {
+          return '<span class="detail-text">Ma\'lumot yo\'q</span>';
+        }
+        
+        const phones = phoneString.split(',').map(p => p.trim()).filter(p => p);
+        
+        if (phones.length === 1) {
+          return `<a href="tel:${phones[0]}" class="detail-link">${phones[0]}</a>`;
+        }
+        
+        return phones.map(phone => 
+          `<a href="tel:${phone}" class="detail-link" style="display: block; margin-bottom: 4px;">${phone}</a>`
+        ).join('');
+      }
+      
+      detailContent.innerHTML = `
+        <div class="detail-card">
+          <div class="detail-photo-section">
+            <div class="detail-badges">
+              <div class="detail-combined-badge">
+                <div class="badge-stars">
+                  ${starRatingHTML}
+                </div>
+                ${mosque.distance ? `
+                  <div class="badge-distance">
+                    <span>📍</span>
+                    <span>${distanceDisplay} km</span>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+            
+            ${photoHTML}
+          </div>
+          
+          <div class="detail-content">
+            <h1 class="detail-title">${mosque.name}</h1>
+            <p class="detail-subtitle">${mosque.city || 'Unknown City'}</p>
+            
+            <div class="detail-section">
+              <h3 class="detail-section-title">📞 Kontakt</h3>
+              <div class="detail-info-item">
+                <span class="detail-icon">📱</span>
+                <div style="flex: 1;">
+                  ${renderPhoneNumbers(mosque.phone)}
+                </div>
+              </div>
+            </div>
+            
+            <div class="detail-section">
+              <h3 class="detail-section-title">📍 Manzil</h3>
+              <div class="detail-info-item" style="cursor: pointer;" onclick="copyAddress('${(mosque.address || '').replace(/'/g, "\\'")}', event)">
+                <span class="detail-icon">🌐</span>
+                <span class="detail-text">${mosque.address || 'Manzil ma\'lumoti yo\'q'}</span>
+                <span style="margin-left: auto; opacity: 0.5; font-size: 0.9rem;">📋</span>
+              </div>
+            </div>
+            
+            ${reviewCount > 0 ? `
+              <div class="detail-section reviews-section">
+                <h3 class="detail-section-title">💬 Izohlar (${reviewCount})</h3>
+                ${reviewsHTML}
+              </div>
+            ` : ''}
+            
+            <div class="detail-section">
+              <h3 class="detail-section-title">🗺️ Navigatsiya</h3>
+              <div class="nav-buttons">
+                ${mosque.kakaoMapUrl ? `
+                  <a href="${mosque.kakaoMapUrl}" target="_blank" class="nav-button kakao-button">
+                    <span class="nav-icon">🟡</span>
+                    <span>KakaoMap</span>
+                  </a>
+                ` : ''}
+                ${mosque.naverMapUrl ? `
+                  <a href="${mosque.naverMapUrl}" target="_blank" class="nav-button naver-button">
+                    <span class="nav-icon">🟢</span>
+                    <span>NaverMap</span>
+                  </a>
+                ` : ''}
+              </div>
+            </div>
+
+            <div class="review-submit-wrapper">
+              <button class="review-toggle-btn" id="reviewToggleBtn">
+                <span>✍️ Izoh qoldirish</span>
+                <span class="toggle-arrow" id="reviewToggleArrow">▼</span>
+              </button>
+              
+              <div class="review-collapsible" id="reviewCollapsible" style="display: none;">
+                <!-- Info box -->
+                <div style="background: #f0f9f5; border-left: 4px solid #00a884; padding: 14px; border-radius: 8px; margin-bottom: 16px;">
+                  <p style="margin: 0 0 10px 0; font-weight: 600; color: #2c5e2e; font-size: 0.95rem;">📝 Izohingizda quyidagilarni yozishingiz mumkin:</p>
+                  <p style="margin: 4px 0; font-size: 0.88rem; color: #555;">✅ Masjid haqida fikringiz</p>
+                  <p style="margin: 4px 0; font-size: 0.88rem; color: #555;">🕌 Ochilish va yopilish vaqtlari</p>
+                  <p style="margin: 4px 0; font-size: 0.88rem; color: #555;">📋 Kirish eshikdagi parol (agar bor bo'lsa)</p>
+                  <p style="margin: 4px 0; font-size: 0.88rem; color: #555;">🗺️ Lokatsiyaga olib boriladigan yo'l tushuntirishlar</p>
+                </div>
+                
+                <p style="text-align: center; margin: 0 0 8px 0; color: #666; font-size: 0.95rem;">Baholang:</p>
+                <div class="star-rating-input" id="starRatingInput">
+                  <span class="star-input" data-rating="1">⭐</span>
+                  <span class="star-input" data-rating="2">⭐</span>
+                  <span class="star-input" data-rating="3">⭐</span>
+                  <span class="star-input" data-rating="4">⭐</span>
+                  <span class="star-input" data-rating="5">⭐</span>
+                </div>
+                <textarea 
+                  class="review-textarea" 
+                  id="reviewText" 
+                  placeholder="Izohingizni yozing ..."></textarea>
+                <button class="review-submit-btn" id="submitReviewBtn">Yuborish</button>
+                
+                <!-- Success message (hidden initially) -->
+                <div id="reviewSuccessMessage" style="display: none; text-align: center; padding: 30px 20px;">
+                  <div style="font-size: 3rem; margin-bottom: 12px;">✅</div>
+                  <h3 style="color: #00a884; margin: 0 0 8px 0;">Rahmat!</h3>
+                  <p style="color: #666; margin: 0;">Izohingiz muvaffaqiyatli qabul qilindi va ko'rib chiqilmoqda.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      `;
+      
+      if (photos.length > 1) {
+        initDetailCarousel(photos.length);
+      }
+
+      initReviewSubmission(mosque.id);      
+    }
+
+
+    function initReviewSubmission(mosqueId) {
+      const toggleBtn = document.getElementById('reviewToggleBtn');
+      const collapsible = document.getElementById('reviewCollapsible');
+      const arrow = document.getElementById('reviewToggleArrow');
+      const stars = document.querySelectorAll('.star-input');
+      const submitBtn = document.getElementById('submitReviewBtn');
+      const reviewText = document.getElementById('reviewText');
+      
+      let selectedRating = 0;
+      
+      // Toggle collapsible
+      toggleBtn.addEventListener('click', () => {
+        const isVisible = collapsible.style.display !== 'none';
+        collapsible.style.display = isVisible ? 'none' : 'block';
+        arrow.textContent = isVisible ? '▼' : '▲';
+        toggleBtn.classList.toggle('active', !isVisible);
+      });
+      
+      // Star rating
+      stars.forEach(star => {
+        star.addEventListener('click', () => {
+          selectedRating = parseInt(star.dataset.rating);
+          stars.forEach((s, idx) => {
+            s.classList.toggle('selected', idx < selectedRating);
+          });
+        });
+      });
+      
+      // Submit review
+      submitBtn.addEventListener('click', async () => {
+        if (selectedRating === 0) {
+          tg.showAlert('Iltimos, baho tanlang!');
+          return;
+        }
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Yuklanmoqda...';
+        
+        try {
+          const userId = tg.initDataUnsafe?.user?.id || 'web_user';
+          
+          const reviewData = {
+            mosque_id: mosqueId,
+            user_id: userId,
+            rating: selectedRating,
+            review_text: reviewText.value.trim() || '',
+            timestamp: new Date().toISOString()
+          };
+          
+          const response = await fetch(`${API_CONFIG.BASE_URL}/api/review/submit`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(reviewData)
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            // Hide form, show success message
+            document.querySelector('.review-collapsible > div').style.display = 'none'; // Hide info box
+            document.getElementById('starRatingInput').style.display = 'none';
+            reviewText.style.display = 'none';
+            submitBtn.style.display = 'none';
+            document.querySelector('.review-collapsible p').style.display = 'none';
+            document.getElementById('reviewSuccessMessage').style.display = 'block';
+            
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          } else {
+            tg.showAlert('Xatolik: ' + (result.error || 'Qaytadan urinib ko\'ring'));
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Yuborish';
+          }
+        } catch (error) {
+          tg.showAlert('Xatolik yuz berdi. Internetni tekshiring.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Yuborish';
+        }
+      });
+    }
+
+
+
+
+    function showError(message) {
+      detailLoading.style.display = 'none';
+      detailContent.style.display = 'none';
+      detailError.style.display = 'block';
+      errorMessage.textContent = message;
+    }
+
+    async function loadMosqueDetail() {
+      const mosqueId = getMosqueId();
+      
+      if (!mosqueId) {
+        showError('Masjid ID topilmadi. Iltimos, orqaga qaytib, qaytadan tanlang.');
+        return;
+      }
+
+      detailLoading.style.display = 'flex';
+      detailError.style.display = 'none';
+      detailContent.style.display = 'none';
+      
+      try {
+        const mosque = await fetchMosqueDetail(mosqueId);
+        
+        detailLoading.style.display = 'none';
+        detailContent.style.display = 'block';
+        
+        await renderMosqueDetail(mosque);
+        
+      } catch (error) {
+        let errorMsg = 'Ma\'lumotlarni yuklashda xatolik yuz berdi. Iltimos, internetni tekshirib, qaytadan urinib ko\'ring.';
+        
+        if (error.name === 'TimeoutError') {
+          errorMsg = 'Server javob bermadi (30 soniya). Server uyg\'onayotgan bo\'lishi mumkin, iltimos 1 daqiqa kuting va qaytadan urinib ko\'ring.';
+        } else if (error.message.includes('404')) {
+          errorMsg = 'Masjid topilmadi. Bu masjid bazadan o\'chirilgan bo\'lishi mumkin.';
+        }
+        
+        showError(errorMsg);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadMosqueDetail);
+  </script>
+
+</body>
+</html>

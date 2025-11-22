@@ -3,7 +3,7 @@
 
 const API_CONFIG = {
   // Base URL for the Flask API deployed on Render
-  BASE_URL: 'https://muslim-vegukin-api.onrender.com',
+  BASE_URL: 'https://muslim-vegukin-api.fly.dev',
   
   // API endpoints
   ENDPOINTS: {
